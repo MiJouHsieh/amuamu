@@ -9,7 +9,7 @@ export function RecipePage() {
   const note = RECIPE_DATA["note"];
 
   return (
-    <section className="border-box w-full rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise-blue.png')] p-4 md:p-10 990:mx-0 990:p-8 1440:max-w-[1110px]">
+    <section className="border-box w-full rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] p-4 md:p-10 990:mx-0 990:p-8 1440:max-w-[1110px]">
       <div className="flex w-full flex-col items-center 990:flex-row 990:flex-wrap 990:items-end 990:justify-between">
         {/* 圖片 */}
         <div className="flex w-full flex-1 flex-col items-center justify-center space-y-4 575:mt-4 990:w-[40%]">
