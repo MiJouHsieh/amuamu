@@ -27,4 +27,13 @@
   .cardHoverShadow:hover {
     box-shadow: 0px 0px 20px 6px rgba(234, 179, 8, 0.5);
   }
+  .inputStyle {
+    @apply md:h-10 md:p-4;
+  }
+  .inputField {
+    @apply h-8 rounded-md border border-transparent p-2 outline-none transition-colors duration-1000 md:h-10 md:p-4;
+  }
+  .darkInputField {
+    @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
+  }
 }
