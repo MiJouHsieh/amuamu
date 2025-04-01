@@ -1,5 +1,5 @@
 import { Nav } from "src/components/Nav";
-import { RecipePage } from "src/pages/Post/RecipePage";
+import { RecipePage } from "src/pages/RecipePage";
 import { AddPost } from "/src/pages/Post/AddPost";
 
 import {
