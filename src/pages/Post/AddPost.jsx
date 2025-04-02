@@ -118,12 +118,12 @@ export function AddPost() {
     <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl 1440:max-w-[1110px]">
       <div className="mx-auto flex flex-col items-center justify-center py-12">
         <h1 className="mb-10 font-youngSerif text-4xl text-orange md:text-5xl">
-          create a recipe
+          Create a Recipe
         </h1>
         {/* form */}
         <form className="block w-full space-y-3 md:space-y-5">
           {/* title */}
-          <div className="flex items-center justify-between p-4 outline">
+          <div className="hover:addPostShadow flex items-center justify-between p-4 transition-all duration-200">
             <label className="form-label text-orange">
               Recipe Name
             </label>
@@ -138,7 +138,7 @@ export function AddPost() {
           </div>
 
           {/* image */}
-          <div className="flex flex-col items-start justify-between gap-y-4 p-4 outline">
+          <div className="hover:addPostShadow flex flex-col items-start justify-between gap-y-4 p-4">
             <label className="form-label text-orange">
               Recipe image
             </label>
@@ -158,7 +158,7 @@ export function AddPost() {
           </div>
 
           {/* recipe info */}
-          <div className="mx-auto flex flex-col gap-y-4 p-4 outline">
+          <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
             <div className="flex items-center justify-between">
               <label className="form-label text-orange">
                 Preparation
@@ -204,7 +204,7 @@ export function AddPost() {
           </div>
 
           {/* Ingredients */}
-          <div className="flex w-full flex-col items-start gap-y-2 p-4 outline">
+          <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
             <label className="form-label w-full text-orange">
               Ingredients
             </label>
@@ -237,9 +237,9 @@ export function AddPost() {
           </div>
 
           {/* note */}
-          <div className="flex w-full flex-col items-start justify-between gap-y-2 p-4 outline">
+          <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-2 p-4">
             <label className="form-label text-orange">Note</label>
-            <input
+            <textarea
               className="inputField darkInputField w-full flex-1"
               value={note}
               placeholder="🗒️note"
