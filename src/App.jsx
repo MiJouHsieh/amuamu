@@ -1,5 +1,7 @@
 import { Nav } from "src/components/Nav";
 import { RecipePage } from "src/pages/RecipePage";
+import { AddPost } from "/src/pages/Post/AddPost";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,6 +16,7 @@ export function App() {
           <Nav />
           <Routes>
             <Route path="/" element={<RecipePage />} />
+            <Route path="/addpost" element={<AddPost />} />
           </Routes>
         </Router>
       </div>
