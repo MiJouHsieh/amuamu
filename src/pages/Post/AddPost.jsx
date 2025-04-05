@@ -150,7 +150,7 @@ export function AddPost() {
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="mx-auto max-h-[300px] max-w-[300px] rounded-md object-cover md:max-h-[500px] md:max-w-[500px]"
+                className="mx-auto h-[300px] w-[300px] rounded-md object-cover object-center md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
               />
             )}
           </div>
