@@ -1,6 +1,7 @@
 import { HiPlusCircle } from "react-icons/hi";
 import { useState } from "react";
 import { IngredientCollection } from "src/components/IngredientCollection";
+import TextareaAutosize from "react-textarea-autosize";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -28,7 +29,7 @@ export function AddPost() {
 
   const handleAddTodo = (e) => {
     // 確認有無輸入資料
-    if (ingredientInput.length === 0) {
+    if (ingredientInput.trim().length === 0) {
       return;
     }
     // 新增輸入的資料 物件
@@ -37,21 +38,18 @@ export function AddPost() {
         ...prevIngredients,
         {
           id: Math.random() * 100,
-          title: ingredientInput,
+          title: ingredientInput.trim(),
           isDone: false,
         },
       ];
     });
-    // 輸入框清空
-    if (e.key === "Enter") {
-      setIngredientInput("");
-    }
     setIngredientInput(""); // clean input
   };
 
   const handleKeyDown = (e) => {
     if (e.key !== "Enter") return;
-    if (ingredientInput.length === 0) return;
+    if (ingredientInput.trim().length === 0) return;
+    e.preventDefault(); // 阻止換行產生
 
     // 新增輸入的 ingredient 物件
     setIngredients((prevIngredients) => {
@@ -59,12 +57,12 @@ export function AddPost() {
         ...prevIngredients,
         {
           id: Math.random() * 100,
-          title: ingredientInput,
+          title: ingredientInput.trim(),
           isDone: false,
         },
       ];
     });
-    setIngredientInput(""); // clean input
+    setIngredientInput("");
   };
 
   const handleSave = ({ id, title }) => {
@@ -115,15 +113,15 @@ export function AddPost() {
     }
   };
   return (
-    <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl 1440:max-w-[1110px]">
-      <div className="mx-auto flex flex-col items-center justify-center py-12">
-        <h1 className="mb-10 font-youngSerif text-4xl text-orange md:text-5xl">
+    <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
+      <div className="mx-auto flex w-full max-w-[500px] flex-col items-center justify-center px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
+        <h1 className="mb-10 font-youngSerif text-4xl text-orange md:text-5xl 990:text-6xl">
           Create a Recipe
         </h1>
         {/* form */}
-        <form className="block w-full space-y-3 md:space-y-5">
+        <form className="block w-full space-y-3 md:space-y-5 990:space-y-6">
           {/* title */}
-          <div className="hover:addPostShadow flex items-center justify-between p-4 transition-all duration-200">
+          <div className="hover:addPostShadow flex items-center justify-between p-4 transition-all duration-200 md:p-6">
             <label className="form-label text-orange">
               Recipe Name
             </label>
@@ -138,13 +136,13 @@ export function AddPost() {
           </div>
 
           {/* image */}
-          <div className="hover:addPostShadow flex flex-col items-start justify-between gap-y-4 p-4">
+          <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-4 p-4">
             <label className="form-label text-orange">
               Recipe image
             </label>
             <input
               type="file"
-              className="rounded-md bg-[#1E1E3F] text-[#FFD28F]/70 outline-none"
+              className="w-full cursor-pointer rounded-md bg-[#1E1E3F] p-2 text-[#FFD28F]/70 outline-none"
               accept="image/*"
               onChange={uploadImage}
             />
@@ -209,8 +207,10 @@ export function AddPost() {
               Ingredients
             </label>
             <div className="flex w-full items-center justify-between gap-x-4">
-              <input
-                className="inputField darkInputField flex-1"
+              <TextareaAutosize
+                rows={5}
+                spellCheck={false}
+                className="inputField darkInputField flex-1 resize-none overflow-auto"
                 value={ingredientInput}
                 placeholder="🥕 add ingredient"
                 onChange={(e) =>
@@ -239,11 +239,12 @@ export function AddPost() {
           {/* note */}
           <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-2 p-4">
             <label className="form-label text-orange">Note</label>
-            <textarea
-              className="inputField darkInputField w-full flex-1"
+            <TextareaAutosize
+              className="inputField darkInputField w-full"
               value={note}
               placeholder="🗒️note"
               onChange={(e) => setNote(e.target.value)}
+              cacheMeasurements
             />
           </div>
         </form>
