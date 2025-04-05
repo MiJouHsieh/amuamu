@@ -1,5 +1,6 @@
-import { HiMinusCircle } from "react-icons/hi"; 
+import { HiMinusCircle } from "react-icons/hi";
 import { useRef } from "react";
+import TextareaAutosize from "react-textarea-autosize";
 
 export function IngredientItem({
   ingredient,
@@ -7,7 +8,6 @@ export function IngredientItem({
   onDelete,
   onChangeMode,
 }) {
-
   const inputRef = useRef(null);
 
   const handleKeyDown = (event) => {
@@ -26,16 +26,16 @@ export function IngredientItem({
   };
 
   return (
-    <div
-      className="flex w-full items-center justify-between gap-x-4"
-    >
-      <input
+    <div className="flex w-full items-center justify-between gap-x-4">
+      <TextareaAutosize
+        className="box-border flex-1 resize-none whitespace-pre-wrap break-words border-b border-[#FFD28F]/70 bg-transparent p-2 leading-tight md:p-4 md:leading-9"
+        style={{ boxSizing: "border-box" }}
         ref={inputRef}
-        className="flex-1 border-b border-[#FFD28F]/70 bg-transparent p-2"
-        defaultValue={ingredient.title}
         onKeyDown={handleKeyDown}
+        defaultValue={ingredient.title}
+        minRows={1}
+        maxRows={6}
       />
-
       <HiMinusCircle
         className="activeBtn h-8 w-8 cursor-pointer text-blue300 md:h-10 md:w-10"
         type="button"
