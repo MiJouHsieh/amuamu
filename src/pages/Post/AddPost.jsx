@@ -244,7 +244,7 @@ export function AddPost() {
               value={note}
               placeholder="🗒️note"
               onChange={(e) => setNote(e.target.value)}
-              cacheMeasurements
+              spellCheck={false}
             />
           </div>
         </form>
