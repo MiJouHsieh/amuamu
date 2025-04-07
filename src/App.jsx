@@ -1,6 +1,9 @@
 import { Nav } from "src/components/Nav";
 import { RecipePage } from "src/pages/RecipePage";
+import { HomePage } from "src/pages/HomePage";
 import { AddPost } from "/src/pages/Post/AddPost";
+import { Login } from "/src/pages/Auth/Login";
+import { SignUp } from "/src/pages/Auth/SignUp";
 
 import {
   BrowserRouter as Router,
@@ -15,8 +18,11 @@ export function App() {
         <Router>
           <Nav />
           <Routes>
-            <Route path="/" element={<RecipePage />} />
-            <Route path="/addpost" element={<AddPost />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/recipe-page" element={<RecipePage />} />
+            <Route path="/add-post" element={<AddPost />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
           </Routes>
         </Router>
       </div>
