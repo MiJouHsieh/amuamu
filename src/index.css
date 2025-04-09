@@ -18,6 +18,9 @@
 }
 
 @layer utilities {
+  .archBackground {
+    @apply rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')];
+  }
   .checkboxIconStyle {
     @apply h-[30px] w-[30px] cursor-pointer border-[3px];
   }
@@ -42,5 +45,14 @@
   }
   .darkInputField {
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
+  }
+  .loginSingupInput {
+    @apply rounded-full border border-[#917262] bg-transparent p-6 outline-none transition-colors duration-1000;
+  }
+  .loginSingupInputField {
+    @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
+  }
+  .loginSingupBtn {
+    @apply my-4 rounded-full bg-yellow400 p-4 transition-transform duration-200 hover:bg-orange active:scale-95;
   }
 }
