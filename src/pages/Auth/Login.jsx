@@ -14,7 +14,7 @@ export function Login() {
   };
 
   return (
-    <main className="archBackground flex h-screen w-full justify-center">
+    <main className="archBackground flex h-full w-full justify-center">
       <div className="mt-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
         <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
           Sign In
@@ -57,7 +57,7 @@ export function Login() {
             />
             {hasPassword && (
               <span
-                className="text-yellow300 absolute bottom-7 right-6 cursor-pointer"
+                className="absolute bottom-7 right-6 cursor-pointer text-yellow300"
                 onClick={() => setPasswordShow(!passwordShow)}
               >
                 {passwordShow ? <GoEye /> : <RxEyeClosed />}
