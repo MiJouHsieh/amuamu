@@ -32,7 +32,7 @@ export function Login() {
               type="email"
               ref={emailRef}
               id="inputEmail"
-              className="loginSingupInput loginSingupInputField"
+              className="auth-input auth-input-field"
               placeholder="Email Address"
               required
               name="email"
@@ -50,7 +50,7 @@ export function Login() {
               type={passwordShow ? "text" : "password"}
               ref={passwordRef}
               id="inputPassword"
-              className="loginSingupInput loginSingupInputField tracking-wider"
+              className="auth-input auth-input-field"
               placeholder="Password"
               required
               onChange={handlePasswordChange}
