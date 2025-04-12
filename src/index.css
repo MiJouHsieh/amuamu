@@ -14,6 +14,7 @@
 
   body {
     font-family: "Poppins", sans-serif;
+    background-color: #1A1B33;
   }
 }
 
@@ -46,13 +47,13 @@
   .darkInputField {
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
   }
-  .loginSingupInput {
-    @apply rounded-full border border-[#917262] bg-transparent p-6 outline-none transition-colors duration-1000;
+  .auth-input {
+    @apply rounded-full border border-[#917262] bg-transparent p-6 pr-16 outline-none transition-colors duration-1000;
   }
-  .loginSingupInputField {
+  .auth-input-field {
     @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
   }
   .loginSingupBtn {
-    @apply my-4 rounded-full bg-yellow400 p-4 transition-transform duration-200 hover:bg-orange active:scale-95;
+    @apply my-4 rounded-full bg-yellow400 p-4 transition-transform duration-200 hover:bg-orange active:scale-95 text-center;
   }
 }
