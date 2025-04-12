@@ -1,95 +1,123 @@
-import { GoEye } from "react-icons/go";
-import { RxEyeClosed } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { FormInput } from "src/components/FormInput";
+import { PasswordInput } from "src/components/PasswordInput";
 
 export function SignUp() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const [passwordShow, setPasswordShow] = useState(false);
-  const [hasPassword, setHasPassword] = useState(false);
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setHasPassword(value.length > 0);
-  };
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   return (
-    <main className="archBackground flex h-full w-full justify-center">
-      <div className="mt-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
-        <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
-          New User
-        </h1>
-        <form className="flex w-full flex-col gap-y-5">
-          <div className="flex flex-col justify-start gap-y-2">
-            <label
-              htmlFor="inputEmail"
-              className="font-semibold text-orange"
+    <>
+      {isSubmitted ? (
+        <main className="flex min-h-screen w-full items-center justify-center rounded-[50px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] p-12">
+          <div className="flex flex-col items-center gap-y-10 text-beige">
+            <h2 className="text-xl font-semibold">
+              🎉 Sign-up Successful!
+            </h2>
+            <p className="text-base text-beige">
+              Welcome! You can now start saving recipes.
+            </p>
+            <Link
+              to="/"
+              className="hover:bg-orange-500 cardHoverShadow cardHoverShadow:hover rounded-full bg-orange px-6 py-2 font-medium text-white"
             >
-              Name
-            </label>
-            <input
-              type="text"
-              ref={emailRef}
-              id="inputName"
-              className="loginSingupInput loginSingupInputField"
-              placeholder="Name"
-              required
-              name="name"
-            />
+              Go to Homepage 🍳
+            </Link>
           </div>
+        </main>
+      ) : (
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .required("Name is required")
+              .min(3, "Must be at least 3 characters")
+              .max(10, "Must be 10 characters or less"),
+            email: Yup.string()
+              .email("Invalid email address")
+              .required("Please enter a valid email address"),
+            password: Yup.string()
+              .min(8, "Must be 8 characters or more")
+              .required("Passwords is required"),
+            confirmPassword: Yup.string()
+              .oneOf(
+                [Yup.ref("password")],
+                "Passwords do not match",
+              )
+              .required("Please confirm your password"),
+          })}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            console.log("Form submitted!", values);
+            setIsSubmitted(true);
+            resetForm();
+            setSubmitting(false);
+          }}
+        >
+          <main className="archBackground flex h-full w-full justify-center">
+            <div className="mt-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
+              <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
+                New User
+              </h1>
+              <Form className="flex w-full flex-col gap-y-5">
+                <FormInput
+                  id="inputName"
+                  label="Name"
+                  name="name"
+                  type="text"
+                  placeholder="Name"
+                  required
+                />
+                <FormInput
+                  id="inputEmail"
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  placeholder="Email Address"
+                  required
+                />
+                <PasswordInput
+                  id="inputPassword"
+                  label="Password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <PasswordInput
+                  id="inputConfirmPassword"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  placeholder="Re-enter Password"
+                  required
+                />
 
-          <div className="flex flex-col justify-start gap-y-2">
-            <label
-              htmlFor="inputEmail"
-              className="font-semibold text-orange"
-            >
-              Email Address
-            </label>
-            <input
-              type="email"
-              ref={emailRef}
-              id="inputEmail"
-              className="loginSingupInput loginSingupInputField"
-              placeholder="Email Address"
-              required
-              name="email"
-            />
-          </div>
-
-          <div className="relative flex flex-col gap-y-2">
-            <label
-              htmlFor="inputPassword"
-              className="font-semibold text-orange"
-            >
-              Password
-            </label>
-            <input
-              name="password"
-              type={passwordShow ? "text" : "password"}
-              ref={passwordRef}
-              id="inputPassword"
-              className="loginSingupInput loginSingupInputField tracking-wider"
-              placeholder="Password"
-              required
-              onChange={handlePasswordChange}
-            />
-            {hasPassword && (
-              <span
-                className="text-yellow300 absolute bottom-7 right-6 cursor-pointer"
-                onClick={() => setPasswordShow(!passwordShow)}
-              >
-                {passwordShow ? <GoEye /> : <RxEyeClosed />}
-              </span>
-            )}
-          </div>
-          <button type="submit" className="loginSingupBtn">
-            Start your recipe collection 📖
-          </button>
-          <Link className="text-beige300 underline" to="/login">
-            Log In
-          </Link>
-        </form>
-      </div>
-    </main>
+                <button
+                  type="submit"
+                  className="loginSingupBtn"
+                  disabled={isSubmitted}
+                  aria-label="Submit sign-up form"
+                >
+                  {isSubmitted
+                    ? "Submitting..."
+                    : "Start your recipe collection 📖"}
+                </button>
+                <Link
+                  className="text-beige300 underline"
+                  to="/login"
+                >
+                  Log In
+                </Link>
+              </Form>
+            </div>
+          </main>
+        </Formik>
+      )}
+    </>
   );
 }
