@@ -45,7 +45,7 @@ export function SignUp() {
               .required("Please enter a valid email address"),
             password: Yup.string()
               .min(8, "Must be 8 characters or more")
-              .required("Passwords is required"),
+              .required("Password is required"),
             confirmPassword: Yup.string()
               .oneOf(
                 [Yup.ref("password")],
@@ -60,62 +60,67 @@ export function SignUp() {
             setSubmitting(false);
           }}
         >
-          <main className="archBackground flex h-full w-full justify-center">
-            <div className="mt-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
-              <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
-                New User
-              </h1>
-              <Form className="flex w-full flex-col gap-y-5">
-                <FormInput
-                  id="inputName"
-                  label="Name"
-                  name="name"
-                  type="text"
-                  placeholder="Name"
-                  required
-                />
-                <FormInput
-                  id="inputEmail"
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  placeholder="Email Address"
-                  required
-                />
-                <PasswordInput
-                  id="inputPassword"
-                  label="Password"
-                  name="password"
-                  placeholder="Password"
-                  required
-                />
-                <PasswordInput
-                  id="inputConfirmPassword"
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  placeholder="Re-enter Password"
-                  required
-                />
+          {({ isSubmitting }) => (
+            <main
+              role="status"
+              className="archBackground flex h-full w-full justify-center"
+            >
+              <div className="mt-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
+                <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
+                  New User
+                </h1>
+                <Form className="flex w-full flex-col gap-y-5">
+                  <FormInput
+                    id="inputName"
+                    label="Name"
+                    name="name"
+                    type="text"
+                    placeholder="Name"
+                    required
+                  />
+                  <FormInput
+                    id="inputEmail"
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    placeholder="Email Address"
+                    required
+                  />
+                  <PasswordInput
+                    id="inputPassword"
+                    label="Password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                  <PasswordInput
+                    id="inputConfirmPassword"
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    placeholder="Re-enter Password"
+                    required
+                  />
 
-                <button
-                  type="submit"
-                  className="loginSingupBtn"
-                  disabled={isSubmitted}
-                  aria-label="Submit sign-up form"
-                >
-                  {isSubmitted
-                    ? "Submitting..."
-                    : "Start your recipe collection 📖"}
-                </button>
-                <Link
-                  className="text-beige300 underline"
-                  to="/login"
-                >
-                  Log In
-                </Link>
-              </Form>
-            </div>
-          </main>
+                  <button
+                    type="submit"
+                    className="loginSingupBtn"
+                    disabled={isSubmitting}
+                    aria-label="Submit sign-up form"
+                  >
+                    {isSubmitting
+                      ? "Submitting..."
+                      : "Start your recipe collection 📖"}
+                  </button>
+                  <Link
+                    className="text-beige300 underline"
+                    to="/login"
+                  >
+                    Log In
+                  </Link>
+                </Form>
+              </div>
+            </main>
+          )}
         </Formik>
       )}
     </>
