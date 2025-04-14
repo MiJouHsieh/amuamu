@@ -18,6 +18,16 @@ export function HomePage() {
         <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
           Amuamu
         </h1>
+        {/* search */}
+        <div className="relative">
+          <input
+            id="search-input"
+            type="text"
+            className="search-input"
+            placeholder="Search by Materials"
+          />
+          <span className="absolute top-3 text-xl right-4 cursor-pointer">🔍</span>
+        </div>
         {/* tags */}
         <section className="flex flex-col gap-y-4 text-2xl text-yellow400 990:px-12">
           <h3>All Recipes</h3>
