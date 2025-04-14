@@ -1,8 +1,8 @@
 import babka from "src/assets/images/babka.jpg"
-import friedcalamarisalad from "src/assets/images/friedcalamarisalad.webp"
-import undBread from "src/assets/images/und-bread-02.webp"
+import pumpkinSoup from "src/assets/images/pumpkin-soup.jpg"
+import eggSalad from "src/assets/images/egg-salad.jpg"
 
-export const RECIPE_TYPES = ["All products", "Tomato", "Egg", "Potato", "Pasta", "Bread"]
+export const RECIPE_TYPES = ["All products", "Tomato", "Egg", "Potato", "Pasta", "Bread", "Soup"]
 
 export const RECIPE_LIST = 
   [
@@ -42,13 +42,13 @@ export const RECIPE_LIST =
   ]
   },{
       id:2,
-      src: friedcalamarisalad,
-      title: "Boldly Fried Calamari* Ring Salad 2",
+      src: pumpkinSoup,
+      title: "pumpkin Soup",
       difficulty: "Medium",
       preparation: "8 hours",
       cookTime: "35 mins",
       servings: 4,
-      tags: ["salad"],
+      tags: ["soup"],
       ingredients :
       [{
         list:[
@@ -75,7 +75,7 @@ export const RECIPE_LIST =
   },
   {
     id:3,
-    src: undBread,
+    src: eggSalad,
     title: "Egg Sandwich",
     difficulty: "Easy",
     preparation: "14 mins",
@@ -101,19 +101,19 @@ export const RECIPE_LIST =
         {text: "Place two slices of almond milk bread on a sheet of cooking paper and spread mayonnaise on both.", finish:false},
         {text: "Place egg salad on almond milk bread with mayonnaise and spread egg salad gently toward all four corners.", finish:false},
         {text: "Place another slice of bread on top, fold the cooking paper over the top and bottom, and wrap the egg sandwich.", finish:false},
-        {text: "Cut the wrapped egg sandwich from the middle. A hearty egg sandwich is ready!", finish:false}
+        {text: "Place another slice of bread on top, fold the cooking paper over the top and bottom, and wrap the egg sandwich.", finish:false}
       ]
     }
   ]
   },{
       id:4,
-      src: friedcalamarisalad,
-      title: "Boldly Fried Calamari* Ring Salad 4",
+      src: pumpkinSoup,
+      title: "pumpkin Soup",
       difficulty: "Medium",
       preparation: "8 hours",
       cookTime: "35 mins",
       servings: 4,
-      tags: ["salad"],
+      tags: ["soup"],
       ingredients :
       [{
         list:[
@@ -174,8 +174,8 @@ export const RECIPE_LIST =
   ]
   },{
       id:6,
-      src: friedcalamarisalad,
-      title: "Boldly Fried Calamari* Ring Salad 6",
+      src: pumpkinSoup,
+      title: "pumpkin Soup",
       difficulty: "Medium",
       preparation: "8 hours",
       cookTime: "35 mins",
@@ -241,8 +241,8 @@ export const RECIPE_LIST =
   ]
   },{
       id:8,
-      src: friedcalamarisalad,
-      title: "Boldly Fried Calamari* Ring Salad 8",
+      src: pumpkinSoup,
+      title: "pumpkin Soup",
       difficulty: "Medium",
       preparation: "8 hours",
       cookTime: "35 mins",
