@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "src/components/FormInput";
 import { PasswordInput } from "src/components/PasswordInput";
+import { useAuth } from "src/context/useAuth";
 
 export function SignUp() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { signUp } = useAuth();
 
   return (
     <>
@@ -53,14 +55,28 @@ export function SignUp() {
               )
               .required("Please confirm your password"),
           })}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
+          onSubmit={async (
+            values,
+            { setSubmitting, resetForm, setStatus },
+          ) => {
             console.log("Form submitted!", values);
+            const { email, password } = values;
+
+            const { error } = await signUp({ email, password });
+
+            if (error) {
+              setStatus("註冊失敗，請確認 Email 是否已被使用");
+              setSubmitting(false);
+              return;
+            }
+
+            //  註冊成功
             setIsSubmitted(true);
             resetForm();
             setSubmitting(false);
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, status }) => (
             <main
               role="status"
               className="archBackground flex h-full w-full justify-center"
@@ -100,7 +116,9 @@ export function SignUp() {
                     placeholder="Re-enter Password"
                     required
                   />
-
+                  {status && (
+                    <div className="text-red-400">{status}</div>
+                  )}
                   <button
                     type="submit"
                     className="loginSingupBtn"
