@@ -1,8 +1,10 @@
 import IconLogo from "src/assets/icons/logo.svg?react";
 import IconHamburger from "src/assets/icons/icon-hamburger.svg?react";
 import IconClose from "src/assets/icons/icon-close.svg?react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "src/context/useAuth";
+import { NavItem } from "src/components/NavItem";
 
 const ROUTES = [
   { id: "", label: "Home" },
@@ -18,6 +20,13 @@ export function Nav() {
   const handleClick = () => {
     setShowMenu((prev) => !prev);
   };
+
+  const { user, signOut } = useAuth();
+  let navigate = useNavigate();
+  async function handleSignOut() {
+    await signOut();
+    navigate("/");
+  }
 
   useEffect(() => {
     function handleOutsideClick(event) {
@@ -68,28 +77,21 @@ export function Nav() {
           <div>
             <ul className="flex flex-col gap-y-9">
               {ROUTES.map(({ id, label }) => {
-                const isActive =
-                  id === ""
-                    ? location.pathname === "/"
-                    : location.pathname.startsWith(`/${id}`);
                 return (
-                  <Link
+                  <NavItem
                     key={id}
-                    to={`/${id}`}
-                    className="cursor-pointer"
-                  >
-                    <li
-                      className={`inline-block items-center border-b-[3px] text-2xl ${
-                        isActive
-                          ? "border-yellow400 text-yellow400"
-                          : "border-transparent text-white300 hover:border-b-[3px] hover:border-yellow"
-                      }`}
-                    >
-                      {label}
-                    </li>
-                  </Link>
+                    id={id}
+                    label={label}
+                    pathname={location.pathname}
+                  />
                 );
               })}
+              <NavItem
+                id="signout"
+                label="Signout"
+                pathname={location.pathname}
+                onClick={handleSignOut}
+              />
             </ul>
           </div>
         </div>
@@ -97,29 +99,20 @@ export function Nav() {
 
       <div className="hidden h-full w-full max-w-[756px] md:block">
         <ul className="flex h-full w-full items-center justify-end gap-x-12 px-10">
-          {ROUTES.map(({ id, label }) => {
-            const isActive =
-              id === ""
-                ? location.pathname === "/"
-                : location.pathname.startsWith(`/${id}`);
-            return (
-              <Link
-                key={id}
-                to={`/${id}`}
-                className="cursor-pointer"
-              >
-                <li
-                  className={`inline-block items-center border-b-[3px] text-xl ${
-                    isActive
-                      ? "border-yellow400 text-yellow400"
-                      : "border-transparent text-white300 hover:border-b-[3px] hover:border-yellow"
-                  }`}
-                >
-                  {label}
-                </li>
-              </Link>
-            );
-          })}
+          {ROUTES.map(({ id, label }) => (
+            <NavItem
+              key={id}
+              id={id}
+              label={label}
+              pathname={location.pathname}
+            />
+          ))}
+          <NavItem
+            id="signout"
+            label="Signout"
+            pathname={location.pathname}
+            onClick={handleSignOut}
+          />
         </ul>
       </div>
     </nav>
