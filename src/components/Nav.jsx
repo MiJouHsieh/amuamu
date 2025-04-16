@@ -76,22 +76,33 @@ export function Nav() {
           </div>
           <div>
             <ul className="flex flex-col gap-y-9">
-              {ROUTES.map(({ id, label }) => {
-                return (
+              {user ? (
+                <>
+                  {ROUTES.map(({ id, label }) => {
+                    return (
+                      <NavItem
+                        key={id}
+                        id={id}
+                        label={label}
+                        pathname={location.pathname}
+                      />
+                    );
+                  })}
                   <NavItem
-                    key={id}
-                    id={id}
-                    label={label}
+                    id="signout"
+                    label="Signout"
                     pathname={location.pathname}
+                    onClick={handleSignOut}
                   />
-                );
-              })}
-              <NavItem
-                id="signout"
-                label="Signout"
-                pathname={location.pathname}
-                onClick={handleSignOut}
-              />
+                </>
+              ) : (
+                <NavItem
+                  id="login"
+                  label="Login"
+                  pathname={location.pathname}
+                  to="/login"
+                />
+              )}
             </ul>
           </div>
         </div>
@@ -99,20 +110,31 @@ export function Nav() {
 
       <div className="hidden h-full w-full max-w-[756px] md:block">
         <ul className="flex h-full w-full items-center justify-end gap-x-12 px-10">
-          {ROUTES.map(({ id, label }) => (
+          {user ? (
+            <>
+              {ROUTES.map(({ id, label }) => (
+                <NavItem
+                  key={id}
+                  id={id}
+                  label={label}
+                  pathname={location.pathname}
+                />
+              ))}
+              <NavItem
+                id="signout"
+                label="Signout"
+                pathname={location.pathname}
+                onClick={handleSignOut}
+              />
+            </>
+          ) : (
             <NavItem
-              key={id}
-              id={id}
-              label={label}
+              id="login"
+              label="Login"
               pathname={location.pathname}
+              to="/login"
             />
-          ))}
-          <NavItem
-            id="signout"
-            label="Signout"
-            pathname={location.pathname}
-            onClick={handleSignOut}
-          />
+          )}
         </ul>
       </div>
     </nav>
