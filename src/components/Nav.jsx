@@ -90,15 +90,16 @@ export function Nav() {
                   })}
                   <NavItem
                     id="signout"
-                    label="Signout"
+                    label="Sign out"
                     pathname={location.pathname}
                     onClick={handleSignOut}
+                    to="/"
                   />
                 </>
               ) : (
                 <NavItem
                   id="login"
-                  label="Login"
+                  label="Log in"
                   pathname={location.pathname}
                   to="/login"
                 />
@@ -122,15 +123,16 @@ export function Nav() {
               ))}
               <NavItem
                 id="signout"
-                label="Signout"
+                label="Sign out"
                 pathname={location.pathname}
                 onClick={handleSignOut}
+                to="/"
               />
             </>
           ) : (
             <NavItem
               id="login"
-              label="Login"
+              label="Log in"
               pathname={location.pathname}
               to="/login"
             />

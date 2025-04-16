@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 
-export function NavItem({ id, label, onClick, pathname, to=`/${id}` }) {
+export function NavItem({
+  id,
+  label,
+  onClick,
+  pathname,
+  to = `/${id}`,
+}) {
   const isActive =
     id === "" ? pathname === "/" : pathname.startsWith(`/${id}`);
   return (
