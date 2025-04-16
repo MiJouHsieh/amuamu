@@ -79,7 +79,7 @@ export function SignUp() {
           {({ isSubmitting, status }) => (
             <main
               role="status"
-              className="archBackground flex h-full w-full justify-center"
+              className="archBackground min-h-screen w-full flex h-full justify-center"
             >
               <div className="my-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
                 <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">

@@ -14,7 +14,7 @@
 
   body {
     font-family: "Poppins", sans-serif;
-    background-color: #1A1B33;
+    background-color: #1a1b33;
   }
 }
 
@@ -47,6 +47,9 @@
   .darkInputField {
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
   }
+  .search-input {
+    @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 text-[#FFD28F] outline-none focus:border-yellow300;
+  }
   .auth-input {
     @apply rounded-full border border-[#917262] bg-transparent p-6 pr-16 outline-none transition-colors duration-1000;
   }
@@ -54,6 +57,17 @@
     @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
   }
   .loginSingupBtn {
-    @apply my-4 rounded-full bg-yellow400 p-4 transition-transform duration-200 hover:bg-orange active:scale-95 text-center;
+    @apply my-4 rounded-full bg-yellow400 p-4 text-center transition-transform duration-200 hover:bg-orange active:scale-95;
+  }
+  .tagBtn {
+    @apply rounded-full border px-3 py-1 text-lg text-beige;
+  }
+  .selectedBtn,
+  .tagBtn:hover {
+    @apply bg-orange text-blue900;
+    box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
+  }
+  .homePageFoodCardImg {
+    @apply h-full w-full cursor-pointer rounded-xl object-cover object-center transition-transform duration-200 hover:scale-[2];
   }
 }
