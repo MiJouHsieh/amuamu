@@ -4,7 +4,7 @@ import { HomePage } from "src/pages/HomePage";
 import { AddPost } from "src/pages/Post/AddPost";
 import { Login } from "src/pages/Auth/Login";
 import { SignUp } from "src/pages/Auth/SignUp";
-import { AuthProvider } from "src/context/AuthProvider";
+import { AuthProvider } from "src/context/AuthContext";
 
 import {
   BrowserRouter as Router,
