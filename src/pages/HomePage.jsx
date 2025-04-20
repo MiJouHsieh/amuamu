@@ -1,6 +1,7 @@
 import { RECIPE_LIST } from "src/constants.js";
 import { RECIPE_TYPES } from "src/constants.js";
 import { useState } from "react";
+import { useAuth } from "src/context/AuthContext";
 
 export function HomePage() {
 
@@ -22,6 +23,9 @@ export function HomePage() {
         <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
           Amuamu
         </h1>
+        <h3 className="mb-4 mt-2 w-full text-center text-lg font-medium text-white300">
+          Welcome back, {displayName} 👩‍🍳
+        </h3>
         {/* search */}
         <div className="relative w-full md:max-w-[700px]">
           <input
@@ -30,7 +34,9 @@ export function HomePage() {
             className="search-input"
             placeholder="Search by Materials"
           />
-          <span className="absolute top-3 text-xl right-4 cursor-pointer">🔍</span>
+          <span className="absolute right-4 top-3 cursor-pointer text-xl">
+            🔍
+          </span>
         </div>
         {/* tags */}
         <section className="flex flex-col gap-y-4 text-2xl text-yellow400 990:px-12">

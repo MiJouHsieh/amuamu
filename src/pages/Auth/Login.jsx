@@ -4,10 +4,13 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "src/components/FormInput";
 import { PasswordInput } from "src/components/PasswordInput";
+import { useAuth } from "src/context/AuthContext";
 
 export function Login() {
   const [isSubmittingDone, setIsSubmittingDone] = useState(false);
   const navigate = useNavigate();
+  const { signIn } = useAuth();
+
 
   useEffect(() => {
     if (isSubmittingDone) {
@@ -32,8 +35,21 @@ export function Login() {
           .min(8, "Must be 8 characters or more")
           .required("Password is required"),
       })}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={async (
+        values,
+        { setSubmitting, resetForm, setStatus },
+      ) => {
         console.log("Form submitted!", values);
+        const { email, password } = values;
+
+        const { error } = await signIn({ email, password });
+
+        if (error) {
+          setStatus("註冊失敗，請確認 Email 是否已被使用");
+          setSubmitting(false);
+          return;
+        }
+
         resetForm();
         setSubmitting(false);
         setIsSubmittingDone(true);
