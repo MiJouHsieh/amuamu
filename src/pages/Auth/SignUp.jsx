@@ -60,9 +60,11 @@ export function SignUp() {
             { setSubmitting, resetForm, setStatus },
           ) => {
             console.log("Form submitted!", values);
-            const { email, password } = values;
+            const { name, email, password } = values;
 
-            const { error } = await signUp({ email, password });
+            const { error } = await signUp({
+              name, email, password
+            });
 
             if (error) {
               setStatus("註冊失敗，請確認 Email 是否已被使用");
@@ -79,7 +81,7 @@ export function SignUp() {
           {({ isSubmitting, status }) => (
             <main
               role="status"
-              className="archBackground min-h-screen w-full flex h-full justify-center"
+              className="archBackground flex h-full min-h-screen w-full justify-center"
             >
               <div className="my-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
                 <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
@@ -106,6 +108,7 @@ export function SignUp() {
                     id="inputPassword"
                     label="Password"
                     name="password"
+                    type="password"
                     placeholder="Password"
                     required
                   />
@@ -113,6 +116,7 @@ export function SignUp() {
                     id="inputConfirmPassword"
                     label="Confirm Password"
                     name="confirmPassword"
+                    type="password"
                     placeholder="Re-enter Password"
                     required
                   />
