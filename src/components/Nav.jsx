@@ -3,7 +3,7 @@ import IconHamburger from "src/assets/icons/icon-hamburger.svg?react";
 import IconClose from "src/assets/icons/icon-close.svg?react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "src/context/useAuth";
+import { useAuth } from "src/context/AuthContext";
 import { NavItem } from "src/components/NavItem";
 
 const ROUTES = [
