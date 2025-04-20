@@ -3,7 +3,11 @@ import { RECIPE_TYPES } from "src/constants.js";
 import { useState } from "react";
 
 export function HomePage() {
-  const [selectedTag, setSelectedTag] = useState("All products")
+
+  const { user } = useAuth();
+  const displayName = user?.user_metadata?.name;
+
+  const [selectedTag, setSelectedTag] = useState("All products");
 
   const filteredRecipes =
     selectedTag === "All products"
@@ -14,12 +18,12 @@ export function HomePage() {
 
   return (
     <main className="archBackground flex h-full min-h-screen w-full justify-center">
-      <div className="flex w-full flex-col gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
+      <div className="flex w-full flex-col items-center gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
         <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
           Amuamu
         </h1>
         {/* search */}
-        <div className="relative">
+        <div className="relative w-full md:max-w-[700px]">
           <input
             id="search-input"
             type="text"
@@ -45,35 +49,37 @@ export function HomePage() {
           </div>
         </section>
 
-        <hr className="border border-yellow200/70" />
+        <hr className="w-full border border-yellow200/70" />
 
-        <div className="flex w-full flex-wrap justify-center gap-6">
-          {/* cards */}
-          {filteredRecipes.map((item) => (
-            <div
-              className="flex w-[350px] flex-col items-center gap-3 rounded-2xl bg-white300 py-4 text-white outline md:w-[300px] 990:w-[350px]"
-              key={item.id}
-            >
-              <div className="h-[250px] w-[300px] overflow-hidden rounded-3xl border-[3px] border-orange600 hover:border-orange md:h-[280px] md:w-[280px]">
-                <img
-                  className="homePageFoodCardImg"
-                  src={item.src}
-                  alt="food image"
-                />
+        <div className="flex w-full justify-center">
+          <div className="grid max-w-[1200px] grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] justify-start gap-6 px-0">
+            {/* cards */}
+            {filteredRecipes.map((item) => (
+              <div
+                className="flex w-[350px] flex-col items-center gap-3 rounded-2xl bg-white300 py-4 text-white outline md:w-[300px] 990:w-[350px]"
+                key={item.id}
+              >
+                <div className="h-[250px] w-[300px] overflow-hidden rounded-3xl border-[3px] border-orange600 hover:border-orange md:h-[280px] md:w-[280px]">
+                  <img
+                    className="homePageFoodCardImg"
+                    src={item.src}
+                    alt="food image"
+                  />
+                </div>
+                <h3 className="text-center text-2xl font-semibold text-blue800">
+                  {item.title}
+                </h3>
+                <p className="space-x-2 text-sm text-orange900">
+                  <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
+                    ⏱️ {item.preparation}
+                  </span>
+                  <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
+                    🍳 {item.cookTime}
+                  </span>
+                </p>
               </div>
-              <h3 className="text-center text-2xl font-semibold text-blue800">
-                {item.title}
-              </h3>
-              <p className="space-x-2 text-sm text-orange900">
-                <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
-                  ⏱️ {item.preparation}
-                </span>
-                <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
-                  🍳 {item.cookTime}
-                </span>
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </main>
