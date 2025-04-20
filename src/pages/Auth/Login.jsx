@@ -4,7 +4,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "src/components/FormInput";
 import { PasswordInput } from "src/components/PasswordInput";
-import { useAuth } from "src/context/useAuth";
+import { useAuth } from "src/context/AuthContext";
 
 export function Login() {
   const [isSubmittingDone, setIsSubmittingDone] = useState(false);
