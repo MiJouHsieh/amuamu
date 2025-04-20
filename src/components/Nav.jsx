@@ -22,6 +22,8 @@ export function Nav() {
   };
 
   const { user, signOut } = useAuth();
+  const displayName = user?.user_metadata?.name;
+
   let navigate = useNavigate();
   async function handleSignOut() {
     await signOut();
@@ -78,6 +80,9 @@ export function Nav() {
             <ul className="flex flex-col gap-y-9">
               {user ? (
                 <>
+                  <h3 className="items-center text-2xl text-white300">
+                    Hi, {displayName} 👋
+                  </h3>
                   {ROUTES.map(({ id, label }) => {
                     return (
                       <NavItem

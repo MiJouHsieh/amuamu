@@ -13,7 +13,6 @@ export function FormInput({ label, id, ...props }) {
         {...field}
         {...props}
         id={id}
-        type={props.type}
         className={`auth-input auth-input-field ${hasError ? "border-red" : ""} `}
         aria-invalid={hasError}
         aria-describedby={hasError ? `${id}-error` : undefined}

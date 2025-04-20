@@ -18,7 +18,7 @@ export function PasswordInput({ label, id, ...props }) {
     setPasswordShow((prev) => !prev);
   };
 
-  const hasPassword = field.value?.length > 0;
+  const hasPassword = field.value?.trim().length > 0;
 
   return (
     <div className="relative flex flex-col gap-y-2">
@@ -33,7 +33,9 @@ export function PasswordInput({ label, id, ...props }) {
         className="auth-input auth-input-field relative tracking-wider outline"
         onChange={handlePasswordChange}
         onBlur={field.onBlur}
-        aria-describedby={id + "-error"}
+        aria-describedby={
+          meta.touched && meta.error ? `${id}-error` : undefined
+        }
       />
 
       {hasPassword && (
