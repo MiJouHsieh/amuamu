@@ -15,7 +15,7 @@ import {
 export function App() {
   return (
     <div className="relative flex h-full min-w-[375px] flex-col items-center bg-blue900">
-      <div className="h-full w-full px-4 pb-14 md:px-8 1440:max-w-[1110px]">
+      <div className="h-full w-full px-4 pb-14 md:px-8 1440:max-w-[1400px]">
         <AuthProvider>
           <Router>
             <Nav />
