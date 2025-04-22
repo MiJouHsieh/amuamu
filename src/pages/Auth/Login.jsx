@@ -11,12 +11,11 @@ export function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
-
   useEffect(() => {
     if (isSubmittingDone) {
       const timer = setTimeout(() => {
         navigate("/");
-      }, 800); 
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, [isSubmittingDone, navigate]);
@@ -45,7 +44,9 @@ export function Login() {
         const { error } = await signIn({ email, password });
 
         if (error) {
-          setStatus("註冊失敗，請確認 Email 是否已被使用");
+          setStatus(
+            "Oops! That doesn't look right. Please check your email and password.",
+          );
           setSubmitting(false);
           return;
         }
@@ -55,7 +56,7 @@ export function Login() {
         setIsSubmittingDone(true);
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, status }) => (
         <main className="archBackground flex h-full w-full justify-center">
           <div className="my-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
             <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
@@ -77,6 +78,12 @@ export function Login() {
                 placeholder="Password"
                 required
               />
+              {status && (
+                <div className="bg-beige border-red rounded-md border-4 px-4 py-3 text-center text-base font-semibold leading-snug text-red">
+                  <p>⚠️ Oops! That doesn't look right. ⚠️</p>
+                  <p>Please check your email and password.</p>
+                </div>
+              )}
               <button
                 type="submit"
                 className="loginSingupBtn"
