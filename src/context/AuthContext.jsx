@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      async (session) => {
+      async ( session) => {
         setUser(session?.user ?? null);
         setLoading(false);
       },
@@ -35,8 +35,21 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
-    signUp: ({ email, password }) =>
-      supabase.auth.signUp({ email, password }),
+    signUp: async ({ email, password, name }) => {
+      const { user, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) throw error;
+      if (user) {
+        const {  error: updateError } = 
+          await supabase.auth.update({
+          data: { name },
+        });
+        if (updateError) throw updateError;
+      }
+      return user;
+    },
     signIn: ({ email, password }) =>
       supabase.auth.signIn({ email, password }),
     signOut: () => supabase.auth.signOut(),
