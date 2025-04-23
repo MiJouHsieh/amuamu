@@ -68,6 +68,6 @@
     box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
   }
   .homePageFoodCardImg {
-    @apply h-full w-full cursor-pointer rounded-xl object-cover object-center transition-transform duration-200 hover:scale-[2];
+    @apply h-full w-full cursor-pointer rounded-xl object-cover object-center transition-transform duration-200 hover:scale-[1.15];
   }
 }

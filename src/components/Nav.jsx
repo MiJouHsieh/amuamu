@@ -1,4 +1,4 @@
-import IconLogo from "src/assets/icons/logo.svg?react";
+import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import IconHamburger from "src/assets/icons/icon-hamburger.svg?react";
 import IconClose from "src/assets/icons/icon-close.svg?react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -55,7 +55,7 @@ export function Nav() {
     <nav className="flex h-[88px] w-full items-center justify-between bg-blue900 p-6 text-white md:h-24 md:p-0 1440:top-10 1440:max-w-[1110px]">
       <div className="1440:relative">
         <Link to="/">
-          <IconLogo className="660:mx-10 h-10 w-10 md:h-12 md:w-12 1440:mx-16" />
+          <IconLogo className="660:mx-10 h-16 w-16 1440:mx-16" />
         </Link>
       </div>
       <div className="md:hidden">

@@ -1,3 +1,4 @@
+import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { RECIPE_LIST } from "src/constants.js";
 import { RECIPE_TYPES } from "src/constants.js";
 import { useState } from "react";
@@ -7,31 +8,46 @@ export function HomePage() {
   const { user } = useAuth();
   const displayName = user?.user_metadata?.name;
 
-  const [selectedTag, setSelectedTag] = useState("All products")
+  const [selectedTag, setSelectedTag] = useState("All products");
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  const filteredRecipes =
-    selectedTag === "All products"
-      ? RECIPE_LIST
-      : RECIPE_LIST.filter((item) =>
-          item.tags.includes(selectedTag.toLowerCase()),
-        );
+  const filteredRecipes = RECIPE_LIST.filter((item) => {
+    const matchesTag =
+      selectedTag === "All products" ||
+      item.tags.includes(selectedTag.toLowerCase());
+
+    const matchesSearch =
+      item.title
+        .toLowerCase()
+        .includes(searchKeyword.toLowerCase()) ||
+      item.ingredients.some((ing) =>
+        ing.title
+          ?.toLowerCase()
+          .includes(searchKeyword.toLowerCase()),
+      );
+
+    return matchesTag && matchesSearch;
+  });
 
   return (
-    <main className="archBackground flex h-full min-h-screen w-full justify-center">
-      <div className="flex w-full flex-col gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
-        <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
-          Amuamu
-        </h1>
-        <h3 className="mb-4 mt-2 w-full text-center text-lg font-medium text-white300">
-          Welcome back, {displayName} 👩‍🍳
-        </h3>
+    <main className="archBackground flex h-full min-h-screen w-full flex-col items-center justify-center py-8">
+      <div>
+        <IconLogo className="h-40 w-40" />
+      </div>
+      <div className="flex w-full flex-col items-center gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
+        {displayName && (
+          <h3 className="w-full text-center text-lg font-medium text-white300">
+            Welcome back, {displayName} 👩‍🍳
+          </h3>
+        )}
         {/* search */}
-        <div className="relative">
+        <div className="relative w-full md:max-w-[700px]">
           <input
             id="search-input"
             type="text"
             className="search-input"
             placeholder="Search by Materials"
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <span className="absolute right-4 top-3 cursor-pointer text-xl">
             🔍
@@ -54,9 +70,9 @@ export function HomePage() {
           </div>
         </section>
 
-        <hr className="border border-yellow200/70" />
+        <hr className="w-full border border-yellow200/70" />
 
-        <div className="flex w-full flex-wrap justify-center gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* cards */}
           {filteredRecipes.map((item) => (
             <div

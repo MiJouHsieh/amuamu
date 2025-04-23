@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      async (session) => {
+      (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
       },
@@ -42,10 +42,9 @@ export function AuthProvider({ children }) {
       });
       if (error) throw error;
       if (user) {
-        const {  error: updateError } =
-          await supabase.auth.update({
-            data: { name },
-          });
+        const { error: updateError } = await supabase.auth.update({
+          data: { name },
+        });
         if (updateError) throw updateError;
       }
       return user;
