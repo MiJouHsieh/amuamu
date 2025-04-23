@@ -1,10 +1,10 @@
+import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { RECIPE_LIST } from "src/constants.js";
 import { RECIPE_TYPES } from "src/constants.js";
 import { useState } from "react";
 import { useAuth } from "src/context/AuthContext";
 
 export function HomePage() {
-  
   const { user } = useAuth();
   const displayName = user?.user_metadata?.name;
 
@@ -30,14 +30,16 @@ export function HomePage() {
   });
 
   return (
-    <main className="archBackground flex h-full min-h-screen w-full justify-center">
+    <main className="archBackground flex h-full min-h-screen w-full flex-col items-center justify-center py-8">
+      <div>
+        <IconLogo className="h-40 w-40" />
+      </div>
       <div className="flex w-full flex-col items-center gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
-        <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
-          Amuamu
-        </h1>
-        <h3 className="mb-4 mt-2 w-full text-center text-lg font-medium text-white300">
-          Welcome back, {displayName} 👩‍🍳
-        </h3>
+        {displayName && (
+          <h3 className="w-full text-center text-lg font-medium text-white300">
+            Welcome back, {displayName} 👩‍🍳
+          </h3>
+        )}
         {/* search */}
         <div className="relative w-full md:max-w-[700px]">
           <input

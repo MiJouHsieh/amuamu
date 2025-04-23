@@ -1,3 +1,4 @@
+import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -13,7 +14,10 @@ export function SignUp() {
   return (
     <>
       {isSubmitted ? (
-        <main className="flex min-h-screen w-full items-center justify-center rounded-[50px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] p-12">
+        <main className="archBackground flex h-[85vh] w-full flex-col items-center justify-center gap-y-6 overflow-hidden">
+          <div>
+            <IconLogo className="h-40 w-40" />
+          </div>
           <div className="flex flex-col items-center gap-y-10 text-beige">
             <h2 className="text-xl font-semibold">
               🎉 Sign-up Successful!
@@ -63,7 +67,9 @@ export function SignUp() {
             const { name, email, password } = values;
 
             const { error } = await signUp({
-              name, email, password
+              name,
+              email,
+              password,
             });
 
             if (error) {
@@ -81,9 +87,12 @@ export function SignUp() {
           {({ isSubmitting, status }) => (
             <main
               role="status"
-              className="archBackground flex h-full min-h-screen w-full justify-center"
+              className="archBackground flex h-full min-h-screen w-full flex-col items-center justify-center gap-y-6 py-8"
             >
-              <div className="my-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
+              <div>
+                <IconLogo className="h-40 w-40" />
+              </div>
+              <div className="flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
                 <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
                   New User
                 </h1>

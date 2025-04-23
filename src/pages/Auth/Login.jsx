@@ -1,3 +1,4 @@
+import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
@@ -11,12 +12,11 @@ export function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
-
   useEffect(() => {
     if (isSubmittingDone) {
       const timer = setTimeout(() => {
         navigate("/");
-      }, 800); 
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, [isSubmittingDone, navigate]);
@@ -56,8 +56,11 @@ export function Login() {
       }}
     >
       {({ isSubmitting }) => (
-        <main className="archBackground flex h-full w-full justify-center">
-          <div className="my-40 flex w-full flex-col gap-y-6 p-6 500:max-w-[28rem]">
+        <main className="archBackground flex h-full w-full flex-col items-center justify-center gap-y-6 py-8">
+          <div>
+            <IconLogo className="h-40 w-40" />
+          </div>
+          <div className="relative flex w-full flex-col items-center gap-y-6 p-6 500:max-w-[28rem]">
             <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
               Sign In
             </h1>
