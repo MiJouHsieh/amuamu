@@ -45,7 +45,9 @@ export function Login() {
         const { error } = await signIn({ email, password });
 
         if (error) {
-          setStatus("註冊失敗，請確認 Email 是否已被使用");
+          setStatus(
+            "Oops! That doesn't look right. Please check your email and password.",
+          );
           setSubmitting(false);
           return;
         }
@@ -55,7 +57,8 @@ export function Login() {
         setIsSubmittingDone(true);
       }}
     >
-      {({ isSubmitting }) => (
+
+      {({ isSubmitting, status }) => (
         <main className="archBackground flex h-full w-full flex-col items-center justify-center gap-y-6 py-8">
           <div>
             <IconLogo className="h-40 w-40" />
@@ -80,6 +83,12 @@ export function Login() {
                 placeholder="Password"
                 required
               />
+              {status && (
+                <div className="bg-beige border-red rounded-md border-4 px-4 py-3 text-center text-base font-semibold leading-snug text-red">
+                  <p>⚠️ Oops! That doesn't look right. ⚠️</p>
+                  <p>Please check your email and password.</p>
+                </div>
+              )}
               <button
                 type="submit"
                 className="loginSingupBtn"
