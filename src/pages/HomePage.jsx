@@ -76,7 +76,7 @@ export function HomePage() {
           {/* cards */}
           {filteredRecipes.map((item) => (
             <div
-              className="flex w-[350px] flex-col items-center gap-3 rounded-2xl bg-white300 py-4 text-white outline md:w-[300px] 990:w-[350px]"
+              className="flex w-[350px] flex-col items-center gap-3 rounded-2xl bg-white300 py-4 text-white outline md:w-[300px] lg:w-[290px]"
               key={item.id}
             >
               <div className="h-[250px] w-[300px] overflow-hidden rounded-3xl border-[3px] border-orange600 hover:border-orange md:h-[280px] md:w-[280px]">
