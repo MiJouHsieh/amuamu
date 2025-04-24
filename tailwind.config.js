@@ -14,6 +14,7 @@ export default {
         beige500: "#917262",
         yellow: "#FFFCC9",
         yellow200:"#FFEF88",
+        yellow300:"#FFD28F",
         yellow400:"#FFC444 ",
         orange: "#FF841F",
         orange100: "#FFC89A",
