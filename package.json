@@ -19,6 +19,7 @@
     "react-slick": "^0.30.3",
     "react-textarea-autosize": "^8.5.9",
     "slick-carousel": "^1.8.1",
+    "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
