@@ -1,7 +1,9 @@
 import { HiPlusCircle } from "react-icons/hi";
 import { useState } from "react";
 import { IngredientCollection } from "src/components/IngredientCollection";
+import { InstructionsCollection } from "src/components/InstructionsCollection";
 import TextareaAutosize from "react-textarea-autosize";
+import { useListItemActions } from "src/hooks/useListItemActions";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -11,9 +13,13 @@ export function AddPost() {
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState([]);
 
+  const [instructionsInput, setInstructionsInput] = useState("");
+  const [instructions, setInstructions] = useState([]);
+
   const [note, setNote] = useState("");
-  const [directions, setDirections] = useState([]);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
+  const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
+    useListItemActions();
 
   const handleChangePreparation = (event) => {
     event.preventDefault();
@@ -27,79 +33,58 @@ export function AddPost() {
     ]);
   };
 
-  const handleAddTodo = (e) => {
-    // 確認有無輸入資料
-    if (ingredientInput.trim().length === 0) {
-      return;
-    }
-    // 新增輸入的資料 物件
-    setIngredients((prevIngredients) => {
-      return [
-        ...prevIngredients,
-        {
-          id: Math.random() * 100,
-          title: ingredientInput.trim(),
-          isDone: false,
-        },
-      ];
-    });
-    setIngredientInput(""); // clean input
+  const handleAddIngredient = () => {
+    handleAddItem(ingredientInput, setIngredientInput, setIngredients);
+  };
+  const handleAddInstructions = () => {
+    handleAddItem(instructionsInput, setInstructionsInput, setInstructions);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key !== "Enter") return;
-    if (ingredientInput.trim().length === 0) return;
-    e.preventDefault(); // 阻止換行產生
-
-    // 新增輸入的 ingredient 物件
-    setIngredients((prevIngredients) => {
-      return [
-        ...prevIngredients,
-        {
-          id: Math.random() * 100,
-          title: ingredientInput.trim(),
-          isDone: false,
-        },
-      ];
-    });
-    setIngredientInput("");
+  const handleKeyDownIngredient = (e) => {
+    handleKeyDown(e, ingredientInput, setIngredientInput, setIngredients);
+  };
+  const handleKeyDownInstructions = (e) => {
+    handleKeyDown(e, instructionsInput, setInstructionsInput, setInstructions);
   };
 
-  const handleSave = ({ id, title }) => {
-    setIngredients((prevIngredients) => {
-      return prevIngredients.map((ingredient) => {
-        if (ingredient.id === id) {
-          return {
-            ...ingredient,
-            id,
-            title,
-            isEdit: false,
-          };
-        }
-        return ingredient;
-      });
+  const handleSaveIngredient = (id, title) => {
+    handleSave({
+      id,
+      title,
+      items: ingredients,
+      setItems: setIngredients,
+    });
+  };
+  const handleSaveInstructions = (id, title) => {
+    handleSave({
+      id,
+      title,
+      items: instructions,
+      setItems: setInstructions,
     });
   };
 
-  const handleDelete = (id) => {
-    setIngredients((prevIngredients) => {
-      return prevIngredients.filter((ingredient) => {
-        return ingredient.id !== id;
-      });
-    });
+  const handleDeleteIngredient = (id) => {
+    handleDelete(id, setIngredients);
+  };
+  const handleDeleteInstructions = (id) => {
+    handleDelete(id, setInstructions);
   };
 
-  const handleChangeMode = ({ id, isEdit }) => {
-    setIngredients((prevIngredients) => {
-      return prevIngredients.map((ingredient) => {
-        if (ingredient.id === id) {
-          return {
-            ...ingredient,
-            isEdit,
-          };
-        }
-        return { ...ingredient, isEdit: false };
-      });
+  const handleChangeModeIngredient = (id, title) => {
+    handleChangeMode({
+      id,
+      title,
+      items: ingredients,
+      setItems: setIngredients,
+    });
+  };
+  const handleChangeModeInstructions = (id, title) => {
+    handleChangeMode({
+      id,
+      title,
+      items: instructions,
+      setItems: setInstructions,
     });
   };
 
@@ -122,14 +107,12 @@ export function AddPost() {
         <form className="block w-full space-y-3 md:space-y-5 990:space-y-6">
           {/* title */}
           <div className="hover:addPostShadow flex items-center justify-between p-4 transition-all duration-200 md:p-6">
-            <label className="form-label text-orange">
-              Recipe Name
-            </label>
+            <label className="form-label text-orange">Recipe Name</label>
 
             <input
               className="inputField darkInputField bg-beige"
               value={title}
-              placeholder="recipe name"
+              placeholder="🧁 e.g. Chocolate Cake"
               name="name"
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -137,15 +120,15 @@ export function AddPost() {
 
           {/* image */}
           <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-4 p-4">
-            <label className="form-label text-orange">
-              Recipe image
-            </label>
+            <label className="form-label text-orange">Recipe image</label>
             <input
               type="file"
               className="w-full cursor-pointer rounded-md bg-[#1E1E3F] p-2 text-[#FFD28F]/70 outline-none"
               accept="image/*"
               onChange={uploadImage}
             />
+            <p className="-mt-1 text-xs text-white300">Please choose a photo of a dish</p>
+
             {imagePreview && (
               <img
                 src={imagePreview}
@@ -158,44 +141,32 @@ export function AddPost() {
           {/* recipe info */}
           <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
             <div className="flex items-center justify-between">
-              <label className="form-label text-orange">
-                Preparation
-              </label>
+              <label className="form-label text-orange">Preparation Time</label>
               <input
                 className="inputField darkInputField"
                 value={preparation.preparationTime}
-                placeholder="🕒 preparation time"
+                placeholder="⏰ e.g. 30 mins"
                 name="preparationTime"
-                onChange={(e) =>
-                  handleChangePreparation(e.target.value)
-                }
+                onChange={(e) => handleChangePreparation(e.target.value)}
               />
             </div>
             <div className="flex items-center justify-between">
-              <label className="form-label text-orange">
-                Cook time
-              </label>
+              <label className="form-label text-orange">Cook time</label>
               <input
                 className="inputField darkInputField bg-[#3A3A6A]"
-                placeholder="🧑‍🍳 cook time"
+                placeholder="🧑‍🍳 e.g. 45 mins"
                 value={preparation.cookTime}
-                onChange={(e) =>
-                  handleChangePreparation(e.target.value)
-                }
+                onChange={(e) => handleChangePreparation(e.target.value)}
                 name="preparationTime"
               />
             </div>
             <div className="flex items-center justify-between">
-              <label className="form-label text-orange">
-                Servings
-              </label>
+              <label className="form-label text-orange">Servings</label>
               <input
                 className="inputField darkInputField"
-                placeholder="🍽 servings"
+                placeholder=" 🍽 e.g. 2 people "
                 value={preparation.servings}
-                onChange={(e) =>
-                  handleChangePreparation(e.target.value)
-                }
+                onChange={(e) => handleChangePreparation(e.target.value)}
                 name="servings"
               />
             </div>
@@ -203,20 +174,16 @@ export function AddPost() {
 
           {/* Ingredients */}
           <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
-            <label className="form-label w-full text-orange">
-              Ingredients
-            </label>
+            <label className="form-label w-full text-orange">Ingredients</label>
             <div className="flex w-full items-center justify-between gap-x-4">
               <TextareaAutosize
                 rows={5}
                 spellCheck={false}
                 className="inputField darkInputField flex-1 resize-none overflow-auto"
                 value={ingredientInput}
-                placeholder="🥕 add ingredient"
-                onChange={(e) =>
-                  setIngredientInput(e.target.value)
-                }
-                onKeyDown={handleKeyDown}
+                placeholder="🥚 e.g. 2 eggs"
+                onChange={(e) => setIngredientInput(e.target.value)}
+                onKeyDown={handleKeyDownIngredient}
                 type="text"
               />
 
@@ -224,15 +191,46 @@ export function AddPost() {
                 <HiPlusCircle
                   className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
                   type="button"
-                  onClick={handleAddTodo}
+                  onClick={handleAddIngredient}
                 />
               )}
             </div>
             <IngredientCollection
               ingredients={ingredients}
-              onSave={handleSave}
-              onDelete={handleDelete}
-              onChangeMode={handleChangeMode}
+              onSave={handleSaveIngredient}
+              onDelete={handleDeleteIngredient}
+              onChangeMode={handleChangeModeIngredient}
+            />
+          </div>
+
+          {/* Instructions  */}
+          <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+            <label className="form-label w-full text-orange">Instructions</label>
+            <div className="flex w-full items-center justify-between gap-x-4">
+              <TextareaAutosize
+                rows={5}
+                spellCheck={false}
+                className="inputField darkInputField flex-1 resize-none overflow-auto"
+                value={instructionsInput}
+                placeholder="🥣 e.g. Crack the eggs into a bowl and whisk well"
+                onChange={(e) => setInstructionsInput(e.target.value)}
+                onKeyDown={handleKeyDownInstructions}
+                type="text"
+              />
+
+              {instructionsInput.length > 0 && (
+                <HiPlusCircle
+                  className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
+                  type="button"
+                  onClick={handleAddInstructions}
+                />
+              )}
+            </div>
+            <InstructionsCollection
+              instructions={instructions}
+              onSave={handleSaveInstructions}
+              onDelete={handleDeleteInstructions}
+              onChangeMode={handleChangeModeInstructions}
             />
           </div>
 
@@ -242,7 +240,7 @@ export function AddPost() {
             <TextareaAutosize
               className="inputField darkInputField w-full"
               value={note}
-              placeholder="🗒️note"
+              placeholder="📝 Any tips or notes?"
               onChange={(e) => setNote(e.target.value)}
               spellCheck={false}
             />
