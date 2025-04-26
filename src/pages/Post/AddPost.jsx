@@ -140,6 +140,30 @@ export function AddPost() {
       alert(error.message);
     }
   };
+  const uploadImage = async (event) => {
+    try {
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error("You must select an image to upload.");
+      }
+      const file = event.target.files[0];
+      const fileExt = file.name.split(".").pop()
+      const fileName = `${Math.random()}.${fileExt}`
+      const filePath = `${fileName}`  // 建立檔案路徑
+
+      // 上傳圖片到 Supabase
+      let { data, error: uploadError } = await supabase.storage
+        .from("recipe-image")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      console.log("上傳成功！圖片路徑：", data.path);
+    } catch (error) {
+      alert(`上傳圖片失敗：${error.message}`);
+    }
+  }
 
   return (
     user && (
