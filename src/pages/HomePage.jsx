@@ -1,8 +1,9 @@
 import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { RECIPE_LIST } from "src/constants.js";
 import { RECIPE_TYPES } from "src/constants.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
+import { supabase } from "src/supabaseClient";
 
 export function HomePage() {
   const { user } = useAuth();
@@ -10,6 +11,26 @@ export function HomePage() {
 
   const [selectedTag, setSelectedTag] = useState("All products");
   const [searchKeyword, setSearchKeyword] = useState("");
+  
+  const [data, setData] = useState()
+
+  useEffect(() => {
+    const getRecipe = async () => {
+      try {
+        let { data, error, status } = await supabase.from("recipe").select("*")
+
+        if (error && status !== 406 ) {
+          console.log("error", error)
+          throw error
+        }
+        console.log("HomePage data", data)
+        setData(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+    getRecipe()
+  }, [])
 
   const filteredRecipes = RECIPE_LIST.filter((item) => {
     const matchesTag =
