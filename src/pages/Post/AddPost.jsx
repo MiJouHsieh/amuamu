@@ -106,22 +106,13 @@ export function AddPost() {
     });
   };
 
-  const uploadImage = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      console.log("選擇的圖片", file);
-      const imagePreview = URL.createObjectURL(file);
-      setImagePreview(imagePreview);
-    }
-  };
-
-  const addRecipe = async ({ title, preparation, ingredients, instructions, note }) => {
+  const addRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
     try {
       const updates = {
         user_id: user.id,
         id: uuidv4(),
         recipe_name: title,
+        image: image,
         preparation: preparation,
         ingredients: ingredients,
         instructions: instructions,
@@ -140,15 +131,25 @@ export function AddPost() {
       alert(error.message);
     }
   };
+  
   const uploadImage = async (event) => {
     try {
+      setUploading(true);
+
       if (!event.target.files || event.target.files.length === 0) {
         throw new Error("You must select an image to upload.");
       }
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop()
-      const fileName = `${Math.random()}.${fileExt}`
-      const filePath = `${fileName}`  // 建立檔案路徑
+      const file = event.target?.files[0];
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`; // 建立檔案路徑
+
+      if (file) {
+        setImage(file);
+        console.log("選擇的圖片", file);
+        const imagePreview = URL.createObjectURL(file);
+        setImagePreview(imagePreview);
+      }
 
       // 上傳圖片到 Supabase
       let { data, error: uploadError } = await supabase.storage
@@ -158,12 +159,30 @@ export function AddPost() {
       if (uploadError) {
         throw uploadError;
       }
-
+      getURL(filePath);
       console.log("上傳成功！圖片路徑：", data.path);
     } catch (error) {
       alert(`上傳圖片失敗：${error.message}`);
     }
-  }
+  };
+
+  const getURL = async (url) => {
+    try {
+      // 從 Supabase 取得公開 URL
+      const { publicURL, error } = await supabase.storage.from("recipe-image").getPublicUrl(url);
+
+      if (error) {
+        throw error;
+      }
+
+      // 將圖片 URL 存入 state
+      setImage(publicURL);
+    } catch (error) {
+      alert(`獲取圖片 URL 失敗：${error.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     user && (
@@ -324,7 +343,7 @@ export function AddPost() {
               aria-label="Submit recipe form"
               onClick={async (e) => {
                 e.preventDefault();
-                await addRecipe({ title, preparation, ingredients, instructions, note });
+                await addRecipe({ title, image, preparation, ingredients, instructions, note });
               }}
             >
               {uploading ? "uploading..." : "📖 Add recipe"}
