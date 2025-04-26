@@ -5,7 +5,7 @@ import { InstructionsCollection } from "src/components/InstructionsCollection";
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
 
-import { supabase } from "/src/supabaseClient";
+import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
@@ -131,7 +131,7 @@ export function AddPost() {
       alert(error.message);
     }
   };
-  
+
   const uploadImage = async (event) => {
     try {
       setUploading(true);
