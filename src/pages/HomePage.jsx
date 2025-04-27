@@ -37,7 +37,7 @@ export function HomePage() {
     const tags = item.tags ?? [];
     const ingredients = item.ingredients ?? [];
 
-    const matchesTag = selectedTag === "All products" || tags.includes(selectedTag.toLowerCase());
+    const matchesTag = selectedTag === "All products" || tags.map((tag) => tag.toLowerCase()).includes(selectedTag.toLowerCase());
 
     const searchKeywordLower = searchKeyword.toLowerCase();
     const matchesSearch =
