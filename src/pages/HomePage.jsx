@@ -1,9 +1,9 @@
 import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
-import { RECIPE_LIST } from "src/constants.js";
 import { RECIPE_TYPES } from "src/constants.js";
 import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
+import { HomePageCard } from "src/components/HomePageCard";
 
 export function HomePage() {
   const { user } = useAuth();
@@ -11,40 +11,35 @@ export function HomePage() {
 
   const [selectedTag, setSelectedTag] = useState("All products");
   const [searchKeyword, setSearchKeyword] = useState("");
-  
-  const [data, setData] = useState()
+
+  const [data, setData] = useState();
 
   useEffect(() => {
     const getRecipe = async () => {
       try {
-        let { data, error, status } = await supabase.from("recipe").select("*")
+        let { data, error, status } = await supabase.from("recipe").select("*");
 
-        if (error && status !== 406 ) {
-          console.log("error", error)
-          throw error
+        if (error && status !== 406) {
+          console.log("error", error);
+          throw error;
         }
-        console.log("HomePage data", data)
-        setData(data)
+        console.log("HomePage data", data);
+        setData(data);
       } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    }
-    getRecipe()
-  }, [])
+    };
+    getRecipe();
+  }, []);
 
-  const filteredRecipes = RECIPE_LIST.filter((item) => {
+  const filteredRecipes = (data ?? []).filter((item) => {
     const matchesTag =
-      selectedTag === "All products" ||
-      item.tags.includes(selectedTag.toLowerCase());
+      selectedTag === "All products" || item.tags?.includes(selectedTag.toLowerCase());
 
     const matchesSearch =
-      item.title
-        .toLowerCase()
-        .includes(searchKeyword.toLowerCase()) ||
-      item.ingredients.some((ing) =>
-        ing.title
-          ?.toLowerCase()
-          .includes(searchKeyword.toLowerCase()),
+      item.title?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      item.ingredients?.some((ing) =>
+        ing.title?.toLowerCase().includes(searchKeyword.toLowerCase()),
       );
 
     return matchesTag && matchesSearch;
@@ -70,9 +65,7 @@ export function HomePage() {
             placeholder="Search by Materials"
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <span className="absolute right-4 top-3 cursor-pointer text-xl">
-            🔍
-          </span>
+          <span className="absolute right-4 top-3 cursor-pointer text-xl">🔍</span>
         </div>
         {/* tags */}
         <section className="flex flex-col gap-y-4 text-2xl text-yellow400 990:px-12">
@@ -93,32 +86,16 @@ export function HomePage() {
 
         <hr className="w-full border border-yellow200/70" />
 
+        {filteredRecipes.length === 0 && (
+          <div className="flex w-full justify-center py-4">
+            <p className="text-center text-beige">No recipes found.</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* cards */}
-          {filteredRecipes.map((item) => (
-            <div
-              className="flex w-[350px] flex-col items-center gap-3 rounded-2xl bg-white300 py-4 text-white outline md:w-[300px] lg:w-[290px]"
-              key={item.id}
-            >
-              <div className="h-[250px] w-[300px] overflow-hidden rounded-3xl border-[3px] border-orange600 hover:border-orange md:h-[280px] md:w-[280px]">
-                <img
-                  className="homePageFoodCardImg"
-                  src={item.src}
-                  alt="food image"
-                />
-              </div>
-              <h3 className="text-center text-2xl font-semibold text-blue800">
-                {item.title}
-              </h3>
-              <p className="space-x-2 text-sm text-orange900">
-                <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
-                  ⏱️ {item.preparation}
-                </span>
-                <span className="inline-flex w-auto items-center gap-x-2 rounded-full bg-beige px-3 py-1">
-                  🍳 {item.cookTime}
-                </span>
-              </p>
-            </div>
+          {/* filter cards */}
+          {filteredRecipes.map((recipe) => (
+            <HomePageCard key={recipe.id} item={recipe} />
           ))}
         </div>
       </div>
