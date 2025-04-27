@@ -33,14 +33,16 @@ export function HomePage() {
   }, []);
 
   const filteredRecipes = (data ?? []).filter((item) => {
-    const matchesTag =
-      selectedTag === "All products" || item.tags?.includes(selectedTag.toLowerCase());
+    const title = item.title ?? "";
+    const tags = item.tags ?? [];
+    const ingredients = item.ingredients ?? [];
 
+    const matchesTag = selectedTag === "All products" || tags.includes(selectedTag.toLowerCase());
+
+    const searchKeywordLower = searchKeyword.toLowerCase();
     const matchesSearch =
-      item.title?.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      item.ingredients?.some((ing) =>
-        ing.title?.toLowerCase().includes(searchKeyword.toLowerCase()),
-      );
+      title.toLowerCase().includes(searchKeywordLower) ||
+      ingredients.some((ing) => (ing.title ?? "").toLowerCase().includes(searchKeywordLower));
 
     return matchesTag && matchesSearch;
   });
