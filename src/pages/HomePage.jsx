@@ -23,7 +23,6 @@ export function HomePage() {
           console.log("error", error);
           throw error;
         }
-        console.log("HomePage data", data);
         setData(data);
       } catch (error) {
         console.log(error.message);
@@ -37,7 +36,9 @@ export function HomePage() {
     const tags = item.tags ?? [];
     const ingredients = item.ingredients ?? [];
 
-    const matchesTag = selectedTag === "All products" || tags.map((tag) => tag.toLowerCase()).includes(selectedTag.toLowerCase());
+    const matchesTag =
+      selectedTag === "All products" ||
+      tags.map((tag) => tag.toLowerCase()).includes(selectedTag.toLowerCase());
 
     const searchKeywordLower = searchKeyword.toLowerCase();
     const matchesSearch =
