@@ -10,6 +10,83 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 
+export function TagsInput({ tags, setTags }) {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleAddTag = () => {
+    const trimmed = inputValue.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+    }
+    setInputValue("");
+  };
+
+  const handleDeleteTag = (e, index) => {
+    e?.preventDefault?.();
+    const newTags = tags.filter((_, idx) => idx !== index);
+    setTags(newTags);
+  };
+
+  const handleEditTag = (index, newValue) => {
+    const newTags = tags.map((tag, idx) => (idx === index ? newValue : tag));
+    setTags(newTags);
+  };
+
+  return (
+    <div className="mx-auto flex w-full flex-col gap-y-2 p-4 outline">
+      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4 outline">
+        <label className="form-label w-full text-orange">Recipe Tags</label>
+        <div className="flex w-full items-center justify-between gap-x-4">
+          <input
+            type="text"
+            placeholder="🏷️ e.g. cake"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
+            className="darkInputField inputField flex-1 resize-none overflow-auto"
+          />
+          {inputValue.length > 0 && (
+            <HiPlusCircle
+              className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
+              type="button"
+              onClick={handleAddTag}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="hover:addPostShadow flex flex-wrap gap-2">
+        {tags.map((tag, index) => (
+          <div key={index} className="tag-container">
+            <input
+              value={tag}
+              style={{ width: `${Math.max(tag.length, 1)}ch` }}
+              onChange={(e) => handleEditTag(index, e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace" && tag.length === 0) {
+                  e.preventDefault();
+                  handleDeleteTag(e, index);
+                } else if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+              className="tag min-w-[100px]"
+            />
+            <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2 text-blue300">
+              X
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function AddPost() {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -19,6 +96,7 @@ export function AddPost() {
     cookTime: "",
     servings: "",
   });
+  const [tags, setTags] = useState([]);
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState([]);
 
@@ -117,6 +195,7 @@ export function AddPost() {
         ingredients: ingredients,
         instructions: instructions,
         note: note,
+        tags: tags,
       };
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
@@ -204,7 +283,6 @@ export function AddPost() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-
             {/* image */}
             <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-4 p-4">
               <label className="form-label text-orange">Recipe image</label>
@@ -224,7 +302,6 @@ export function AddPost() {
                 />
               )}
             </div>
-
             {/* recipe info */}
             <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
               <div className="flex items-center justify-between">
@@ -258,6 +335,8 @@ export function AddPost() {
                 />
               </div>
             </div>
+            {/* Multiple Tags  */}
+            <TagsInput tags={tags} setTags={setTags} />
 
             {/* Ingredients */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
@@ -289,7 +368,6 @@ export function AddPost() {
                 onChangeMode={handleChangeModeIngredient}
               />
             </div>
-
             {/* Instructions  */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
               <label className="form-label w-full text-orange">Instructions</label>
@@ -320,7 +398,6 @@ export function AddPost() {
                 onChangeMode={handleChangeModeInstructions}
               />
             </div>
-
             {/* note */}
             <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-2 p-4">
               <label className="form-label text-orange">Note</label>
@@ -332,7 +409,6 @@ export function AddPost() {
                 spellCheck={false}
               />
             </div>
-
             {/* button */}
             <button
               type="submit"
