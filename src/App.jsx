@@ -22,7 +22,7 @@ export function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route
-                path="/recipe-page"
+                path="/recipe-page/:id"
                 element={<RecipePage />}
               />
               <Route path="/add-post" element={<AddPost />} />
