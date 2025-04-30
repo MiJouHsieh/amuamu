@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
 import { HomePageCard } from "src/components/HomePageCard";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
   const { user } = useAuth();
@@ -98,7 +99,9 @@ export function HomePage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* filter cards */}
           {filteredRecipes.map((recipe) => (
-            <HomePageCard key={recipe.id} item={recipe} />
+            <Link to={`/recipe-page/${recipe.id}`}>
+              <HomePageCard key={recipe.id} item={recipe} />
+            </Link>
           ))}
         </div>
       </div>
