@@ -11,7 +11,7 @@ export function Checkbox({ className, items }) {
 
       <label
         htmlFor="custom-checkbox"
-        className="checkbox-input body-s peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
+        className="checkbox-input peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
       >
         {items}
       </label>
