@@ -31,9 +31,8 @@ export function HomePage() {
   }, []);
 
   // Collect all tags and remove duplicates
-  const uniqueTags = Array.from(
-    new Set(data.flatMap((item) => (item.tags ?? []).filter((tag) => tag.trim() !== ""))),
-  );
+  const allTags = (data ?? []).flatMap((item) => item.tags ?? []);
+  const uniqueTags = Array.from(new Set(allTags.filter((tag) => tag.trim() !== "")));
 
   const filteredRecipes = (data ?? []).filter((item) => {
     const title = item.title ?? "";
@@ -79,6 +78,12 @@ export function HomePage() {
           <h3>All Recipes</h3>
 
           <div className="flex flex-wrap gap-3 text-beige">
+            <button
+              className={`tagBtn ${selectedTag === "All products" ? "selectedBtn" : ""}`}
+              onClick={() => setSelectedTag("All products")}
+            >
+              All Recipes
+            </button>
             {uniqueTags?.map((tag) => (
               <button
                 key={tag}
