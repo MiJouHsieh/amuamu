@@ -1,14 +1,15 @@
 import { MdDoneOutline } from "react-icons/md";
-import { RECIPE_DATA } from "src/recipe.js";
 import { useState } from "react";
 import Slider from "react-slick";
 
-export function StepsCards() {
-  const steps = RECIPE_DATA["steps"];
+export function StepsCards({ instructions }) {
   const [doneStepsNum, setDoneStepsNum] = useState(0);
-  const [stepsStatus, setStepsStatus] = useState(
-    Array(steps.length).fill(false),
-  );
+  const [stepsStatus, setStepsStatus] = useState(Array(instructions.length).fill(false));
+
+  if (!Array.isArray(instructions) || instructions.length === 0) {
+    console.warn("Oops! No instructions found or data format is invalid.");
+    return <div className="text-white">No instructions available.</div>;
+  }
 
   const handleClick = (index) => {
     setStepsStatus((prevSteps) => {
@@ -45,15 +46,15 @@ export function StepsCards() {
     ],
   };
   return (
-    <div className="mt-6 h-full w-full space-y-6 py-6">
+    <div className="h-full w-full space-y-4 py-6">
       <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold leading-[32px] tracking-[0px] text-yellow400">
-        Directions
+        Instructions
       </h4>
 
       {/* cards */}
       <div className="h-full w-full rounded-xl border border-yellow p-8">
         <Slider {...settings} className="h-full w-full">
-          {steps.map((item, index) => {
+          {instructions.map((item, index) => {
             return (
               <div key={index} className="h-full p-4">
                 <div
@@ -63,7 +64,7 @@ export function StepsCards() {
                   <div className="flex w-full items-center justify-between">
                     <span
                       className={`text-nowrap rounded-3xl p-1 px-4 text-xl group-hover:bg-yellow400 ${stepsStatus[index] ? "bg-orange" : "bg-yellow"}`}
-                    >{`Step ${index + 1}/${steps.length}`}</span>
+                    >{`Step ${index + 1}/${instructions.length}`}</span>
                     <span
                       className={`leading-0 text-6xl font-black 500:text-[90px] ${stepsStatus[index] ? "animate-popIn text-orange" : "text-gray-400 opacity-30"} group-hover:text-orange group-hover:opacity-40`}
                     >
@@ -72,7 +73,7 @@ export function StepsCards() {
                   </div>
 
                   <h5 className="h-full w-full text-base font-semibold md:text-2xl">
-                    {item}
+                    {item.title}
                   </h5>
                 </div>
               </div>
@@ -82,11 +83,8 @@ export function StepsCards() {
       </div>
 
       <p className="text-5xl text-beige">
-        {steps.length > 0 ? (
-          <span>
-            {((doneStepsNum / steps.length) * 100).toFixed(0)}
-            %{" "}
-          </span>
+        {instructions.length > 0 ? (
+          <span>{((doneStepsNum / instructions.length) * 100).toFixed(0)}% </span>
         ) : (
           <span>0%</span>
         )}
