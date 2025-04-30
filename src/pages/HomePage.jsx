@@ -1,5 +1,4 @@
 import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
-import { RECIPE_TYPES } from "src/constants.js";
 import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
@@ -14,7 +13,6 @@ export function HomePage() {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const [data, setData] = useState();
-
   useEffect(() => {
     const getRecipe = async () => {
       try {
@@ -31,6 +29,11 @@ export function HomePage() {
     };
     getRecipe();
   }, []);
+
+  // Collect all tags and remove duplicates
+  const uniqueTags = Array.from(
+    new Set(data.flatMap((item) => (item.tags ?? []).filter((tag) => tag.trim() !== ""))),
+  );
 
   const filteredRecipes = (data ?? []).filter((item) => {
     const title = item.title ?? "";
@@ -76,7 +79,7 @@ export function HomePage() {
           <h3>All Recipes</h3>
 
           <div className="flex flex-wrap gap-3 text-beige">
-            {RECIPE_TYPES.map((tag) => (
+            {uniqueTags?.map((tag) => (
               <button
                 key={tag}
                 className={`tagBtn ${selectedTag === tag ? "selectedBtn" : ""}`}
