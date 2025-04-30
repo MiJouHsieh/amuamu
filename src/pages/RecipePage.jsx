@@ -8,6 +8,7 @@ import { supabase } from "src/supabaseClient";
 export function RecipePage() {
   let { id } = useParams();
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getRecipe = async () => {
@@ -26,11 +27,25 @@ export function RecipePage() {
         console.log("RecipePage data", data);
       } catch (error) {
         console.error("An error occurred while loading the post.", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     getRecipe();
   }, [id]);
+
+  if (loading) {
+    return <div className="mt-48 p-3 text-3xl text-orange">Loading...</div>;
+  }
+
+  if (!data) {
+    return (
+      <div className="mt-48 flex rounded-lg border-2 border-orange px-4 py-2 text-3xl text-orange">
+        Recipe not found.💔
+      </div>
+    );
+  }
 
   return (
     <section className="border-box h-full w-full rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] p-4 md:p-10 990:mx-0 990:p-8 1440:max-w-[1110px]">
