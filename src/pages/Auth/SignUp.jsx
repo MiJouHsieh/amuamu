@@ -19,12 +19,8 @@ export function SignUp() {
             <IconLogo className="h-40 w-40" />
           </div>
           <div className="flex flex-col items-center gap-y-10 text-beige">
-            <h2 className="text-xl font-semibold">
-              🎉 Sign-up Successful!
-            </h2>
-            <p className="text-base text-beige">
-              Welcome! You can now start saving recipes.
-            </p>
+            <h2 className="text-xl font-semibold">🎉 Sign-up Successful!</h2>
+            <p className="text-base text-beige">Welcome! You can now start saving recipes.</p>
             <Link
               to="/"
               className="hover:bg-orange-500 cardHoverShadow cardHoverShadow:hover rounded-full bg-orange px-6 py-2 font-medium text-white"
@@ -53,16 +49,10 @@ export function SignUp() {
               .min(8, "Must be 8 characters or more")
               .required("Password is required"),
             confirmPassword: Yup.string()
-              .oneOf(
-                [Yup.ref("password")],
-                "Passwords do not match",
-              )
+              .oneOf([Yup.ref("password")], "Passwords do not match")
               .required("Please confirm your password"),
           })}
-          onSubmit={async (
-            values,
-            { setSubmitting, resetForm, setStatus },
-          ) => {
+          onSubmit={async (values, { setSubmitting, resetForm, setStatus }) => {
             console.log("Form submitted!", values);
             const { name, email, password } = values;
 
@@ -129,23 +119,16 @@ export function SignUp() {
                     placeholder="Re-enter Password"
                     required
                   />
-                  {status && (
-                    <div className="text-red-400">{status}</div>
-                  )}
+                  {status && <div className="text-red-400">{status}</div>}
                   <button
                     type="submit"
-                    className="loginSingupBtn"
+                    className="submitBtn"
                     disabled={isSubmitting}
                     aria-label="Submit sign-up form"
                   >
-                    {isSubmitting
-                      ? "Submitting..."
-                      : "Start your recipe collection 📖"}
+                    {isSubmitting ? "Submitting..." : "Start your recipe collection 📖"}
                   </button>
-                  <Link
-                    className="text-beige300 underline"
-                    to="/login"
-                  >
+                  <Link className="text-beige300 underline" to="/login">
                     Log In
                   </Link>
                 </Form>

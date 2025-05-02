@@ -35,19 +35,14 @@ export function Login() {
           .min(8, "Must be 8 characters or more")
           .required("Password is required"),
       })}
-      onSubmit={async (
-        values,
-        { setSubmitting, resetForm, setStatus },
-      ) => {
+      onSubmit={async (values, { setSubmitting, resetForm, setStatus }) => {
         console.log("Form submitted!", values);
         const { email, password } = values;
 
         const { error } = await signIn({ email, password });
 
         if (error) {
-          setStatus(
-            "Oops! That doesn't look right. Please check your email and password.",
-          );
+          setStatus("Oops! That doesn't look right. Please check your email and password.");
           setSubmitting(false);
           return;
         }
@@ -57,7 +52,6 @@ export function Login() {
         setIsSubmittingDone(true);
       }}
     >
-
       {({ isSubmitting, status }) => (
         <main className="archBackground flex h-full w-full flex-col items-center justify-center gap-y-6 py-8">
           <div>
@@ -84,14 +78,14 @@ export function Login() {
                 required
               />
               {status && (
-                <div className="bg-beige border-red rounded-md border-4 px-4 py-3 text-center text-base font-semibold leading-snug text-red">
+                <div className="rounded-md border-4 border-red bg-beige px-4 py-3 text-center text-base font-semibold leading-snug text-red">
                   <p>⚠️ Oops! That doesn't look right. ⚠️</p>
                   <p>Please check your email and password.</p>
                 </div>
               )}
               <button
                 type="submit"
-                className="loginSingupBtn"
+                className="submitBtn"
                 disabled={isSubmitting || isSubmittingDone}
                 aria-label="Submit log-in form"
               >
@@ -99,10 +93,7 @@ export function Login() {
                   ? "Submitting..."
                   : "Continue your recipe collection 😋"}
               </button>
-              <Link
-                className="text-beige300 underline"
-                to="/signup"
-              >
+              <Link className="text-beige300 underline" to="/signup">
                 Sign up
               </Link>
             </Form>
