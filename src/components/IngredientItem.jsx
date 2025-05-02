@@ -37,7 +37,7 @@ export function IngredientItem({
         maxRows={6}
       />
       <HiMinusCircle
-        className="activeBtn h-8 w-8 cursor-pointer text-blue300 md:h-10 md:w-10"
+        className="activeBtn text-blue300"
         type="button"
         onClick={() => onDelete?.(ingredient.id)}
       />

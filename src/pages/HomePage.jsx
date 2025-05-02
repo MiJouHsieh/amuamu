@@ -1,9 +1,9 @@
 import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
-import { RECIPE_TYPES } from "src/constants.js";
 import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
 import { HomePageCard } from "src/components/HomePageCard";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
   const { user } = useAuth();
@@ -13,7 +13,6 @@ export function HomePage() {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const [data, setData] = useState();
-
   useEffect(() => {
     const getRecipe = async () => {
       try {
@@ -30,6 +29,10 @@ export function HomePage() {
     };
     getRecipe();
   }, []);
+
+  // Collect all tags and remove duplicates
+  const allTags = (data ?? []).flatMap((item) => item.tags ?? []);
+  const uniqueTags = Array.from(new Set(allTags.filter((tag) => tag.trim() !== "")));
 
   const filteredRecipes = (data ?? []).filter((item) => {
     const title = item.title ?? "";
@@ -75,7 +78,13 @@ export function HomePage() {
           <h3>All Recipes</h3>
 
           <div className="flex flex-wrap gap-3 text-beige">
-            {RECIPE_TYPES.map((tag) => (
+            <button
+              className={`tagBtn ${selectedTag === "All products" ? "selectedBtn" : ""}`}
+              onClick={() => setSelectedTag("All products")}
+            >
+              All Recipes
+            </button>
+            {uniqueTags?.map((tag) => (
               <button
                 key={tag}
                 className={`tagBtn ${selectedTag === tag ? "selectedBtn" : ""}`}
@@ -98,7 +107,9 @@ export function HomePage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* filter cards */}
           {filteredRecipes.map((recipe) => (
-            <HomePageCard key={recipe.id} item={recipe} />
+            <Link to={`/recipe-page/${recipe.id}`}>
+              <HomePageCard key={recipe.id} item={recipe} />
+            </Link>
           ))}
         </div>
       </div>

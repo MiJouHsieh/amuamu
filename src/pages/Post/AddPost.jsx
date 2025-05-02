@@ -7,7 +7,7 @@ import { useListItemActions } from "src/hooks/useListItemActions";
 
 import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 
 export function TagsInput({ tags, setTags }) {
@@ -110,14 +110,39 @@ export function AddPost() {
     useListItemActions();
 
   const { user } = useAuth();
-
+  const { id } = useParams(); // edit mode with id
+  const isEditMode = Boolean(id);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!user || !user.id) {
       alert("✨ Please log in first. ✨");
       navigate("/login");
+      return;
     }
-  }, [user, navigate]);
+
+    //fetchRecipe for edit mode
+    const fetchRecipe = async () => {
+      if (!id) return;
+
+      const { data, error } = await supabase.from("recipe").select("*").eq("id", id).single();
+
+      if (error) {
+        console.error("載入食譜錯誤", error);
+      } else {
+        setTitle(data.recipe_name);
+        setImage(data.image || []);
+        setImagePreview(data.image?.[0]);
+        setPreparation(data.preparation);
+        setIngredients(data.ingredients);
+        setInstructions(data.instructions);
+        setNote(data.note);
+      }
+    };
+
+    fetchRecipe();
+  }, [user, navigate, id]);
+
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
 
@@ -185,18 +210,18 @@ export function AddPost() {
   };
 
   const addRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
+    const updates = {
+      user_id: user.id,
+      id: uuidv4(),
+      recipe_name: title,
+      image: image,
+      preparation: preparation,
+      ingredients: ingredients,
+      instructions: instructions,
+      note: note,
+    };
+
     try {
-      const updates = {
-        user_id: user.id,
-        id: uuidv4(),
-        recipe_name: title,
-        image: image,
-        preparation: preparation,
-        ingredients: ingredients,
-        instructions: instructions,
-        note: note,
-        tags: tags,
-      };
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
 
@@ -207,7 +232,31 @@ export function AddPost() {
         navigate("/");
       }
     } catch (error) {
-      alert(error.message);
+      alert("⚠️ Oops, there was a problem.", error.message);
+      console.error(error);
+    }
+  };
+
+  const updateRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
+    try {
+      const updates = {
+        user_id: user.id,
+        recipe_name: title,
+        image,
+        preparation,
+        ingredients,
+        instructions,
+        note,
+      };
+
+      const { error } = await supabase.from("recipe").update(updates).eq("id", id);
+      if (error) {
+        throw error;
+      } else {
+        navigate(`/recipe-page/${id}`);
+      }
+    } catch (error) {
+      alert("⚠️ Failed to update: " + error.message);
     }
   };
 
@@ -239,9 +288,9 @@ export function AddPost() {
         throw uploadError;
       }
       getURL(filePath);
-      console.log("上傳成功！圖片路徑：", data.path);
+      console.log("Upload successful! Image URL:", data.path);
     } catch (error) {
-      alert(`上傳圖片失敗：${error.message}`);
+      alert(`Failed to upload image：${error.message}`);
     }
   };
 
@@ -255,7 +304,7 @@ export function AddPost() {
       }
 
       // 將圖片 URL 存入 state
-      setImage(publicURL);
+      setImage([publicURL]);
     } catch (error) {
       alert(`獲取圖片 URL 失敗：${error.message}`);
     } finally {
@@ -292,14 +341,23 @@ export function AddPost() {
                 accept="image/*"
                 onChange={uploadImage}
               />
-              <p className="-mt-1 text-xs text-white300">Please choose a photo of a dish</p>
+              <p className="-mt-1 text-xs text-white300">
+                {isEditMode
+                  ? "Wanna update a tasty food image? 🍽️"
+                  : "Please choose a photo of a dish"}
+              </p>
 
               {imagePreview && (
                 <img
                   src={imagePreview}
-                  alt="Preview"
+                  alt="Preview image"
                   className="mx-auto h-[300px] w-[300px] rounded-md object-cover object-center md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
                 />
+              )}
+              {image?.length > 0 && (
+                <p className="mt-1 break-all text-xs text-beige300">
+                  📁 {typeof image[0] === "string" ? image[0].split("/").pop() : image[0]?.name}
+                </p>
               )}
             </div>
             {/* recipe info */}
@@ -355,7 +413,7 @@ export function AddPost() {
 
                 {ingredientInput.length > 0 && (
                   <HiPlusCircle
-                    className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
+                    className="activeBtn text-orange"
                     type="button"
                     onClick={handleAddIngredient}
                   />
@@ -385,7 +443,7 @@ export function AddPost() {
 
                 {instructionsInput.length > 0 && (
                   <HiPlusCircle
-                    className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
+                    className="activeBtn text-orange"
                     type="button"
                     onClick={handleAddInstructions}
                   />
@@ -412,17 +470,29 @@ export function AddPost() {
             {/* button */}
             <button
               type="submit"
-              className="loginSingupBtn"
+              className="submitBtn"
               disabled={
                 uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0
               }
               aria-label="Submit recipe form"
               onClick={async (e) => {
                 e.preventDefault();
-                await addRecipe({ title, image, preparation, ingredients, instructions, note });
+                const payload = {
+                  title,
+                  image,
+                  preparation,
+                  ingredients,
+                  instructions,
+                  note,
+                };
+                if (isEditMode) {
+                  await updateRecipe(payload); // 新增這個函式
+                } else {
+                  await addRecipe(payload);
+                }
               }}
             >
-              {uploading ? "uploading..." : "📖 Add recipe"}
+              {uploading ? "uploading..." : isEditMode ? "📘 Update recipe" : "📖 Add recipe"}
             </button>
           </form>
         </div>
