@@ -1,14 +1,17 @@
 import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "src/supabaseClient";
+import { useAuth } from "src/context/AuthContext";
 
 export function RecipePage() {
   let { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getRecipe = async () => {
@@ -59,6 +62,18 @@ export function RecipePage() {
               alt={data && data.recipe_name}
             />
           </div>
+          {/* user edit delete */}
+          {user && (
+            <div className="flex w-full items-center justify-center gap-10 text-blue100">
+              <button
+                className="actionBtn:hover actionBtn rounded-xl"
+                onClick={() => navigate(`/edit/${id}`)}
+              >
+                Edit
+              </button>
+            </div>
+          )}
+
           <h1 className="font-youngSerif text-[30px] font-semibold uppercase leading-[40px] tracking-[3px] text-orange opacity-90">
             {data ? data.recipe_name : ""}
           </h1>
@@ -84,7 +99,7 @@ export function RecipePage() {
           <h4 className="font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
             Tags
           </h4>
-          <div className="h-full space-x-2 text-beige">
+          <div className="h-full space-x-2 space-y-2 text-beige">
             {data?.tags?.map((tag) => {
               return (
                 <span className="inline-block rounded-full border border-yellow px-4 py-2 text-xl">
