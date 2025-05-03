@@ -116,7 +116,7 @@ export function RecipePage() {
           </h4>
           <div className="space-y-4 rounded-xl border border-yellow p-6 text-beige md:flex md:flex-wrap md:space-y-0">
             {data?.ingredients?.map((item) => {
-              return <Checkbox className="md:p-2" items={item.title} key={item.id} />;
+              return <Checkbox className="md:p-2" items={item.title} key={item.id} id={item.id} />;
             })}
           </div>
         </div>
