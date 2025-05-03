@@ -51,11 +51,9 @@ export function TagsInput({ tags, setTags }) {
             className="darkInputField inputField flex-1 resize-none overflow-auto"
           />
           {inputValue.length > 0 && (
-            <HiPlusCircle
-              className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
-              type="button"
-              onClick={handleAddTag}
-            />
+            <button type="button" onClick={handleAddTag} className="activeBtn">
+              <HiPlusCircle className="activeIcon text-orange" />
+            </button>
           )}
         </div>
       </div>
@@ -441,11 +439,9 @@ export function AddPost() {
                 />
 
                 {ingredientInput.length > 0 && (
-                  <HiPlusCircle
-                    className="activeBtn text-orange"
-                    type="button"
-                    onClick={handleAddIngredient}
-                  />
+                  <button type="button" onClick={handleAddIngredient} className="activeBtn">
+                    <HiPlusCircle className="activeIcon text-orange" />
+                  </button>
                 )}
               </div>
               <IngredientCollection
@@ -471,11 +467,9 @@ export function AddPost() {
                 />
 
                 {instructionsInput.length > 0 && (
-                  <HiPlusCircle
-                    className="activeBtn text-orange"
-                    type="button"
-                    onClick={handleAddInstructions}
-                  />
+                  <button type="button" onClick={handleAddInstructions} className="activeBtn">
+                    <HiPlusCircle className="activeIcon text-orange" />
+                  </button>
                 )}
               </div>
               <InstructionsCollection
