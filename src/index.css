@@ -63,7 +63,7 @@
     @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
   }
   .submitBtn {
-    @apply my-4 rounded-full bg-yellow400 p-4 text-center transition-transform duration-200 hover:bg-orange active:scale-95;
+    @apply my-4 rounded-full bg-yellow400 p-4 text-center transition-transform duration-200 hover:bg-orange active:scale-95 text-blue900;
   }
   .tagBtn {
     @apply rounded-full border px-3 py-1 text-lg text-beige;
