@@ -33,8 +33,8 @@ export function TagsInput({ tags, setTags }) {
   };
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-y-2 p-4 outline">
-      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4 outline">
+    <div className="mx-auto flex w-full flex-col gap-y-2 p-4">
+      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2">
         <label className="form-label w-full text-orange">Recipe Tags</label>
         <div className="flex w-full items-center justify-between gap-x-4">
           <input
@@ -133,6 +133,7 @@ export function AddPost() {
         setTitle(data.recipe_name);
         setImage(data.image || []);
         setImagePreview(data.image?.[0]);
+        setTags(data.tags);
         setPreparation(data.preparation);
         setIngredients(data.ingredients);
         setInstructions(data.instructions);
@@ -215,6 +216,7 @@ export function AddPost() {
       id: uuidv4(),
       recipe_name: title,
       image: image,
+      tags: tags,
       preparation: preparation,
       ingredients: ingredients,
       instructions: instructions,
@@ -237,13 +239,22 @@ export function AddPost() {
     }
   };
 
-  const updateRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
+  const updateRecipe = async ({
+    title,
+    image,
+    preparation,
+    tags,
+    ingredients,
+    instructions,
+    note,
+  }) => {
     try {
       const updates = {
         user_id: user.id,
         recipe_name: title,
         image,
         preparation,
+        tags,
         ingredients,
         instructions,
         note,
@@ -309,6 +320,24 @@ export function AddPost() {
       alert(`獲取圖片 URL 失敗：${error.message}`);
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      title,
+      image,
+      preparation,
+      tags,
+      ingredients,
+      instructions,
+      note,
+    };
+    if (isEditMode) {
+      await updateRecipe(payload);
+    } else {
+      await addRecipe(payload);
     }
   };
 
@@ -475,22 +504,7 @@ export function AddPost() {
                 uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0
               }
               aria-label="Submit recipe form"
-              onClick={async (e) => {
-                e.preventDefault();
-                const payload = {
-                  title,
-                  image,
-                  preparation,
-                  ingredients,
-                  instructions,
-                  note,
-                };
-                if (isEditMode) {
-                  await updateRecipe(payload); // 新增這個函式
-                } else {
-                  await addRecipe(payload);
-                }
-              }}
+              onClick={handleSubmit}
             >
               {uploading ? "uploading..." : isEditMode ? "📘 Update recipe" : "📖 Add recipe"}
             </button>
