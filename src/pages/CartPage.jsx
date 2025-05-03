@@ -3,6 +3,7 @@ import { useCart } from "src/context/CartContext";
 import IconCheck from "src/assets/icons/icon-check.svg?react";
 import { HiMinusCircle } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "src/components/IconButton";
 
 export function CheckCartItem({ className, item, id }) {
   const { toggleChecked, removeFromCart } = useCart();
@@ -16,16 +17,13 @@ export function CheckCartItem({ className, item, id }) {
         onChange={() => toggleChecked(item.name)}
         className="checkboxIconStyle peer relative shrink-0 appearance-none rounded-full border-yellow200 bg-blue800 checked:border-transparent"
       />
-
       <label
         htmlFor={`custom-checkbox-${id}`}
         className="checkbox-input peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
       >
         {item.name}
       </label>
-      <button type="button" onClick={() => removeFromCart(item.name)} className="activeBtn">
-        <HiMinusCircle className="activeIcon text-blue300" />
-      </button>
+      <IconButton icon={HiMinusCircle} onClick={() => removeFromCart(item.name)} color="blue300" />
       <IconCheck className="checkboxIconStyle pointer-events-none absolute hidden rounded-full border-orange peer-checked:block" />
     </div>
   );
