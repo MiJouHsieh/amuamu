@@ -23,11 +23,9 @@ export function CheckCartItem({ className, item, id }) {
       >
         {item.name}
       </label>
-      <HiMinusCircle
-        className="activeBtn text-blue300"
-        type="button"
-        onClick={() => removeFromCart(item.name)}
-      />
+      <button type="button" onClick={() => removeFromCart(item.name)} className="activeBtn">
+        <HiMinusCircle className="activeIcon text-blue300" />
+      </button>
       <IconCheck className="checkboxIconStyle pointer-events-none absolute hidden rounded-full border-orange peer-checked:block" />
     </div>
   );
