@@ -10,6 +10,83 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 
+export function TagsInput({ tags, setTags }) {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleAddTag = () => {
+    const trimmed = inputValue.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+    }
+    setInputValue("");
+  };
+
+  const handleDeleteTag = (e, index) => {
+    e?.preventDefault?.();
+    const newTags = tags.filter((_, idx) => idx !== index);
+    setTags(newTags);
+  };
+
+  const handleEditTag = (index, newValue) => {
+    const newTags = tags.map((tag, idx) => (idx === index ? newValue : tag));
+    setTags(newTags);
+  };
+
+  return (
+    <div className="mx-auto flex w-full flex-col gap-y-2 p-4">
+      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2">
+        <label className="form-label w-full text-orange">Recipe Tags</label>
+        <div className="flex w-full items-center justify-between gap-x-4">
+          <input
+            type="text"
+            placeholder="🏷️ e.g. cake"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
+            className="darkInputField inputField flex-1 resize-none overflow-auto"
+          />
+          {inputValue.length > 0 && (
+            <HiPlusCircle
+              className="h-8 w-8 cursor-pointer text-orange md:h-10 md:w-10"
+              type="button"
+              onClick={handleAddTag}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="hover:addPostShadow flex flex-wrap gap-2">
+        {tags.map((tag, index) => (
+          <div key={index} className="tag-container">
+            <input
+              value={tag}
+              style={{ width: `${Math.max(tag.length, 1)}ch` }}
+              onChange={(e) => handleEditTag(index, e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace" && tag.length === 0) {
+                  e.preventDefault();
+                  handleDeleteTag(e, index);
+                } else if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+              className="tag min-w-[100px]"
+            />
+            <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2 text-blue300">
+              X
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function AddPost() {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -19,6 +96,7 @@ export function AddPost() {
     cookTime: "",
     servings: "",
   });
+  const [tags, setTags] = useState([]);
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState([]);
 
@@ -55,6 +133,7 @@ export function AddPost() {
         setTitle(data.recipe_name);
         setImage(data.image || []);
         setImagePreview(data.image?.[0]);
+        setTags(data.tags);
         setPreparation(data.preparation);
         setIngredients(data.ingredients);
         setInstructions(data.instructions);
@@ -137,6 +216,7 @@ export function AddPost() {
       id: uuidv4(),
       recipe_name: title,
       image: image,
+      tags: tags,
       preparation: preparation,
       ingredients: ingredients,
       instructions: instructions,
@@ -159,13 +239,22 @@ export function AddPost() {
     }
   };
 
-  const updateRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
+  const updateRecipe = async ({
+    title,
+    image,
+    preparation,
+    tags,
+    ingredients,
+    instructions,
+    note,
+  }) => {
     try {
       const updates = {
         user_id: user.id,
         recipe_name: title,
         image,
         preparation,
+        tags,
         ingredients,
         instructions,
         note,
@@ -234,6 +323,24 @@ export function AddPost() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      title,
+      image,
+      preparation,
+      tags,
+      ingredients,
+      instructions,
+      note,
+    };
+    if (isEditMode) {
+      await updateRecipe(payload);
+    } else {
+      await addRecipe(payload);
+    }
+  };
+
   return (
     user && (
       <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -254,7 +361,6 @@ export function AddPost() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-
             {/* image */}
             <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-4 p-4">
               <label className="form-label text-orange">Recipe image</label>
@@ -283,7 +389,6 @@ export function AddPost() {
                 </p>
               )}
             </div>
-
             {/* recipe info */}
             <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
               <div className="flex items-center justify-between">
@@ -317,6 +422,8 @@ export function AddPost() {
                 />
               </div>
             </div>
+            {/* Multiple Tags  */}
+            <TagsInput tags={tags} setTags={setTags} />
 
             {/* Ingredients */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
@@ -348,7 +455,6 @@ export function AddPost() {
                 onChangeMode={handleChangeModeIngredient}
               />
             </div>
-
             {/* Instructions  */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
               <label className="form-label w-full text-orange">Instructions</label>
@@ -379,7 +485,6 @@ export function AddPost() {
                 onChangeMode={handleChangeModeInstructions}
               />
             </div>
-
             {/* note */}
             <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-2 p-4">
               <label className="form-label text-orange">Note</label>
@@ -391,7 +496,6 @@ export function AddPost() {
                 spellCheck={false}
               />
             </div>
-
             {/* button */}
             <button
               type="submit"
@@ -400,22 +504,7 @@ export function AddPost() {
                 uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0
               }
               aria-label="Submit recipe form"
-              onClick={async (e) => {
-                e.preventDefault();
-                const payload = {
-                  title,
-                  image,
-                  preparation,
-                  ingredients,
-                  instructions,
-                  note,
-                };
-                if (isEditMode) {
-                  await updateRecipe(payload); // 新增這個函式
-                } else {
-                  await addRecipe(payload);
-                }
-              }}
+              onClick={handleSubmit}
             >
               {uploading ? "uploading..." : isEditMode ? "📘 Update recipe" : "📖 Add recipe"}
             </button>
