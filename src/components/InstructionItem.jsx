@@ -28,11 +28,9 @@ export function InstructionItem({ instruction, onSave, onDelete, onChangeMode })
         minRows={1}
         maxRows={6}
       />
-      <HiMinusCircle
-        className="activeBtn text-blue300"
-        type="button"
-        onClick={() => onDelete?.(instruction.id)}
-      />
+      <button type="button" onClick={() => onDelete?.(instruction.id)} className="activeBtn">
+        <HiMinusCircle className="activeIcon text-blue300" />
+      </button>
     </div>
   );
 }

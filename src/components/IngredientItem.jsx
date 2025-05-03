@@ -2,19 +2,11 @@ import { HiMinusCircle } from "react-icons/hi";
 import { useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
-export function IngredientItem({
-  ingredient,
-  onSave,
-  onDelete,
-  onChangeMode,
-}) {
+export function IngredientItem({ ingredient, onSave, onDelete, onChangeMode }) {
   const inputRef = useRef(null);
 
   const handleKeyDown = (event) => {
-    if (
-      inputRef.current.value.length > 0 &&
-      event.key === "Enter"
-    ) {
+    if (inputRef.current.value.length > 0 && event.key === "Enter") {
       onSave?.({
         id: ingredient.id,
         title: inputRef.current.value,
@@ -36,11 +28,9 @@ export function IngredientItem({
         minRows={1}
         maxRows={6}
       />
-      <HiMinusCircle
-        className="activeBtn text-blue300"
-        type="button"
-        onClick={() => onDelete?.(ingredient.id)}
-      />
+      <button type="button" onClick={() => onDelete?.(ingredient.id)} className="activeBtn">
+        <HiMinusCircle className="activeIcon text-blue300" />
+      </button>
     </div>
   );
 }

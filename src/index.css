@@ -80,10 +80,18 @@
     @apply border border-orange px-4 py-2 text-red bg-transparent transition-colors duration-1000;
   }
   .actionBtn:hover {
-    @apply bg-orange text-blue900  ;
+    @apply bg-orange text-blue900;
     box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
   }
   .activeBtn {
-    @apply h-8 w-8 cursor-pointer md:h-10 md:w-10;
+    @apply flex items-center justify-center rounded-full bg-transparent transition-all duration-500 ;
+    
   }
+  .activeBtn:hover {
+    @apply focus:scale-[1.2];
+    box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
+  }
+  .activeIcon {
+    @apply h-6 w-6;
+  } 
 }
