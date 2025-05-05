@@ -39,6 +39,11 @@ export function CartPage() {
         <h1 className="mt-10 font-youngSerif text-4xl text-orange md:text-5xl 990:text-6xl">
           Cart List
         </h1>
+        {cart?.length > 0 && (
+          <p className="text-base text-beige">
+            {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
+          </p>
+        )}
 
         {/* list */}
         <div className="w-full space-y-12 rounded-xl border border-yellow p-6 text-beige">
@@ -54,7 +59,7 @@ export function CartPage() {
               </button>
             </>
           ) : (
-            <div className="flex flex-col items-center gap-y-8">
+            <div className="flex flex-col items-center gap-y-8 pt-4">
               <FiShoppingCart className="h-24 w-24" alt="Empty cart" />
               <h4 className="text-center text-xl font-medium text-beige">your cart is empty</h4>
               <button className="submitBtn w-full" onClick={() => navigate("/")}>
