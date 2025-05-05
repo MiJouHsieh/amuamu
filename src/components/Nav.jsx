@@ -32,10 +32,7 @@ export function Nav() {
 
   useEffect(() => {
     function handleOutsideClick(event) {
-      if (
-        navRef.current &&
-        !navRef.current.contains(event.target)
-      ) {
+      if (navRef.current && !navRef.current.contains(event.target)) {
         setShowMenu(false);
       }
     }
@@ -44,10 +41,7 @@ export function Nav() {
     }
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleOutsideClick,
-      );
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [showMenu]);
 
@@ -59,10 +53,7 @@ export function Nav() {
         </Link>
       </div>
       <div className="md:hidden">
-        <IconHamburger
-          onClick={handleClick}
-          className="cursor-pointer"
-        />
+        <IconHamburger onClick={handleClick} className="cursor-pointer" />
       </div>
       {/* menu */}
       {showMenu && (
@@ -80,18 +71,9 @@ export function Nav() {
             <ul className="flex flex-col gap-y-9">
               {user ? (
                 <>
-                  <h3 className="items-center text-2xl text-white300">
-                    Hi, {displayName} 👋
-                  </h3>
+                  <h3 className="items-center text-2xl text-white300">Hi, {displayName} 👋</h3>
                   {ROUTES.map(({ id, label }) => {
-                    return (
-                      <NavItem
-                        key={id}
-                        id={id}
-                        label={label}
-                        pathname={location.pathname}
-                      />
-                    );
+                    return <NavItem key={id} id={id} label={label} pathname={location.pathname} />;
                   })}
                   <NavItem
                     id="signout"
@@ -102,12 +84,10 @@ export function Nav() {
                   />
                 </>
               ) : (
-                <NavItem
-                  id="login"
-                  label="Log in"
-                  pathname={location.pathname}
-                  to="/login"
-                />
+                <>
+                  <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+                  <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+                </>
               )}
             </ul>
           </div>
@@ -119,12 +99,7 @@ export function Nav() {
           {user ? (
             <>
               {ROUTES.map(({ id, label }) => (
-                <NavItem
-                  key={id}
-                  id={id}
-                  label={label}
-                  pathname={location.pathname}
-                />
+                <NavItem key={id} id={id} label={label} pathname={location.pathname} />
               ))}
               <NavItem
                 id="signout"
@@ -135,12 +110,10 @@ export function Nav() {
               />
             </>
           ) : (
-            <NavItem
-              id="login"
-              label="Log in"
-              pathname={location.pathname}
-              to="/login"
-            />
+            <>
+              <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+              <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+            </>
           )}
         </ul>
       </div>
