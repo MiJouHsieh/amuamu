@@ -107,8 +107,8 @@ export function HomePage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* filter cards */}
           {filteredRecipes.map((recipe) => (
-            <Link to={`/recipe-page/${recipe.id}`}>
-              <HomePageCard key={recipe.id} item={recipe} />
+            <Link key={recipe.id} to={`/recipe-page/${recipe.id}`}>
+              <HomePageCard item={recipe} />
             </Link>
           ))}
         </div>
