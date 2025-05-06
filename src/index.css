@@ -22,6 +22,9 @@
   .archBackground {
     @apply rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')];
   }
+  .checkedCountIcon {
+    @apply h-[25px] w-[25px] cursor-pointer border-[2px];
+  }
   .checkboxIconStyle {
     @apply h-[30px] w-[30px] cursor-pointer border-[3px];
   }
@@ -63,7 +66,11 @@
     @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
   }
   .submitBtn {
-    @apply my-4 rounded-full bg-yellow400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
+    @apply my-4 rounded-full border-4 border-beige300 bg-yellow400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
+  }
+  .submitBtn:hover {
+    @apply bg-orange;
+    box-shadow: 0px 0px 20px 16px rgba(255, 140, 0, 0.2);
   }
   .tagBtn {
     @apply rounded-full border px-3 py-1 text-lg text-beige;

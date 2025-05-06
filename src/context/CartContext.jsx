@@ -26,6 +26,10 @@ export function CartProvider({ children }) {
     );
   };
 
+  const checkedCount = () => {
+    return cart.filter((item) => item.checked).length;
+  }
+
   const removeFromCart = (ingredientId) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== ingredientId));
   };
@@ -35,7 +39,9 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, toggleChecked }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart, toggleChecked, checkedCount }}
+    >
       {children}
     </CartContext.Provider>
   );

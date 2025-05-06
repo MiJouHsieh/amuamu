@@ -34,7 +34,7 @@ export function CheckCartItem({ className, ingredient }) {
 }
 
 export function CartPage() {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, checkedCount } = useCart();
   const navigate = useNavigate();
   //分類食譜
   const groupedIngredients = cart.reduce((acc, item) => {
@@ -52,7 +52,7 @@ export function CartPage() {
   const recipeGroup = Object.values(groupedIngredients);
 
   return (
-    <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
+    <section className="relative flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
       <div className="mx-auto flex min-h-screen w-full max-w-[500px] flex-col items-center justify-start gap-y-10 px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
         <h1 className="mt-10 font-youngSerif text-4xl text-orange md:text-5xl 990:text-6xl">
           Cart List
@@ -104,6 +104,16 @@ export function CartPage() {
             </div>
           )}
         </div>
+
+        {/* checkedCount */}
+        {cart.length > 0 && (
+          <div className="pointer-events-none fixed bottom-4 left-0 z-50 flex w-full justify-center">
+            <div className="pointer-events-auto flex items-center gap-x-3 rounded-full bg-orange900/90 px-4 py-3 text-orange shadow-md">
+              <IconCheck className="checkedCountIcon pointer-events-none rounded-full border-orange peer-checked:block" />
+              {checkedCount()} / {cart.length} {cart.length === 1 ? "item" : "items"}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
