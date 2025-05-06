@@ -5,25 +5,28 @@ import { HiMinusCircle } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { IconButton } from "src/components/IconButton";
 
-export function CheckCartItem({ className, item, id }) {
+export function CheckCartItem({ className, ingredient }) {
   const { toggleChecked, removeFromCart } = useCart();
-
   return (
     <div className={`${className} flex items-center`}>
       <input
         type="checkbox"
-        id={`custom-checkbox-${id}`}
-        checked={item.checked}
-        onChange={() => toggleChecked(item.name)}
+        id={`custom-checkbox-${ingredient.id}`}
+        checked={ingredient.checked}
+        onChange={() => toggleChecked(ingredient.id)}
         className="checkboxIconStyle peer relative shrink-0 appearance-none rounded-full border-yellow200 bg-blue800 checked:border-transparent"
       />
       <label
-        htmlFor={`custom-checkbox-${id}`}
+        htmlFor={`custom-checkbox-${ingredient.id}`}
         className="checkbox-input peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
       >
-        {item.name}
+        {ingredient.title}
       </label>
-      <IconButton icon={HiMinusCircle} onClick={() => removeFromCart(item.name)} color="blue300" />
+      <IconButton
+        icon={HiMinusCircle}
+        onClick={() => removeFromCart(ingredient.id)}
+        color="blue300"
+      />
       <IconCheck className="checkboxIconStyle pointer-events-none absolute hidden rounded-full border-orange peer-checked:block" />
     </div>
   );
@@ -32,6 +35,20 @@ export function CheckCartItem({ className, item, id }) {
 export function CartPage() {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
+  //分類食譜
+  const groupedIngredients = cart.reduce((acc, item) => {
+    const key = item.recipe_id;
+    if (!acc[key]) {
+      acc[key] = {
+        recipe_id: item.id,
+        recipe_name: item.recipe_name,
+        ingredients: [],
+      };
+    }
+    acc[key].ingredients.push(item);
+    return acc;
+  }, {});
+  const recipeGroup = Object.values(groupedIngredients);
 
   return (
     <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -40,20 +57,36 @@ export function CartPage() {
           Cart List
         </h1>
         {cart?.length > 0 && (
-          <p className="text-base text-beige">
-            {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
+          <p className="text-xl text-beige">
+            Total: {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
           </p>
         )}
 
         {/* list */}
         <div className="w-full space-y-12 rounded-xl border border-yellow p-6 text-beige">
-          {cart && cart.length > 0 ? (
+          {recipeGroup && recipeGroup.length > 0 ? (
             <>
-              <div className="flex w-full flex-col space-y-6 rounded-xl">
-                {cart?.map((item) => {
-                  return <CheckCartItem key={item.name} id={item.name} item={item} />;
-                })}
-              </div>
+              {recipeGroup?.map((group) => {
+                const ingredientsArr = group.ingredients;
+                return (
+                  <div key={group.recipe_id}>
+                    <h4 className="mb-8 font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
+                      {group.recipe_name}
+                    </h4>
+                    <div className="flex w-full flex-col space-y-6 rounded-xl">
+                      {ingredientsArr?.map((ingredient) => {
+                        return (
+                          <CheckCartItem
+                            key={ingredient.id}
+                            id={ingredient.id}
+                            ingredient={ingredient}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
               <button className="submitBtn w-full" onClick={clearCart}>
                 clear
               </button>
