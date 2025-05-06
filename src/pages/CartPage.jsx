@@ -1,8 +1,9 @@
+import { HiLink } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import { useCart } from "src/context/CartContext";
 import IconCheck from "src/assets/icons/icon-check.svg?react";
 import { HiMinusCircle } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { IconButton } from "src/components/IconButton";
 
 export function CheckCartItem({ className, ingredient }) {
@@ -40,7 +41,7 @@ export function CartPage() {
     const key = item.recipe_id;
     if (!acc[key]) {
       acc[key] = {
-        recipe_id: item.id,
+        recipe_id: item.recipe_id,
         recipe_name: item.recipe_name,
         ingredients: [],
       };
@@ -70,9 +71,11 @@ export function CartPage() {
                 const ingredientsArr = group.ingredients;
                 return (
                   <div key={group.recipe_id}>
-                    <h4 className="mb-8 font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
-                      {group.recipe_name}
-                    </h4>
+                    <Link to={`/recipe-page/${group.recipe_id}`}>
+                      <h4 className="cartRecipeName">
+                        {group.recipe_name} <HiLink />
+                      </h4>
+                    </Link>
                     <div className="flex w-full flex-col space-y-6 rounded-xl">
                       {ingredientsArr?.map((ingredient) => {
                         return (

@@ -96,4 +96,10 @@
   .activeIcon {
     @apply h-6 w-6;
   }
+  .cartRecipeName {
+    @apply mb-8 flex items-end gap-x-2 font-chocolateClassicalSans text-2xl font-semibold text-yellow400 underline transition-colors duration-500;
+  }
+  .cartRecipeName:hover {
+    @apply text-orange;
+  }
 }
