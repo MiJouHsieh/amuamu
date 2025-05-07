@@ -22,6 +22,13 @@
   .archBackground {
     @apply rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')];
   }
+  .navBackground {
+    @apply bg-transparent bg-gradient-to-b;
+    background-image: linear-gradient(to bottom, rgba(26, 27, 51, 1), rgba(26, 27, 51, 0.5));
+  }
+  .navStyle {
+    @apply fixed left-0 top-0 z-10 flex h-[88px] w-full items-center justify-between px-10 py-6 text-white;
+  }
   .checkedCountIcon {
     @apply h-[25px] w-[25px] cursor-pointer border-[2px];
   }
@@ -57,7 +64,7 @@
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
   }
   .search-input {
-    @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 text-[#FFD28F] outline-none focus:border-yellow300;
+    @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-10 text-[#FFD28F] outline-none focus:border-yellow300;
   }
   .auth-input {
     @apply rounded-full border border-[#917262] bg-transparent p-6 pr-16 outline-none transition-colors duration-1000;

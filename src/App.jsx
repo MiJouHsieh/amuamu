@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 export function App() {
   return (
     <div className="relative flex h-full min-w-[375px] flex-col items-center bg-blue900">
-      <div className="flex h-full w-full flex-col items-center px-4 pb-14 md:px-8 1440:max-w-[1400px]">
+      <div className="flex h-full w-full flex-col items-center px-4 pb-14 pt-[88px] md:px-8 md:pt-24 1440:max-w-[1400px]">
         <AuthProvider>
           <CartProvider>
             <Router>

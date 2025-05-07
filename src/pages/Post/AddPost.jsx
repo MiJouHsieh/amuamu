@@ -341,7 +341,7 @@ export function AddPost() {
 
   return (
     user && (
-      <section className="flex w-full justify-center rounded-tl-[150px] rounded-tr-[150px] bg-blue800 bg-[url('/src/assets/images/img-noise.png')] md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
+      <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
         <div className="mx-auto flex w-full max-w-[500px] flex-col items-center justify-center px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
           <h1 className="mb-10 font-youngSerif text-4xl text-orange md:text-5xl 990:text-6xl">
             Create a Recipe
