@@ -84,7 +84,10 @@ export function Nav() {
                   />
                 </>
               ) : (
-                <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+                <>
+                  <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+                  <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+                </>
               )}
             </ul>
           </div>
@@ -107,7 +110,10 @@ export function Nav() {
               />
             </>
           ) : (
-            <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+            <>
+              <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+              <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+            </>
           )}
         </ul>
       </div>
