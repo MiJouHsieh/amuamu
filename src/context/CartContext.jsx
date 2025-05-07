@@ -11,21 +11,27 @@ export function CartProvider({ children }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (itemName) => {
+  const addToCart = (item) => {
     setCart((prevCart) => {
-      if (prevCart.some((item) => item.name === itemName)) return prevCart;
-      return [...prevCart, { name: itemName, checked: false }];
+      if (prevCart.some((cartItem) => cartItem.id === item.id)) return prevCart;
+      return [...prevCart, { ...item, checked: false }];
     });
   };
 
-  const toggleChecked = (itemName) => {
+  const toggleChecked = (ingredientId) => {
     setCart((prevCart) =>
-      prevCart.map((item) => (item.name === itemName ? { ...item, checked: !item.checked } : item)),
+      prevCart.map((item) =>
+        item.id === ingredientId ? { ...item, checked: !item.checked } : item
+      )
     );
   };
 
-  const removeFromCart = (itemName) => {
-    setCart((prevCart) => prevCart.filter((item) => item.name !== itemName));
+  const checkedCount = () => {
+    return cart.filter((item) => item.checked).length;
+  }
+
+  const removeFromCart = (ingredientId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== ingredientId));
   };
 
   const clearCart = () => {
@@ -33,7 +39,9 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, toggleChecked }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart, toggleChecked, checkedCount }}
+    >
       {children}
     </CartContext.Provider>
   );
