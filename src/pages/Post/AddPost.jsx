@@ -9,6 +9,8 @@ import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
+import JSConfetti from "js-confetti";
+const jsConfetti = new JSConfetti();
 
 export function TagsInput({ tags, setTags }) {
   const [inputValue, setInputValue] = useState("");
@@ -224,7 +226,27 @@ export function AddPost() {
     try {
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
-
+      await jsConfetti.addConfetti({
+        emojis: [
+          "🥕",
+          "🌽",
+          "🍅",
+          "💫",
+          "🥬",
+          "🌸",
+          "🌶️",
+          "🧀",
+          "🥑",
+          "🫐",
+          "🥩",
+          "🧅",
+          "🍆",
+          "🍖",
+        ],
+        emojiSize: 50,
+        confettiNumber: 200,
+        confettiRadius: 6,
+      });
       const { error } = await supabase.from("recipe").insert([updates]);
       if (error) {
         throw error;
