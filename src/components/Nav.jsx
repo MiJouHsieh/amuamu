@@ -46,7 +46,7 @@ export function Nav() {
   }, [showMenu]);
 
   return (
-    <nav className="navBackground navStyle">
+    <nav className="navBackground navStyle bg-blue900 md:h-24 md:px-8 1440:top-10 1440:max-w-[1110px]">
       <div className="1440:relative">
         <Link to="/">
           <IconLogo className="660:mx-10 h-16 w-16 1440:mx-16" />
@@ -59,38 +59,36 @@ export function Nav() {
       {showMenu && (
         <div
           ref={navRef}
-          className="fixed right-0 top-0 z-20 h-full w-[67%] max-w-[736px] bg-blue900 bg-opacity-15 pl-8 backdrop-blur-xl md:hidden"
+          className="fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/15 pl-8 backdrop-blur-xl md:hidden"
         >
-          <div className="flex justify-end space-y-12 py-8 pr-6">
+          <div className="flex justify-end py-8 pr-6">
             <IconClose
               onClick={handleClick}
               className="h-[21px] w-6 cursor-pointer border-blue-300"
             />
           </div>
-          <div>
-            <ul className="flex flex-col gap-y-9">
-              {user ? (
-                <>
-                  <h3 className="items-center text-2xl text-white300">Hi, {displayName} 👋</h3>
-                  {ROUTES.map(({ id, label }) => {
-                    return <NavItem key={id} id={id} label={label} pathname={location.pathname} />;
-                  })}
-                  <NavItem
-                    id="signout"
-                    label="Sign out"
-                    pathname={location.pathname}
-                    onClick={handleSignOut}
-                    to="/"
-                  />
-                </>
-              ) : (
-                <>
-                  <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
-                  <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
-                </>
-              )}
-            </ul>
-          </div>
+          <ul className="flex flex-col gap-y-9">
+            {user ? (
+              <>
+                <h3 className="items-center text-2xl text-white300">Hi, {displayName} 👋</h3>
+                {ROUTES.map(({ id, label }) => {
+                  return <NavItem key={id} id={id} label={label} pathname={location.pathname} />;
+                })}
+                <NavItem
+                  id="signout"
+                  label="Sign out"
+                  pathname={location.pathname}
+                  onClick={handleSignOut}
+                  to="/"
+                />
+              </>
+            ) : (
+              <>
+                <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+                <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
+              </>
+            )}
+          </ul>
         </div>
       )}
 
