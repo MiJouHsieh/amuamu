@@ -1,8 +1,9 @@
 import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
+import { SlideOverPanel } from "src/components/SlideOverPanel";
 
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "src/supabaseClient";
 import { useAuth } from "src/context/AuthContext";
 
@@ -12,6 +13,12 @@ export function RecipePage() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showMiniCart, setShowMiniCart] = useState(false);
+  const cartRef = useRef(null);
+
+  const handleClick = () => {
+    setShowMiniCart((prev) => !prev);
+  };
 
   useEffect(() => {
     const getRecipe = async () => {
@@ -34,9 +41,21 @@ export function RecipePage() {
         setLoading(false);
       }
     };
-
     getRecipe();
-  }, [id]);
+
+    function handleOutsideClick(event) {
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setShowMiniCart(false);
+      }
+    }
+    if (showMiniCart) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [id, showMiniCart]);
 
   if (loading) {
     return <div className="mt-48 p-3 text-3xl text-orange">Loading...</div>;
@@ -124,6 +143,7 @@ export function RecipePage() {
                   id={item.id}
                   recipeName={data.recipe_name}
                   recipeId={data.id}
+                  onClickShowCart={handleClick}
                 />
               );
             })}
@@ -139,6 +159,12 @@ export function RecipePage() {
           <p className="pl-2 text-beige">{data ? data.note : ""}</p>
         </div>
       </div>
+      {/* mini cart */}
+      {showMiniCart && (
+        <SlideOverPanel ref={cartRef} onClose={handleClick}>
+          {"CART ITEM"}
+        </SlideOverPanel>
+      )}
     </section>
   );
 }

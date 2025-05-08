@@ -2,7 +2,7 @@ import IconCheck from "src/assets/icons/icon-check.svg?react";
 import { HiPlusCircle } from "react-icons/hi";
 import { useCart } from "src/context/CartContext";
 
-export function Checkbox({ className, itemTitle, id, recipeName, recipeId }) {
+export function Checkbox({ className, itemTitle, id, recipeName, recipeId, onClickShowCart }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -12,6 +12,7 @@ export function Checkbox({ className, itemTitle, id, recipeName, recipeId }) {
       recipe_id: recipeId,
       recipe_name: recipeName,
     });
+    onClickShowCart();
   };
   return (
     <div className={`${className} flex items-center`}>
