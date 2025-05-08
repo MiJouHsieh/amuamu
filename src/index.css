@@ -27,7 +27,10 @@
     background-image: linear-gradient(to bottom, rgba(26, 27, 51, 1), rgba(26, 27, 51, 0.5));
   }
   .navStyle {
-    @apply fixed left-0 top-0 z-10 flex h-[88px] w-full items-center justify-between px-10 py-6 text-white;
+    @apply fixed left-0 top-0 z-10 w-full;
+  }
+  .navContainer {
+    @apply mx-auto flex h-[88px] max-w-[1110px] items-center justify-between px-10 py-6 text-white md:h-24 md:px-8;
   }
   .checkedCountIcon {
     @apply h-[25px] w-[25px] cursor-pointer border-[2px];
