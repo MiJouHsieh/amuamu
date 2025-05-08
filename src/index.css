@@ -33,7 +33,7 @@
     @apply mx-auto flex h-[88px] max-w-[1110px] items-center justify-between px-10 py-6 text-white md:h-24 md:px-8;
   }
   .slideOverPanelStyle {
-    @apply fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/15 px-6 py-8 pl-8 text-white backdrop-blur-xl md:hidden;
+    @apply fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/55 px-6 py-8 pl-8 text-white backdrop-blur-xl overflow-y-auto;
   }
   .checkedCountIcon {
     @apply h-[25px] w-[25px] cursor-pointer border-[2px];
@@ -120,6 +120,12 @@
     @apply mb-8 flex items-end gap-x-2 font-chocolateClassicalSans text-2xl font-semibold text-yellow400 underline transition-colors duration-500;
   }
   .cartRecipeName:hover {
+    @apply text-orange;
+  }
+  .miniCartRecipeName {
+    @apply mb-2 flex justify-start items-end gap-x-2 font-chocolateClassicalSans text-xl md:text-2xl font-semibold text-yellow400 underline transition-colors duration-500;
+  }
+  .miniCartRecipeName:hover {
     @apply text-orange;
   }
 }

@@ -14,7 +14,7 @@ export function CartProvider({ children }) {
   const addToCart = (item) => {
     setCart((prevCart) => {
       if (prevCart.some((cartItem) => cartItem.id === item.id)) return prevCart;
-      return [...prevCart, { ...item, checked: false }];
+      return [...prevCart, { ...item, checked: false}];
     });
   };
 

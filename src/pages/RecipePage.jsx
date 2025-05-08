@@ -1,11 +1,14 @@
 import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
 import { SlideOverPanel } from "src/components/SlideOverPanel";
+import { MiniCartItem } from "src/components/MiniCartItem";
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "src/supabaseClient";
 import { useAuth } from "src/context/AuthContext";
+import { useCart } from "src/context/CartContext";
+import { HiLink } from "react-icons/hi";
 
 export function RecipePage() {
   let { id } = useParams();
@@ -15,6 +18,23 @@ export function RecipePage() {
   const navigate = useNavigate();
   const [showMiniCart, setShowMiniCart] = useState(false);
   const cartRef = useRef(null);
+  const { cart } = useCart();
+
+  //分類食譜
+  const groupedIngredients = cart.reduce((acc, item) => {
+    const key = item.recipe_id;
+    if (!acc[key]) {
+      acc[key] = {
+        recipe_id: item.recipe_id,
+        recipe_name: item.recipe_name,
+        recipe_image: item.recipe_image,
+        ingredients: [],
+      };
+    }
+    acc[key].ingredients.push(item);
+    return acc;
+  }, {});
+  const recipeGroup = Object.values(groupedIngredients);
 
   const handleClick = () => {
     setShowMiniCart((prev) => !prev);
@@ -143,6 +163,7 @@ export function RecipePage() {
                   id={item.id}
                   recipeName={data.recipe_name}
                   recipeId={data.id}
+                  recipeImage={data.image}
                   onClickShowCart={handleClick}
                 />
               );
@@ -162,7 +183,50 @@ export function RecipePage() {
       {/* mini cart */}
       {showMiniCart && (
         <SlideOverPanel ref={cartRef} onClose={handleClick}>
-          {"CART ITEM"}
+          {cart?.length > 0 && (
+            <p className="w-full text-center text-xl text-beige">
+              Total: {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
+            </p>
+          )}
+          {recipeGroup?.map((group) => {
+            const ingredientsArr = group.ingredients;
+            return (
+              <div
+                key={group.recipe_id}
+                className="w-full space-y-4 rounded-xl border border-yellow p-2 text-beige"
+              >
+                <div className="flex flex-col">
+                  <Link to={`/recipe-page/${group.recipe_id}`}>
+                    <h4 className="miniCartRecipeName">
+                      {group.recipe_name} <HiLink />
+                    </h4>
+                  </Link>
+                  <div className="mt-0">
+                    <img
+                      className="h-[100px] w-[100px] rounded-full object-cover object-center 1440:h-[150px] 1440:w-[150px]"
+                      src={group && group.recipe_image}
+                      alt={group && group.recipe_name}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full flex-col space-y-6 rounded-xl">
+                  {ingredientsArr?.map((ingredient) => {
+                    return (
+                      <MiniCartItem
+                        key={ingredient.id}
+                        id={ingredient.id}
+                        ingredient={ingredient}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+          <button className="submitBtn w-full" onClick={() => navigate("/cart")}>
+            Cart Page
+          </button>
         </SlideOverPanel>
       )}
     </section>
