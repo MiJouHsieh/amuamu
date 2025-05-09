@@ -1,10 +1,16 @@
 import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
+import { SlideOverPanel } from "src/components/SlideOverPanel";
+import { MiniCartItem } from "src/components/MiniCartItem";
+import { MiniCartModal } from "src/components/MiniCartModal";
+import { CartIconToggle } from "src/components/CartIconToggle";
 
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "src/supabaseClient";
 import { useAuth } from "src/context/AuthContext";
+import { useCart } from "src/context/CartContext";
+import { HiLink } from "react-icons/hi";
 
 export function RecipePage() {
   let { id } = useParams();
@@ -12,7 +18,36 @@ export function RecipePage() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showMiniCart, setShowMiniCart] = useState(false);
+  const [showMiniCartModal, setShowMiniCartModal] = useState(false);
+  const cartRef = useRef(null);
+  const [latestItemTitle, setLatestItemTitle] = useState("");
+  const [isNewItem, setIsNewItem] = useState(true);
+  const { cart } = useCart();
 
+  const groupedIngredients = cart.reduce((acc, item) => {
+    const key = item.recipe_id;
+    if (!acc[key]) {
+      acc[key] = {
+        recipe_id: item.recipe_id,
+        recipe_name: item.recipe_name,
+        recipe_image: item.recipe_image,
+        ingredients: [],
+      };
+    }
+    acc[key].ingredients.push(item);
+    return acc;
+  }, {});
+  const recipeGroup = Object.values(groupedIngredients);
+
+  const handleClickAddBtn = (title, isNew) => {
+    setLatestItemTitle(title);
+    setIsNewItem(isNew);
+    setShowMiniCartModal(true);
+  };
+  const handleToggleCart = () => {
+    setShowMiniCart((prev) => !prev);
+  };
   useEffect(() => {
     const getRecipe = async () => {
       try {
@@ -34,9 +69,21 @@ export function RecipePage() {
         setLoading(false);
       }
     };
-
     getRecipe();
-  }, [id]);
+
+    function handleOutsideClick(event) {
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setShowMiniCart(false);
+      }
+    }
+    if (showMiniCart) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [id, showMiniCart]);
 
   if (loading) {
     return <div className="mt-48 p-3 text-3xl text-orange">Loading...</div>;
@@ -102,7 +149,10 @@ export function RecipePage() {
           <div className="h-full space-x-2 space-y-2 text-beige">
             {data?.tags?.map((tag) => {
               return (
-                <span className="inline-block rounded-full border border-yellow px-4 py-2 text-xl">
+                <span
+                  className="inline-block rounded-full border border-yellow px-4 py-2 text-xl"
+                  key={tag}
+                >
                   {tag}
                 </span>
               );
@@ -111,9 +161,13 @@ export function RecipePage() {
         </div>
         {/* ingredients  */}
         <div className="w-full space-y-4 py-6">
-          <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
-            Ingredients
-          </h4>
+          <div className="flex justify-between">
+            <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
+              Ingredients
+            </h4>
+            <CartIconToggle onClick={handleToggleCart} />
+          </div>
+
           <div className="space-y-4 rounded-xl border border-yellow p-6 text-beige md:flex md:flex-wrap md:space-y-0">
             {data?.ingredients?.map((item) => {
               return (
@@ -124,6 +178,8 @@ export function RecipePage() {
                   id={item.id}
                   recipeName={data.recipe_name}
                   recipeId={data.id}
+                  recipeImage={data.image}
+                  onClickShowCartModal={handleClickAddBtn}
                 />
               );
             })}
@@ -139,6 +195,71 @@ export function RecipePage() {
           <p className="pl-2 text-beige">{data ? data.note : ""}</p>
         </div>
       </div>
+      {/* mini cart */}
+      {showMiniCart && (
+        <SlideOverPanel ref={cartRef} onClose={handleToggleCart}>
+          {cart?.length > 0 && (
+            <p className="w-full text-center text-xl text-beige">
+              Total: {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
+            </p>
+          )}
+          {recipeGroup?.map((group) => {
+            const ingredientsArr = group.ingredients;
+            return (
+              <div
+                key={group.recipe_id}
+                className="w-full space-y-4 rounded-xl border border-yellow p-2 text-beige"
+              >
+                <div className="flex flex-col">
+                  <Link to={`/recipe-page/${group.recipe_id}`}>
+                    <h4 className="miniCartRecipeName">
+                      {group.recipe_name} <HiLink />
+                    </h4>
+                  </Link>
+                  <div className="mt-0">
+                    <img
+                      className="h-[100px] w-[100px] rounded-full object-cover object-center 1440:h-[150px] 1440:w-[150px]"
+                      src={group && group.recipe_image}
+                      alt={group && group.recipe_name}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full flex-col space-y-6 rounded-xl">
+                  {ingredientsArr?.map((ingredient) => {
+                    return (
+                      <MiniCartItem
+                        key={ingredient.id}
+                        id={ingredient.id}
+                        ingredient={ingredient}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+          <button className="submitBtn w-full" onClick={() => navigate("/cart")}>
+            Check My Cart
+          </button>
+        </SlideOverPanel>
+      )}
+      {/* mini cart modal */}
+      {showMiniCartModal && (
+        <MiniCartModal onClose={() => setShowMiniCartModal(false)}>
+          {isNewItem ? (
+            <>
+              <p className="font-semibold text-orange">{`🎉 ${latestItemTitle}`}</p>
+              <p>added to cart!</p>
+            </>
+          ) : (
+            <>
+              <p className="text-blue100">{`🛒 ${latestItemTitle}`}</p>
+              <p className="text-blue100">is already in your cart.</p>
+            </>
+          )}
+        </MiniCartModal>
+      )}
     </section>
   );
 }
