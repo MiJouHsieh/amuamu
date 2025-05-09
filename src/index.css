@@ -33,7 +33,22 @@
     @apply mx-auto flex h-[88px] max-w-[1110px] items-center justify-between px-10 py-6 text-white md:h-24 md:px-8;
   }
   .slideOverPanelStyle {
-    @apply fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/55 px-6 py-8 pl-8 text-white backdrop-blur-xl overflow-y-auto;
+    @apply fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[500px] overflow-y-auto bg-blue900/55 px-6 py-8 pl-8 text-white backdrop-blur-xl;
+  }
+  .borderYellow {
+    @apply rounded-xl border border-yellow p-2 text-beige;
+  }
+  .miniCartModal {
+    @apply fixed left-1/2 z-50 w-[60%] max-w-[500px] -translate-x-1/2 rounded-xl bg-orange900/40 p-4 ring-1 ring-yellow400/40 backdrop-blur-xl transition-all duration-700 ease-in-out;
+  }
+  .miniCartModalHidden {
+    @apply top-[-100px] opacity-0;
+  }
+  .miniCartModalEnter {
+    @apply top-0 opacity-100;
+  }
+  .miniCartModalStay {
+    @apply top-[100px] opacity-100;
   }
   .checkedCountIcon {
     @apply h-[25px] w-[25px] cursor-pointer border-[2px];
@@ -123,7 +138,7 @@
     @apply text-orange;
   }
   .miniCartRecipeName {
-    @apply mb-2 flex justify-start items-end gap-x-2 font-chocolateClassicalSans text-xl md:text-2xl font-semibold text-yellow400 underline transition-colors duration-500;
+    @apply mb-2 flex items-end justify-start gap-x-2 font-chocolateClassicalSans text-xl font-semibold text-yellow400 underline transition-colors duration-500 md:text-2xl;
   }
   .miniCartRecipeName:hover {
     @apply text-orange;

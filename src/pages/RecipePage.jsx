@@ -2,6 +2,8 @@ import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
 import { SlideOverPanel } from "src/components/SlideOverPanel";
 import { MiniCartItem } from "src/components/MiniCartItem";
+import { MiniCartModal } from "src/components/MiniCartModal";
+import { CartIconToggle } from "src/components/CartIconToggle";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -17,10 +19,12 @@ export function RecipePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showMiniCart, setShowMiniCart] = useState(false);
+  const [showMiniCartModal, setShowMiniCartModal] = useState(false);
   const cartRef = useRef(null);
+  const [latestItemTitle, setLatestItemTitle] = useState("");
+  const [isNewItem, setIsNewItem] = useState(true);
   const { cart } = useCart();
 
-  //分類食譜
   const groupedIngredients = cart.reduce((acc, item) => {
     const key = item.recipe_id;
     if (!acc[key]) {
@@ -36,10 +40,14 @@ export function RecipePage() {
   }, {});
   const recipeGroup = Object.values(groupedIngredients);
 
-  const handleClick = () => {
+  const handleClickAddBtn = (title, isNew) => {
+    setLatestItemTitle(title);
+    setIsNewItem(isNew);
+    setShowMiniCartModal(true);
+  };
+  const handleToggleCart = () => {
     setShowMiniCart((prev) => !prev);
   };
-
   useEffect(() => {
     const getRecipe = async () => {
       try {
@@ -141,7 +149,10 @@ export function RecipePage() {
           <div className="h-full space-x-2 space-y-2 text-beige">
             {data?.tags?.map((tag) => {
               return (
-                <span className="inline-block rounded-full border border-yellow px-4 py-2 text-xl">
+                <span
+                  className="inline-block rounded-full border border-yellow px-4 py-2 text-xl"
+                  key={tag}
+                >
                   {tag}
                 </span>
               );
@@ -150,9 +161,13 @@ export function RecipePage() {
         </div>
         {/* ingredients  */}
         <div className="w-full space-y-4 py-6">
-          <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
-            Ingredients
-          </h4>
+          <div className="flex justify-between">
+            <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
+              Ingredients
+            </h4>
+            <CartIconToggle onClick={handleToggleCart} />
+          </div>
+
           <div className="space-y-4 rounded-xl border border-yellow p-6 text-beige md:flex md:flex-wrap md:space-y-0">
             {data?.ingredients?.map((item) => {
               return (
@@ -164,7 +179,7 @@ export function RecipePage() {
                   recipeName={data.recipe_name}
                   recipeId={data.id}
                   recipeImage={data.image}
-                  onClickShowCart={handleClick}
+                  onClickShowCartModal={handleClickAddBtn}
                 />
               );
             })}
@@ -182,7 +197,7 @@ export function RecipePage() {
       </div>
       {/* mini cart */}
       {showMiniCart && (
-        <SlideOverPanel ref={cartRef} onClose={handleClick}>
+        <SlideOverPanel ref={cartRef} onClose={handleToggleCart}>
           {cart?.length > 0 && (
             <p className="w-full text-center text-xl text-beige">
               Total: {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
@@ -225,9 +240,25 @@ export function RecipePage() {
             );
           })}
           <button className="submitBtn w-full" onClick={() => navigate("/cart")}>
-            Cart Page
+            Check My Cart
           </button>
         </SlideOverPanel>
+      )}
+      {/* mini cart modal */}
+      {showMiniCartModal && (
+        <MiniCartModal onClose={() => setShowMiniCartModal(false)}>
+          {isNewItem ? (
+            <>
+              <p className="font-semibold text-orange">{`🎉 ${latestItemTitle}`}</p>
+              <p>added to cart!</p>
+            </>
+          ) : (
+            <>
+              <p className="text-blue100">{`🛒 ${latestItemTitle}`}</p>
+              <p className="text-blue100">is already in your cart.</p>
+            </>
+          )}
+        </MiniCartModal>
       )}
     </section>
   );

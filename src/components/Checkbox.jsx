@@ -9,20 +9,21 @@ export function Checkbox({
   recipeName,
   recipeId,
   recipeImage,
-  onClickShowCart,
+  onClickShowCartModal,
 }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart({
+    const isNewItem = addToCart({
       id: id,
       title: itemTitle,
       recipe_id: recipeId,
       recipe_name: recipeName,
       recipe_image: recipeImage,
     });
-    onClickShowCart();
+    onClickShowCartModal(itemTitle, isNewItem);
   };
+
   return (
     <div className={`${className} flex items-center`}>
       <input
