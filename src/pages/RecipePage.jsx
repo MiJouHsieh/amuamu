@@ -105,8 +105,10 @@ export function RecipePage() {
           <div className="mt-10">
             <img
               className="h-[300px] w-[300px] rounded-full object-cover object-center 500:rounded-full md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
-              src={data && data.image}
+              src={data?.image || "/images/recipe-fallback-image.png"}
               alt={data && data.recipe_name}
+              loading="lazy"
+              onError={(e) => (e.currentTarget.src = "/images/recipe-fallback-image.png")}
             />
           </div>
           {/* user edit delete */}
@@ -219,8 +221,10 @@ export function RecipePage() {
                   <div className="mt-0">
                     <img
                       className="h-[100px] w-[100px] rounded-full object-cover object-center 1440:h-[150px] 1440:w-[150px]"
-                      src={group && group.recipe_image}
-                      alt={group && group.recipe_name}
+                      src={group?.recipe_image || "/images/recipe-fallback-image.png"}
+                      alt={group?.recipe_name || "Recipe Image"}
+                      loading="lazy"
+                      onError={(e) => (e.currentTarget.src = "/images/recipe-fallback-image.png")}
                     />
                   </div>
                 </div>
