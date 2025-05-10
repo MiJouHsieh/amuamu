@@ -4,6 +4,7 @@ import { SlideOverPanel } from "src/components/SlideOverPanel";
 import { MiniCartItem } from "src/components/MiniCartItem";
 import { MiniCartModal } from "src/components/MiniCartModal";
 import { CartIconToggle } from "src/components/CartIconToggle";
+import { RecipeImage } from "src/components/RecipeImage";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -103,10 +104,10 @@ export function RecipePage() {
         {/* image */}
         <div className="flex w-full flex-1 flex-col items-center justify-center space-y-4 575:mt-4 990:w-[40%]">
           <div className="mt-10">
-            <img
+            <RecipeImage
               className="h-[300px] w-[300px] rounded-full object-cover object-center 500:rounded-full md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
-              src={data && data.image}
-              alt={data && data.recipe_name}
+              src={data?.image}
+              alt={data?.recipe_name}
             />
           </div>
           {/* user edit delete */}
@@ -216,11 +217,11 @@ export function RecipePage() {
                       {group.recipe_name} <HiLink />
                     </h4>
                   </Link>
-                  <div className="mt-0">
-                    <img
+                  <div>
+                    <RecipeImage
                       className="h-[100px] w-[100px] rounded-full object-cover object-center 1440:h-[150px] 1440:w-[150px]"
-                      src={group && group.recipe_image}
-                      alt={group && group.recipe_name}
+                      src={group?.recipe_image}
+                      alt={group?.recipe_name}
                     />
                   </div>
                 </div>
