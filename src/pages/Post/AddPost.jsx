@@ -1,91 +1,16 @@
 import { HiPlusCircle } from "react-icons/hi";
 import { useState, useEffect } from "react";
-import { IngredientCollection } from "src/components/IngredientCollection";
-import { InstructionsCollection } from "src/components/InstructionsCollection";
+import { IngredientCollection } from "src/components/post/IngredientCollection";
+import { InstructionsCollection } from "src/components/post/InstructionsCollection";
+import { TagsInput } from "src/components/post/TagsInput";
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
+import { useConfetti } from "src/hooks/useConfetti";
 
 import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
-import JSConfetti from "js-confetti";
-const jsConfetti = new JSConfetti();
-
-export function TagsInput({ tags, setTags }) {
-  const [inputValue, setInputValue] = useState("");
-
-  const handleAddTag = () => {
-    const trimmed = inputValue.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setInputValue("");
-  };
-
-  const handleDeleteTag = (e, index) => {
-    e?.preventDefault?.();
-    const newTags = tags.filter((_, idx) => idx !== index);
-    setTags(newTags);
-  };
-
-  const handleEditTag = (index, newValue) => {
-    const newTags = tags.map((tag, idx) => (idx === index ? newValue : tag));
-    setTags(newTags);
-  };
-
-  return (
-    <div className="mx-auto flex w-full flex-col gap-y-2 p-4">
-      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2">
-        <label className="form-label w-full text-orange">Recipe Tags</label>
-        <div className="flex w-full items-center justify-between gap-x-4">
-          <input
-            type="text"
-            placeholder="🏷️ e.g. cake"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddTag();
-              }
-            }}
-            className="darkInputField inputField flex-1 resize-none overflow-auto"
-          />
-          {inputValue.length > 0 && (
-            <button type="button" onClick={handleAddTag} className="activeBtn">
-              <HiPlusCircle className="activeIcon text-orange" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="hover:addPostShadow flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <div key={index} className="tag-container">
-            <input
-              value={tag}
-              style={{ width: `${Math.max(tag.length, 1)}ch` }}
-              onChange={(e) => handleEditTag(index, e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Backspace" && tag.length === 0) {
-                  e.preventDefault();
-                  handleDeleteTag(e, index);
-                } else if (e.key === "Enter") {
-                  e.preventDefault();
-                }
-              }}
-              className="tag min-w-[100px]"
-            />
-            <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2 text-blue300">
-              X
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -108,6 +33,7 @@ export function AddPost() {
 
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
+  const { triggerConfetti } = useConfetti();
 
   const { user } = useAuth();
   const { id } = useParams(); // edit mode with id
@@ -226,27 +152,7 @@ export function AddPost() {
     try {
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
-      await jsConfetti.addConfetti({
-        emojis: [
-          "🥕",
-          "🌽",
-          "🍅",
-          "💫",
-          "🥬",
-          "🌸",
-          "🌶️",
-          "🧀",
-          "🥑",
-          "🫐",
-          "🥩",
-          "🧅",
-          "🍆",
-          "🍖",
-        ],
-        emojiSize: 50,
-        confettiNumber: 200,
-        confettiRadius: 6,
-      });
+      await triggerConfetti();
       const { error } = await supabase.from("recipe").insert([updates]);
       if (error) {
         throw error;
