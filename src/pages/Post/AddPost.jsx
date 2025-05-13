@@ -6,7 +6,7 @@ import { TagsInput } from "src/components/post/TagsInput";
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
 import { useConfetti } from "src/hooks/useConfetti";
-
+import { useImageUpload } from "src/hooks/useImageUpload";
 import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,8 +14,7 @@ import { useAuth } from "src/context/AuthContext";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+
   const [preparation, setPreparation] = useState({
     preparationTime: "",
     cookTime: "",
@@ -29,11 +28,12 @@ export function AddPost() {
   const [instructions, setInstructions] = useState([]);
 
   const [note, setNote] = useState("");
-  const [uploading, setUploading] = useState(false);
 
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
   const { triggerConfetti } = useConfetti();
+  const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
+    useImageUpload();
 
   const { user } = useAuth();
   const { id } = useParams(); // edit mode with id
@@ -68,7 +68,7 @@ export function AddPost() {
     };
 
     fetchRecipe();
-  }, [user, navigate, id]);
+  }, [user, navigate, id, setImage, setImagePreview]);
 
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
@@ -194,58 +194,6 @@ export function AddPost() {
       }
     } catch (error) {
       alert("⚠️ Failed to update: " + error.message);
-    }
-  };
-
-  const uploadImage = async (event) => {
-    try {
-      setUploading(true);
-
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
-      }
-      const file = event.target?.files[0];
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`; // 建立檔案路徑
-
-      if (file) {
-        setImage(file);
-        console.log("選擇的圖片", file);
-        const imagePreview = URL.createObjectURL(file);
-        setImagePreview(imagePreview);
-      }
-
-      // 上傳圖片到 Supabase
-      let { data, error: uploadError } = await supabase.storage
-        .from("recipe-image")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-      getURL(filePath);
-      console.log("Upload successful! Image URL:", data.path);
-    } catch (error) {
-      alert(`Failed to upload image：${error.message}`);
-    }
-  };
-
-  const getURL = async (url) => {
-    try {
-      // 從 Supabase 取得公開 URL
-      const { publicURL, error } = await supabase.storage.from("recipe-image").getPublicUrl(url);
-
-      if (error) {
-        throw error;
-      }
-
-      // 將圖片 URL 存入 state
-      setImage([publicURL]);
-    } catch (error) {
-      alert(`獲取圖片 URL 失敗：${error.message}`);
-    } finally {
-      setUploading(false);
     }
   };
 
