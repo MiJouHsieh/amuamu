@@ -1,4 +1,4 @@
-import { InstructionItem } from "src/components/InstructionItem";
+import { InstructionItem } from "src/components/post/InstructionItem";
 
 export function InstructionsCollection({ instructions, onSave, onDelete, onChangeMode }) {
   return (
