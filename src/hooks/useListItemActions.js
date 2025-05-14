@@ -38,20 +38,19 @@ export const useListItemActions = () => {
     setInputValue("");
   };;
 
-  const handleSave = ({ id, title, setItems }) => {
-    setItems((items) => {
-      return items.map((item) => {
+  const handleSave = ({ id, title, items, setItems }) => {
+    console.log("💾 Saving:", id, title);
+    const updatedItems = items.map((item) => {
         if (item.id === id) {
           return {
             ...item,
-            id,
             title,
             isEdit: false,
           };
         }
         return item;
       });
-    });
+    setItems(updatedItems);
   };
 
   const handleDelete = ( id, setItems ) => {

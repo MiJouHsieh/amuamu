@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { IngredientCollection } from "src/components/post/IngredientCollection";
 import { InstructionsCollection } from "src/components/post/InstructionsCollection";
 import { TagsInput } from "src/components/post/TagsInput";
+import { RecipeFormButtons } from "src/components/post/RecipeFormButtons";
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
 import { useConfetti } from "src/hooks/useConfetti";
@@ -14,26 +15,40 @@ import { useAuth } from "src/context/AuthContext";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
+  const [originalTitle, setOriginalTitle] = useState("");
 
   const [preparation, setPreparation] = useState({
     preparationTime: "",
     cookTime: "",
     servings: "",
   });
+  const [originalPreparation, setOriginalPreparation] = useState({
+    preparationTime: "",
+    cookTime: "",
+    servings: "",
+  });
+
   const [tags, setTags] = useState([]);
+  const [originalTags, setOriginalTags] = useState([]);
+
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState([]);
+  const [originalIngredients, setOriginalIngredients] = useState([]);
 
   const [instructionsInput, setInstructionsInput] = useState("");
   const [instructions, setInstructions] = useState([]);
+  const [originalInstructions, setOriginalInstructions] = useState([]);
 
   const [note, setNote] = useState("");
+  const [originalNote, setOriginalNote] = useState("");
+
+  const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
+    useImageUpload();
+  const [originalImage, setOriginalImage] = useState([]);
 
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
   const { triggerConfetti } = useConfetti();
-  const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
-    useImageUpload();
 
   const { user } = useAuth();
   const { id } = useParams(); // edit mode with id
@@ -54,24 +69,104 @@ export function AddPost() {
       const { data, error } = await supabase.from("recipe").select("*").eq("id", id).single();
 
       if (error) {
-        console.error("載入食譜錯誤", error);
+        console.error("Failed to load recipe", error);
+        return;
+      }
+      if (data.draft_data && Object.keys(data.draft_data).length > 0 && data.draft_data.title) {
+        const draft = data.draft_data;
+        setTitle(draft.title);
+        setImage(draft.image || []);
+        setImagePreview(draft.image?.[0]);
+        setTags(draft.tags);
+        setPreparation(draft.preparation);
+        setIngredients(draft.ingredients);
+        setInstructions(draft.instructions);
+        setNote(draft.note);
       } else {
         setTitle(data.recipe_name);
+        setOriginalTitle(data.recipe_name);
         setImage(data.image || []);
+        setOriginalImage(data.image || []);
         setImagePreview(data.image?.[0]);
         setTags(data.tags);
+        setOriginalTags(data.tags);
         setPreparation(data.preparation);
+        setOriginalPreparation(data.preparation);
         setIngredients(data.ingredients);
+        setOriginalIngredients(data.ingredients);
         setInstructions(data.instructions);
+        setOriginalInstructions(data.instructions);
         setNote(data.note);
+        setOriginalNote(data.note);
       }
     };
 
     fetchRecipe();
   }, [user, navigate, id, setImage, setImagePreview]);
 
+  useEffect(() => {
+    if (!isEditMode) return;
+    if (!user || !id) return;
+
+    const isChanged =
+      title !== originalTitle ||
+      note !== originalNote ||
+      JSON.stringify(tags) !== JSON.stringify(originalTags) ||
+      JSON.stringify(preparation) !== JSON.stringify(originalPreparation) ||
+      JSON.stringify(image) !== JSON.stringify(originalImage) ||
+      JSON.stringify(ingredients) !== JSON.stringify(originalIngredients) ||
+      JSON.stringify(instructions) !== JSON.stringify(originalInstructions);
+
+    if (!isChanged) {
+      console.log("🛑 No changes, skip autosave");
+      return;
+    }
+    const timer = setTimeout(async () => {
+      const draftPayload = {
+        title,
+        tags,
+        ingredients,
+        instructions,
+        note,
+        preparation,
+        image,
+      };
+
+      const { error } = await supabase
+        .from("recipe")
+        .update({ draft_data: draftPayload })
+        .eq("id", id);
+
+      if (error) {
+        console.error("⚠️ Failed to autosave draft", error);
+      } else {
+        console.log("💾 Draft saved to Supabase");
+      }
+    }, 1000);
+    return () => clearTimeout(timer); 
+    title,
+    tags,
+    note,
+    preparation,
+    image,
+    ingredients,
+    instructions,
+    originalTitle,
+    originalTags,
+    originalNote,
+    originalPreparation,
+    originalImage,
+    originalIngredients,
+    originalInstructions,
+    user,
+    id,
+    isEditMode,
+  ]);
+
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
+  const isSubmitDisabled =
+    uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0;
 
   const handleChangePreparation = (e) => {
     const { name, value } = e.target;
@@ -152,8 +247,8 @@ export function AddPost() {
     try {
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
-      await triggerConfetti();
       const { error } = await supabase.from("recipe").insert([updates]);
+      await triggerConfetti();
       if (error) {
         throw error;
       } else {
@@ -199,6 +294,20 @@ export function AddPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title.trim()) {
+      alert("⚠️ Don't forget to name your recipe!");
+      return;
+    }
+    if (ingredients.length === 0) {
+      alert("⚠️ You'll need at least one ingredient to get started.");
+      return;
+    }
+    if (instructions.length === 0) {
+      alert("⚠️ Please add at least one cooking step.");
+      return;
+    }
+    console.log("🧪 ingredients", ingredients);
+    console.log("🧪 instructions", instructions);
     const payload = {
       title,
       image,
@@ -213,6 +322,25 @@ export function AddPost() {
     } else {
       await addRecipe(payload);
     }
+  };
+
+  const handleCancelEdit = async () => {
+    setTitle(originalTitle);
+    setImage(originalImage);
+    setPreparation(originalPreparation);
+    setTags(originalTags);
+    setIngredients(originalIngredients);
+    setInstructions(originalInstructions);
+    setNote(originalNote);
+
+    // 清空 Supabase 的 draft_data 欄位
+    if (isEditMode) {
+      const { error } = await supabase.from("recipe").update({ draft_data: null }).eq("id", id);
+      if (error) console.error("❌ Failed to clear draft_data", error);
+    }
+
+    alert("Draft cleared. You're now viewing the original version.");
+    navigate(`/recipe-page/${id}`);
   };
 
   return (
@@ -298,7 +426,6 @@ export function AddPost() {
             </div>
             {/* Multiple Tags  */}
             <TagsInput tags={tags} setTags={setTags} />
-
             {/* Ingredients */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
               <label className="form-label w-full text-orange">Ingredients</label>
@@ -367,17 +494,13 @@ export function AddPost() {
               />
             </div>
             {/* button */}
-            <button
-              type="submit"
-              className="submitBtn"
-              disabled={
-                uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0
-              }
-              aria-label="Submit recipe form"
-              onClick={handleSubmit}
-            >
-              {uploading ? "uploading..." : isEditMode ? "📘 Update recipe" : "📖 Add recipe"}
-            </button>
+            <RecipeFormButtons
+              isEditMode={isEditMode}
+              uploading={uploading}
+              disabled={isSubmitDisabled}
+              onSubmit={handleSubmit}
+              onCancelEdit={handleCancelEdit}
+            />
           </form>
         </div>
       </section>
