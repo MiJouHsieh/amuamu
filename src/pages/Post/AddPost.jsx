@@ -293,6 +293,11 @@ export function AddPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (uploading) {
+      alert("⏳ Upload in progress, please wait...");
+      return;
+    }
     if (!title.trim()) {
       alert("⚠️ Don't forget to name your recipe!");
       return;
