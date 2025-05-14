@@ -143,7 +143,8 @@ export function AddPost() {
         console.log("💾 Draft saved to Supabase");
       }
     }, 1000);
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer); // cleanup：輸入過程中清除舊的 timer
+  }, [
     title,
     tags,
     note,
