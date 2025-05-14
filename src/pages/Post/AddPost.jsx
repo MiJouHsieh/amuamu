@@ -1,113 +1,54 @@
 import { HiPlusCircle } from "react-icons/hi";
 import { useState, useEffect } from "react";
-import { IngredientCollection } from "src/components/IngredientCollection";
-import { InstructionsCollection } from "src/components/InstructionsCollection";
+import { IngredientCollection } from "src/components/post/IngredientCollection";
+import { InstructionsCollection } from "src/components/post/InstructionsCollection";
+import { TagsInput } from "src/components/post/TagsInput";
+import { RecipeFormButtons } from "src/components/post/RecipeFormButtons";
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
-
+import { useConfetti } from "src/hooks/useConfetti";
+import { useImageUpload } from "src/hooks/useImageUpload";
 import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
-import JSConfetti from "js-confetti";
-const jsConfetti = new JSConfetti();
-
-export function TagsInput({ tags, setTags }) {
-  const [inputValue, setInputValue] = useState("");
-
-  const handleAddTag = () => {
-    const trimmed = inputValue.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setInputValue("");
-  };
-
-  const handleDeleteTag = (e, index) => {
-    e?.preventDefault?.();
-    const newTags = tags.filter((_, idx) => idx !== index);
-    setTags(newTags);
-  };
-
-  const handleEditTag = (index, newValue) => {
-    const newTags = tags.map((tag, idx) => (idx === index ? newValue : tag));
-    setTags(newTags);
-  };
-
-  return (
-    <div className="mx-auto flex w-full flex-col gap-y-2 p-4">
-      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2">
-        <label className="form-label w-full text-orange">Recipe Tags</label>
-        <div className="flex w-full items-center justify-between gap-x-4">
-          <input
-            type="text"
-            placeholder="🏷️ e.g. cake"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddTag();
-              }
-            }}
-            className="darkInputField inputField flex-1 resize-none overflow-auto"
-          />
-          {inputValue.length > 0 && (
-            <button type="button" onClick={handleAddTag} className="activeBtn">
-              <HiPlusCircle className="activeIcon text-orange" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="hover:addPostShadow flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <div key={index} className="tag-container">
-            <input
-              value={tag}
-              style={{ width: `${Math.max(tag.length, 1)}ch` }}
-              onChange={(e) => handleEditTag(index, e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Backspace" && tag.length === 0) {
-                  e.preventDefault();
-                  handleDeleteTag(e, index);
-                } else if (e.key === "Enter") {
-                  e.preventDefault();
-                }
-              }}
-              className="tag min-w-[100px]"
-            />
-            <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2 text-blue300">
-              X
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export function AddPost() {
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [originalTitle, setOriginalTitle] = useState("");
+
   const [preparation, setPreparation] = useState({
     preparationTime: "",
     cookTime: "",
     servings: "",
   });
+  const [originalPreparation, setOriginalPreparation] = useState({
+    preparationTime: "",
+    cookTime: "",
+    servings: "",
+  });
+
   const [tags, setTags] = useState([]);
+  const [originalTags, setOriginalTags] = useState([]);
+
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState([]);
+  const [originalIngredients, setOriginalIngredients] = useState([]);
 
   const [instructionsInput, setInstructionsInput] = useState("");
   const [instructions, setInstructions] = useState([]);
+  const [originalInstructions, setOriginalInstructions] = useState([]);
 
   const [note, setNote] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [originalNote, setOriginalNote] = useState("");
+
+  const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
+    useImageUpload();
+  const [originalImage, setOriginalImage] = useState([]);
 
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
+  const { triggerConfetti } = useConfetti();
 
   const { user } = useAuth();
   const { id } = useParams(); // edit mode with id
@@ -128,24 +69,105 @@ export function AddPost() {
       const { data, error } = await supabase.from("recipe").select("*").eq("id", id).single();
 
       if (error) {
-        console.error("載入食譜錯誤", error);
+        console.error("Failed to load recipe", error);
+        return;
+      }
+      if (data.draft_data && Object.keys(data.draft_data).length > 0 && data.draft_data.title) {
+        const draft = data.draft_data;
+        setTitle(draft.title);
+        setImage(draft.image || []);
+        setImagePreview(draft.image?.[0]);
+        setTags(draft.tags);
+        setPreparation(draft.preparation);
+        setIngredients(draft.ingredients);
+        setInstructions(draft.instructions);
+        setNote(draft.note);
       } else {
         setTitle(data.recipe_name);
+        setOriginalTitle(data.recipe_name);
         setImage(data.image || []);
+        setOriginalImage(data.image || []);
         setImagePreview(data.image?.[0]);
         setTags(data.tags);
+        setOriginalTags(data.tags);
         setPreparation(data.preparation);
+        setOriginalPreparation(data.preparation);
         setIngredients(data.ingredients);
+        setOriginalIngredients(data.ingredients);
         setInstructions(data.instructions);
+        setOriginalInstructions(data.instructions);
         setNote(data.note);
+        setOriginalNote(data.note);
       }
     };
 
     fetchRecipe();
-  }, [user, navigate, id]);
+  }, [user, navigate, id, setImage, setImagePreview]);
+
+  useEffect(() => {
+    if (!isEditMode) return;
+    if (!user || !id) return;
+
+    const isChanged =
+      title !== originalTitle ||
+      note !== originalNote ||
+      JSON.stringify(tags) !== JSON.stringify(originalTags) ||
+      JSON.stringify(preparation) !== JSON.stringify(originalPreparation) ||
+      JSON.stringify(image) !== JSON.stringify(originalImage) ||
+      JSON.stringify(ingredients) !== JSON.stringify(originalIngredients) ||
+      JSON.stringify(instructions) !== JSON.stringify(originalInstructions);
+
+    if (!isChanged) {
+      console.log("🛑 No changes, skip autosave");
+      return;
+    }
+    const timer = setTimeout(async () => {
+      const draftPayload = {
+        title,
+        tags,
+        ingredients,
+        instructions,
+        note,
+        preparation,
+        image,
+      };
+
+      const { error } = await supabase
+        .from("recipe")
+        .update({ draft_data: draftPayload })
+        .eq("id", id);
+
+      if (error) {
+        console.error("⚠️ Failed to autosave draft", error);
+      } else {
+        console.log("💾 Draft saved to Supabase");
+      }
+    }, 1000);
+    return () => clearTimeout(timer); // cleanup：輸入過程中清除舊的 timer
+  }, [
+    title,
+    tags,
+    note,
+    preparation,
+    image,
+    ingredients,
+    instructions,
+    originalTitle,
+    originalTags,
+    originalNote,
+    originalPreparation,
+    originalImage,
+    originalIngredients,
+    originalInstructions,
+    user,
+    id,
+    isEditMode,
+  ]);
 
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
+  const isSubmitDisabled =
+    uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0;
 
   const handleChangePreparation = (e) => {
     const { name, value } = e.target;
@@ -226,28 +248,8 @@ export function AddPost() {
     try {
       console.log("🧪 目前登入者 id：", user?.id);
       console.log("🧪 傳送到 supabase 的資料：", updates);
-      await jsConfetti.addConfetti({
-        emojis: [
-          "🥕",
-          "🌽",
-          "🍅",
-          "💫",
-          "🥬",
-          "🌸",
-          "🌶️",
-          "🧀",
-          "🥑",
-          "🫐",
-          "🥩",
-          "🧅",
-          "🍆",
-          "🍖",
-        ],
-        emojiSize: 50,
-        confettiNumber: 200,
-        confettiRadius: 6,
-      });
       const { error } = await supabase.from("recipe").insert([updates]);
+      await triggerConfetti();
       if (error) {
         throw error;
       } else {
@@ -291,60 +293,22 @@ export function AddPost() {
     }
   };
 
-  const uploadImage = async (event) => {
-    try {
-      setUploading(true);
-
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
-      }
-      const file = event.target?.files[0];
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`; // 建立檔案路徑
-
-      if (file) {
-        setImage(file);
-        console.log("選擇的圖片", file);
-        const imagePreview = URL.createObjectURL(file);
-        setImagePreview(imagePreview);
-      }
-
-      // 上傳圖片到 Supabase
-      let { data, error: uploadError } = await supabase.storage
-        .from("recipe-image")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-      getURL(filePath);
-      console.log("Upload successful! Image URL:", data.path);
-    } catch (error) {
-      alert(`Failed to upload image：${error.message}`);
-    }
-  };
-
-  const getURL = async (url) => {
-    try {
-      // 從 Supabase 取得公開 URL
-      const { publicURL, error } = await supabase.storage.from("recipe-image").getPublicUrl(url);
-
-      if (error) {
-        throw error;
-      }
-
-      // 將圖片 URL 存入 state
-      setImage([publicURL]);
-    } catch (error) {
-      alert(`獲取圖片 URL 失敗：${error.message}`);
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title.trim()) {
+      alert("⚠️ Don't forget to name your recipe!");
+      return;
+    }
+    if (ingredients.length === 0) {
+      alert("⚠️ You'll need at least one ingredient to get started.");
+      return;
+    }
+    if (instructions.length === 0) {
+      alert("⚠️ Please add at least one cooking step.");
+      return;
+    }
+    console.log("🧪 ingredients", ingredients);
+    console.log("🧪 instructions", instructions);
     const payload = {
       title,
       image,
@@ -359,6 +323,25 @@ export function AddPost() {
     } else {
       await addRecipe(payload);
     }
+  };
+
+  const handleCancelEdit = async () => {
+    setTitle(originalTitle);
+    setImage(originalImage);
+    setPreparation(originalPreparation);
+    setTags(originalTags);
+    setIngredients(originalIngredients);
+    setInstructions(originalInstructions);
+    setNote(originalNote);
+
+    // 清空 Supabase 的 draft_data 欄位
+    if (isEditMode) {
+      const { error } = await supabase.from("recipe").update({ draft_data: null }).eq("id", id);
+      if (error) console.error("❌ Failed to clear draft_data", error);
+    }
+
+    alert("Draft cleared. You're now viewing the original version.");
+    navigate(`/recipe-page/${id}`);
   };
 
   return (
@@ -444,7 +427,6 @@ export function AddPost() {
             </div>
             {/* Multiple Tags  */}
             <TagsInput tags={tags} setTags={setTags} />
-
             {/* Ingredients */}
             <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
               <label className="form-label w-full text-orange">Ingredients</label>
@@ -513,17 +495,13 @@ export function AddPost() {
               />
             </div>
             {/* button */}
-            <button
-              type="submit"
-              className="submitBtn"
-              disabled={
-                uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0
-              }
-              aria-label="Submit recipe form"
-              onClick={handleSubmit}
-            >
-              {uploading ? "uploading..." : isEditMode ? "📘 Update recipe" : "📖 Add recipe"}
-            </button>
+            <RecipeFormButtons
+              isEditMode={isEditMode}
+              uploading={uploading}
+              disabled={isSubmitDisabled}
+              onSubmit={handleSubmit}
+              onCancelEdit={handleCancelEdit}
+            />
           </form>
         </div>
       </section>

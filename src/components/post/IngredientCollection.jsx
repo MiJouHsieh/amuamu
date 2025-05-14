@@ -1,4 +1,4 @@
-import { IngredientItem } from "src/components/IngredientItem";
+import { IngredientItem } from "src/components/post/IngredientItem";
 export function IngredientCollection({
   ingredients,
   onSave,
