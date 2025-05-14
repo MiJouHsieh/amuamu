@@ -1,4 +1,4 @@
-export function RecipeFormButtons({ isEditMode, uploading, disabled, onSubmit, onCancelEdit }) {
+export function RecipeFormButtons({ isEditMode, uploading, onSubmit, onCancelEdit }) {
   return (
     <>
       {isEditMode ? (
@@ -6,7 +6,6 @@ export function RecipeFormButtons({ isEditMode, uploading, disabled, onSubmit, o
           <button
             type="submit"
             className="submitBtn"
-            disabled={disabled}
             aria-label="Submit recipe form"
             onClick={onSubmit}
           >
@@ -15,7 +14,6 @@ export function RecipeFormButtons({ isEditMode, uploading, disabled, onSubmit, o
           <button
             type="button"
             className="submitBtn"
-            disabled={disabled}
             aria-label="Cancel Edit recipe form"
             onClick={onCancelEdit}
           >
@@ -26,7 +24,6 @@ export function RecipeFormButtons({ isEditMode, uploading, disabled, onSubmit, o
         <button
           type="submit"
           className="submitBtn"
-          disabled={disabled}
           aria-label="Submit recipe form"
           onClick={onSubmit}
         >

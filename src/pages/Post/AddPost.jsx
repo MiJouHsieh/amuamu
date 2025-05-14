@@ -166,8 +166,6 @@ export function AddPost() {
 
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
-  const isSubmitDisabled =
-    uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0;
 
   const handleChangePreparation = (e) => {
     const { name, value } = e.target;
@@ -295,6 +293,11 @@ export function AddPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (uploading) {
+      alert("⏳ Upload in progress, please wait...");
+      return;
+    }
     if (!title.trim()) {
       alert("⚠️ Don't forget to name your recipe!");
       return;
@@ -498,7 +501,7 @@ export function AddPost() {
             <RecipeFormButtons
               isEditMode={isEditMode}
               uploading={uploading}
-              disabled={isSubmitDisabled}
+              // disabled={isSubmitDisabled}
               onSubmit={handleSubmit}
               onCancelEdit={handleCancelEdit}
             />
