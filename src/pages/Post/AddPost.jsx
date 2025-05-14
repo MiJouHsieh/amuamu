@@ -46,7 +46,6 @@ export function AddPost() {
   const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
     useImageUpload();
   const [originalImage, setOriginalImage] = useState([]);
-
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
   const { triggerConfetti } = useConfetti();
@@ -167,8 +166,6 @@ export function AddPost() {
 
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
-  const isSubmitDisabled =
-    uploading || !title.trim() || ingredients.length === 0 || instructions.length === 0;
 
   const handleChangePreparation = (e) => {
     const { name, value } = e.target;
@@ -513,7 +510,6 @@ export function AddPost() {
             <RecipeFormButtons
               isEditMode={isEditMode}
               uploading={uploading}
-              disabled={isSubmitDisabled}
               onSubmit={handleSubmit}
               onCancelEdit={handleCancelEdit}
               onDelete={handleDeleteRecipe}

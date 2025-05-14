@@ -5,6 +5,7 @@ import { MiniCartItem } from "src/components/MiniCartItem";
 import { MiniCartModal } from "src/components/MiniCartModal";
 import { CartIconToggle } from "src/components/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
+import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -25,7 +26,6 @@ export function RecipePage() {
   const [latestItemTitle, setLatestItemTitle] = useState("");
   const [isNewItem, setIsNewItem] = useState(true);
   const { cart } = useCart();
-
   const groupedIngredients = cart.reduce((acc, item) => {
     const key = item.recipe_id;
     if (!acc[key]) {
@@ -110,8 +110,9 @@ export function RecipePage() {
               alt={data?.recipe_name}
             />
           </div>
+          <SharedByUserLabel loginUserId={user.id} recipeUserId={data.user_id} />
           {/* user edit delete */}
-          {user && (
+          {user.id === data.user_id && (
             <div className="flex w-full items-center justify-center gap-10 text-blue100">
               <button
                 className="actionBtn:hover actionBtn rounded-xl"
