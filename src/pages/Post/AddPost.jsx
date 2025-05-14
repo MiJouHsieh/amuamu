@@ -4,6 +4,7 @@ import { IngredientCollection } from "src/components/post/IngredientCollection";
 import { InstructionsCollection } from "src/components/post/InstructionsCollection";
 import { TagsInput } from "src/components/post/TagsInput";
 import { RecipeFormButtons } from "src/components/post/RecipeFormButtons";
+
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
 import { useConfetti } from "src/hooks/useConfetti";
@@ -344,6 +345,20 @@ export function AddPost() {
     navigate(`/recipe-page/${id}`);
   };
 
+  const handleDeleteRecipe = async () => {
+    const confirmDelete = confirm("⚠️ Are you sure you want to delete this recipe?");
+    if (!confirmDelete) return;
+
+    const { error } = await supabase.from("recipe").delete().eq("id", id);
+    if (error) {
+      alert("❌ Failed to delete recipe: " + error.message);
+      return;
+    }
+
+    alert("✅ Recipe deleted successfully.");
+    navigate("/");
+  };
+
   return (
     user && (
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -501,6 +516,7 @@ export function AddPost() {
               disabled={isSubmitDisabled}
               onSubmit={handleSubmit}
               onCancelEdit={handleCancelEdit}
+              onDelete={handleDeleteRecipe}
             />
           </form>
         </div>

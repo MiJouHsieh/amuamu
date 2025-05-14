@@ -97,8 +97,19 @@
     @apply my-4 rounded-full border-4 border-beige300 bg-yellow400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
   }
   .submitBtn:hover {
-    @apply bg-orange;
     box-shadow: 0px 0px 20px 16px rgba(255, 140, 0, 0.2);
+  }
+  .cancelBtn {
+    @apply my-4 rounded-full border-4 border-blue100 bg-blue-400 p-4 text-center text-blue500 transition-transform duration-200 hover:bg-blue-500 active:scale-95;
+  }
+  .cancelBtn:hover {
+    box-shadow: 0px 0px 20px 16px rgba(140, 200, 255, 0.2);
+  }
+  .deleteBtn {
+    @apply my-4 rounded-full border-4 border-pink bg-red p-4 text-center text-white transition-transform duration-200 hover:bg-rose-600 active:scale-95;
+  }
+  .deleteBtn:hover {
+    box-shadow: 0px 0px 20px 16px rgba(255, 70, 0, 0.2);
   }
   .tagBtn {
     @apply rounded-full border px-3 py-1 text-lg text-beige;
