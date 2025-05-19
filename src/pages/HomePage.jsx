@@ -58,7 +58,7 @@ export function HomePage() {
       <div>
         <IconLogo className="h-40 w-40" />
       </div>
-      <div className="flex w-full flex-col items-center gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
+      <div className="flex min-h-screen w-full flex-col items-center gap-y-6 px-6 py-12 500:max-w-[28rem] md:max-w-[700px] 990:max-w-[1400px]">
         {displayName && (
           <h3 className="w-full text-center text-lg font-medium text-white300">
             Welcome back, {displayName} 👩‍🍳
