@@ -4,6 +4,7 @@ import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
 import { HomePageCard } from "src/components/HomePageCard";
 import { Link } from "react-router-dom";
+import Fuse from "fuse.js";
 
 export function HomePage() {
   const { user } = useAuth();
@@ -34,21 +35,22 @@ export function HomePage() {
   const allTags = (data ?? []).flatMap((item) => item.tags ?? []);
   const uniqueTags = Array.from(new Set(allTags.filter((tag) => tag.trim() !== "")));
 
-  const filteredRecipes = (data ?? []).filter((item) => {
-    const title = item.title ?? "";
+  const fuse = new Fuse(data ?? [], {
+    keys: ["title", "tags", "ingredients.title"],
+    threshold: 0.3,
+  });
+
+  const searchResults =
+    searchKeyword.trim() !== ""
+      ? fuse.search(searchKeyword).map((result) => result.item)
+      : (data ?? []);
+
+  const filteredRecipes = searchResults.filter((item) => {
     const tags = item.tags ?? [];
-    const ingredients = item.ingredients ?? [];
-
-    const matchesTag =
+    return (
       selectedTag === "All products" ||
-      tags.map((tag) => tag.toLowerCase()).includes(selectedTag.toLowerCase());
-
-    const searchKeywordLower = searchKeyword.toLowerCase();
-    const matchesSearch =
-      title.toLowerCase().includes(searchKeywordLower) ||
-      ingredients.some((ing) => (ing.title ?? "").toLowerCase().includes(searchKeywordLower));
-
-    return matchesTag && matchesSearch;
+      tags.map((tag) => tag.toLowerCase()).includes(selectedTag.toLowerCase())
+    );
   });
 
   return (
