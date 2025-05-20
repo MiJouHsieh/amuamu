@@ -2,7 +2,7 @@ import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
-import { HomePageCard } from "src/components/HomePageCard";
+import { HomePageCard } from "src/components/homePage/HomePageCard";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 
