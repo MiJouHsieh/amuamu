@@ -8,7 +8,7 @@ import { NavItem } from "src/components/NavItem";
 
 const ROUTES = [
   { id: "", label: "Home" },
-  { id: "add-post", label: "Add Recipe" },
+  { id: "add-recipe", label: "Add Recipe" },
   { id: "cart", label: "Cart" },
 ];
 
