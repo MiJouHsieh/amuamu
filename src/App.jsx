@@ -21,7 +21,7 @@ export function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/recipe-page/:id" element={<RecipePage />} />
-                <Route path="/add-post" element={<AddPost />} />
+                <Route path="/add-recipe" element={<AddPost />} />
                 <Route path="/edit/:id" element={<AddPost />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
