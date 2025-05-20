@@ -110,9 +110,9 @@ export function RecipePage() {
               alt={data?.recipe_name}
             />
           </div>
-          <SharedByUserLabel loginUserId={user.id} recipeUserId={data.user_id} />
+          <SharedByUserLabel loginUserId={user?.id} recipeUserId={data.user_id} />
           {/* user edit delete */}
-          {user.id === data.user_id && (
+          {user?.id === data.user_id && (
             <div className="flex w-full items-center justify-center gap-10 text-blue100">
               <button
                 className="actionBtn:hover actionBtn rounded-xl"
