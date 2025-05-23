@@ -64,6 +64,9 @@
   }
   .addPostShadow {
     @apply rounded-3xl bg-transparent transition-all duration-500 hover:shadow-lg;
+    transition:
+      box-shadow 0.5s ease,
+      background-color 0.5s ease;
   }
   .addPostShadow:hover {
     box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
@@ -83,6 +86,9 @@
   }
   .darkInputField {
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
+  }
+  .userViewFormItem {
+    @apply flex flex-col gap-y-6 p-4 text-xl md:p-6;
   }
   .search-input {
     @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-10 text-[#FFD28F] outline-none focus:border-yellow300;

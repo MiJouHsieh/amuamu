@@ -72,7 +72,7 @@ export function UserProfileView() {
         {/* form */}
         <form className="w-full space-y-8 rounded-xl border border-yellow p-6">
           {/* User Name */}
-          <div className="addPostShadow flex flex-col gap-y-4 p-4 text-xl md:p-6">
+          <div className="addPostShadow userViewFormItem">
             <div className="flex flex-col items-start justify-between gap-y-6">
               <label className="form-label text-orange">User Name</label>
               <p className="w-full border-b border-beige300 pb-2 text-center text-xl leading-3 text-beige">
@@ -80,7 +80,7 @@ export function UserProfileView() {
               </p>
             </div>
             {userProfileData?.user_name === "Anonymous" && (
-              <p className="-mt-2 flex items-center gap-3 break-all text-xs text-beige300">
+              <p className="-mt-4 flex items-center gap-3 break-all text-xs text-beige300">
                 <BiInfoCircle className="text-xl" />
                 <span>
                   Your name is currently set to "Anonymous". <br />
@@ -90,17 +90,15 @@ export function UserProfileView() {
             )}
           </div>
 
-          <div className="addPostShadow flex flex-col gap-y-4 p-4 text-xl md:p-6">
-            <div className="flex flex-col items-start justify-between gap-y-6">
+          <div className="addPostShadow userViewFormItem">
               <label className="form-label text-orange">User Email</label>
               <p className="w-full border-b border-beige300 pb-2 text-center text-xl leading-3 text-beige">
                 {userProfileData?.user_email || "Not set"}
               </p>
-            </div>
           </div>
 
           {/* image */}
-          <div className="addPostShadow flex flex-col gap-y-4 p-4 text-xl md:p-6">
+          <div className="addPostShadow userViewFormItem">
             <label className="form-label text-orange">User image</label>
             <div className="flex w-full flex-col items-center justify-center">
               <RecipeImage
@@ -118,7 +116,7 @@ export function UserProfileView() {
             </div>
 
             {userProfileData?.user_avatar?.length > 0 && (
-              <p className="mt-1 break-all text-xs text-beige300">
+              <p className="-mt-4 break-all text-xs text-beige300">
                 📁 {typeof image[0] === "string" ? image[0].split("/").pop() : image[0]?.name}
               </p>
             )}
