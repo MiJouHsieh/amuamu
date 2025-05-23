@@ -70,7 +70,7 @@ export function UserProfileView() {
           User Profile
         </h1>
         {/* form */}
-        <form className="relative w-full space-y-8 rounded-xl border border-yellow p-6">
+        <form className="w-full space-y-8 rounded-xl border border-yellow p-6">
           {/* User Name */}
           <div className="addPostShadow flex flex-col gap-y-4 p-4 text-xl md:p-6">
             <div className="flex flex-col items-start justify-between gap-y-6">
@@ -123,7 +123,7 @@ export function UserProfileView() {
               </p>
             )}
           </div>
-          <div className="fixed bottom-3 right-3 flex justify-end pt-10">
+          <div className="bottom-3 right-3 flex justify-center pt-10">
             <UserFormButtons />
           </div>
         </form>
