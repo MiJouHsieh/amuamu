@@ -8,6 +8,7 @@ import { NavItem } from "src/components/NavItem";
 
 const ROUTES = [
   { id: "", label: "Home" },
+  { id: "user-profile-view", label: "User" },
   { id: "add-recipe", label: "Add Recipe" },
   { id: "cart", label: "Cart" },
 ];
