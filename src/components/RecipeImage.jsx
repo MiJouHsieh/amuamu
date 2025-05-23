@@ -7,7 +7,7 @@ export function RecipeImage({ src, alt, className = "", ...props }) {
       e.currentTarget.classList.add("ring-1", "ring-yellow400/40");
     }
   };
-  const isUsingFallback = !src;
+  const isUsingFallback = !src || src === "";
   const combinedClassName = [className, isUsingFallback ? "ring-1 ring-yellow400/40" : ""]
     .filter(Boolean)
     .join(" ");
