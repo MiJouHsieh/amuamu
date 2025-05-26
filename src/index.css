@@ -90,6 +90,9 @@
   .userViewFormItem {
     @apply flex flex-col gap-y-6 p-4 text-xl md:p-6;
   }
+  .userInputField {
+    @apply h-16 rounded-md border w-full text-center border-transparent p-2 outline-none transition-colors duration-1000  md:p-4;
+  }
   .search-input {
     @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-10 text-[#FFD28F] outline-none focus:border-yellow300;
   }
