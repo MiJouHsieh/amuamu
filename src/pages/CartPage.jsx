@@ -19,7 +19,7 @@ export function CheckCartItem({ className, ingredient }) {
       />
       <label
         htmlFor={`custom-checkbox-${ingredient.id}`}
-        className="checkbox-input peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
+        className="peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
       >
         {ingredient.title}
       </label>
