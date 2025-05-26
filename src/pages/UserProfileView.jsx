@@ -2,7 +2,6 @@ import { BiInfoCircle } from "react-icons/bi";
 import { useAuth } from "src/context/AuthContext";
 import { supabase } from "src/supabaseClient";
 
-import { useUserAvatarUpload } from "src/hooks/useUserAvatarUpload";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RecipeImage } from "src/components/RecipeImage";
@@ -10,12 +9,15 @@ import { UserFormButtons } from "src/components/user/UserFormButtons";
 
 export function UserProfileView() {
   const { user } = useAuth();
-  console.log("Auth user", user);
 
-  const [userProfileData, setUserProfileData] = useState(null);
-  const { image, imagePreview, setImage, setImagePreview } = useUserAvatarUpload();
+  const [userProfileData, setUserProfileData] = useState({
+    user_name: "",
+    user_email: "",
+    user_avatar: "",
+  });
+  const [imagePreview, setImagePreview] = useState(null);
+
   const navigate = useNavigate();
-  console.log("userProfileData state", userProfileData);
 
   useEffect(() => {
     if (!user || !user.id) {
@@ -30,38 +32,50 @@ export function UserProfileView() {
         .select("*")
         .eq("user_id", user.id)
         .single();
-      console.log("✅ data", data);
 
-      if (error) {
-        console.error("Failed to load recipe", error);
-        return;
-      }
-      setUserProfileData(data);
-      console.log("userProfileData fetch state", userProfileData);
-
-      setImage(data.image || []);
-      setImagePreview(data.image?.[0]);
-
-      if (!data) {
-        // ✅ 自動建立一筆 user_profiles 資料
+      if (error && error.message === "JSON object requested, multiple (or no) rows returned") {
+        //找不到資料，建立新資料📌
         const { error: insertError } = await supabase.from("user_profiles").insert([
           {
             user_id: user.id,
             user_email: user.email,
-            user_name: user.name || "Anonymous",
+            user_name: user?.user_metadata.name || "Anonymous",
             user_avatar: null,
           },
         ]);
         if (insertError) {
-          console.error("自動建立 user_profiles 失敗", insertError);
+          console.error("Failed to auto-create user_profiles.", insertError);
           return;
         } else {
-          console.log("✅ 成功建立 user_profiles");
+          console.log("✅ Successfully created user_profiles.");
+          // 建立後，再次 fetch
+          const { data: newData } = await supabase
+            .from("user_profiles")
+            .select("*")
+            .eq("user_id", user.id)
+            .single();
+          setUserProfileData(newData);
         }
+      } else if (error) {
+        console.error("❌ Failed to fetch user_profiles.", error);
+      } else {
+        // 有資料，直接 set
+        setUserProfileData(data);
       }
     };
     fetchUserProfile();
-  }, [user, navigate, setImage, setImagePreview, userProfileData]);
+  }, [user, navigate, setImagePreview, userProfileData]);
+
+  useEffect(() => {
+    if (!userProfileData?.user_avatar) return;
+    const result = supabase.storage.from("user-avatar").getPublicUrl(userProfileData.user_avatar);
+
+    if (result?.data?.publicURL) {
+      setImagePreview(`${result.data.publicURL}?t=${Date.now()}`);
+    } else {
+      console.error("❌ Failed to get public URL", result.error);
+    }
+  }, [userProfileData]);
 
   return (
     <section className="archBackground flex min-h-screen w-full justify-center py-0 md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -76,7 +90,7 @@ export function UserProfileView() {
             <div className="flex flex-col items-start justify-between gap-y-6">
               <label className="form-label text-orange">User Name</label>
               <p className="w-full border-b border-beige300 pb-2 text-center text-xl leading-3 text-beige">
-                {userProfileData?.user_name || "Not set"} mmm
+                {userProfileData?.user_name || user?.user_metadata.name || "Anonymous"}
               </p>
             </div>
             {userProfileData?.user_name === "Anonymous" && (
@@ -91,10 +105,10 @@ export function UserProfileView() {
           </div>
 
           <div className="addPostShadow userViewFormItem">
-              <label className="form-label text-orange">User Email</label>
-              <p className="w-full border-b border-beige300 pb-2 text-center text-xl leading-3 text-beige">
-                {userProfileData?.user_email || "Not set"}
-              </p>
+            <label className="form-label text-orange">User Email</label>
+            <p className="w-full border-b border-beige300 pb-2 text-center text-xl leading-3 text-beige">
+              {userProfileData?.user_email || user?.email}
+            </p>
           </div>
 
           {/* image */}
@@ -103,7 +117,7 @@ export function UserProfileView() {
             <div className="flex w-full flex-col items-center justify-center">
               <RecipeImage
                 className="h-[150px] w-[150px] rounded-full object-cover object-center md:h-[200px] md:w-[200px] 1440:h-[250px] 1440:w-[250px]"
-                src={imagePreview}
+                src={userProfileData?.user_avatar || imagePreview}
                 alt={user.name}
                 aria-label="User profile image"
               />
@@ -114,12 +128,6 @@ export function UserProfileView() {
                 </p>
               )}
             </div>
-
-            {userProfileData?.user_avatar?.length > 0 && (
-              <p className="-mt-4 break-all text-xs text-beige300">
-                📁 {typeof image[0] === "string" ? image[0].split("/").pop() : image[0]?.name}
-              </p>
-            )}
           </div>
           <div className="bottom-3 right-3 flex justify-center pt-10">
             <UserFormButtons />
