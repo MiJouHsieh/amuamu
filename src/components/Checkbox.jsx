@@ -34,7 +34,7 @@ export function Checkbox({
 
       <label
         htmlFor={`custom-checkbox-${id}`}
-        className="checkbox-input peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
+        className="peer-checked mx-4 flex w-full cursor-pointer items-center text-xl peer-checked:line-through peer-checked:decoration-orange peer-checked:decoration-solid"
       >
         {itemTitle}
       </label>
