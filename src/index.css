@@ -40,7 +40,7 @@
   }
   .miniCartModal {
     @apply fixed left-1/2 z-50 w-[60%] max-w-[500px] -translate-x-1/2 rounded-xl bg-orange900/40 p-4 ring-1 ring-yellow400/40 backdrop-blur-xl transition-all duration-700 ease-in-out;
-  }
+  } 
   .miniCartModalHidden {
     @apply top-[-100px] opacity-0;
   }
@@ -162,5 +162,18 @@
   }
   .miniCartRecipeName:hover {
     @apply text-orange;
+  }
+  .timer-btn {
+    @apply cursor-pointer rounded-xl border px-2 bg-transparent;
+    transition: background-color 0.5s ease;
+  }
+  .start-btn:active, .start-btn:focus, .start-btn:hover {
+    @apply bg-blue200/80 text-blue500;
+  }
+  .stop-btn:active, .stop-btn:focus, .stop-btn:hover {
+    @apply bg-orange/90 text-blue500;
+  }
+  .reset-btn:active, .reset-btn:focus, .reset-btn:hover {
+    @apply bg-yellow300/90 text-blue500;
   }
 }
