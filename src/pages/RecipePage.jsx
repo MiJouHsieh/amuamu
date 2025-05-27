@@ -254,6 +254,8 @@ export function RecipePage() {
           )}
         </MiniCartModal>
       )}
+      {/* CookingTimer */}
+      <CookingTimer/>
     </section>
   );
 }
