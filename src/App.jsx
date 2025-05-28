@@ -8,7 +8,8 @@ import { CartPage } from "src/pages/CartPage";
 import { AuthProvider } from "src/context/AuthContext";
 import { CartProvider } from "src/context/CartContext";
 import { UserProfileView } from "src/pages/UserProfileView";
-import { UserProfileEdit } from "src/pages/UserProfileEdit";
+import { UserProfileEdit } from "src/pages/UserProfileEdit";;
+import { StepByStepPage } from "src/pages/StepByStepPage";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -30,6 +31,7 @@ export function App() {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/user-profile-view" element={<UserProfileView />} />
                 <Route path="/user-profile-edit" element={<UserProfileEdit />} />
+                <Route path="/step-by-step/:id" element={<StepByStepPage />} />
               </Routes>
             </Router>
           </CartProvider>
