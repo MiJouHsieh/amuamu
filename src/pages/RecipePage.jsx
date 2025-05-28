@@ -161,6 +161,16 @@ export function RecipePage() {
             })}
           </div>
         </div>
+        {/* Step-by-step mode */}
+        <div className="flex w-full justify-center py-6">
+          <button
+            className="submitBtn mx-auto"
+            onClick={() => navigate(`/step-by-step/${id}`)}
+            recipe={data?.recipe_name}
+          >
+            Step-by-step mode
+          </button>
+        </div>
         {/* ingredients  */}
         <div className="w-full space-y-4 py-6">
           <div className="flex justify-between">
@@ -195,6 +205,12 @@ export function RecipePage() {
             Note
           </h4>
           <p className="pl-2 text-beige">{data ? data.note : ""}</p>
+        </div>
+        {/* Step-by-step mode */}
+        <div className="flex w-full justify-end py-6">
+          <button className="submitBtn" onClick={() => navigate(`/step-by-step/${id}`)}>
+            Step-by-step mode
+          </button>
         </div>
       </div>
       {/* mini cart */}
