@@ -13,6 +13,7 @@ import { supabase } from "src/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
+import { useDropzone } from "react-dropzone";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -43,8 +44,9 @@ export function AddPost() {
   const [note, setNote] = useState("");
   const [originalNote, setOriginalNote] = useState("");
 
-  const { image, imagePreview, uploading, uploadImage, setImage, setImagePreview } =
+  const { images, imagePreview, uploading, uploadImages, setImages, setImagePreview } =
     useImageUpload();
+
   const [originalImage, setOriginalImage] = useState([]);
   const { handleAddItem, handleKeyDown, handleSave, handleDelete, handleChangeMode } =
     useListItemActions();
@@ -75,8 +77,16 @@ export function AddPost() {
       if (data.draft_data && Object.keys(data.draft_data).length > 0 && data.draft_data.title) {
         const draft = data.draft_data;
         setTitle(draft.title);
-        setImage(draft.image || []);
-        setImagePreview(draft.image?.[0]);
+        setImages(Array.isArray(draft.image) ? draft.image : [draft.image]);
+      
+        if (Array.isArray(draft.image)) {
+          setImagePreview(draft.image);
+        } else if (typeof draft.image === "string") {
+          setImagePreview([draft.image]); 
+        } else {
+          setImagePreview([]);
+        }
+
         setTags(draft.tags);
         setPreparation(draft.preparation);
         setIngredients(draft.ingredients);
@@ -85,9 +95,9 @@ export function AddPost() {
       } else {
         setTitle(data.recipe_name);
         setOriginalTitle(data.recipe_name);
-        setImage(data.image || []);
-        setOriginalImage(data.image || []);
-        setImagePreview(data.image?.[0]);
+        setImages(Array.isArray(data.image) ? data.image : [data.image]);
+        setOriginalImage(Array.isArray(data.image) ? data.image : [data.image]);
+        setImagePreview(Array.isArray(data.image) ? data.image : [data.image]);
         setTags(data.tags);
         setOriginalTags(data.tags);
         setPreparation(data.preparation);
@@ -102,7 +112,7 @@ export function AddPost() {
     };
 
     fetchRecipe();
-  }, [user, navigate, id, setImage, setImagePreview]);
+  }, [user, navigate, id, setImages, setImagePreview]);
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -113,7 +123,7 @@ export function AddPost() {
       note !== originalNote ||
       JSON.stringify(tags) !== JSON.stringify(originalTags) ||
       JSON.stringify(preparation) !== JSON.stringify(originalPreparation) ||
-      JSON.stringify(image) !== JSON.stringify(originalImage) ||
+      JSON.stringify(images) !== JSON.stringify(originalImage) ||
       JSON.stringify(ingredients) !== JSON.stringify(originalIngredients) ||
       JSON.stringify(instructions) !== JSON.stringify(originalInstructions);
 
@@ -129,7 +139,7 @@ export function AddPost() {
         instructions,
         note,
         preparation,
-        image,
+        images,
       };
 
       const { error } = await supabase
@@ -149,7 +159,7 @@ export function AddPost() {
     tags,
     note,
     preparation,
-    image,
+    images,
     ingredients,
     instructions,
     originalTitle,
@@ -163,6 +173,17 @@ export function AddPost() {
     id,
     isEditMode,
   ]);
+
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles.length === 0) return;
+    uploadImages(acceptedFiles);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop,
+    multiple: true,
+  });
 
   // 避免 user 為 null 的一瞬間就跑出錯誤
   if (!user) return null;
@@ -230,12 +251,12 @@ export function AddPost() {
     });
   };
 
-  const addRecipe = async ({ title, image, preparation, ingredients, instructions, note }) => {
+  const addRecipe = async ({ title, images, preparation, ingredients, instructions, note }) => {
     const updates = {
       user_id: user.id,
       id: uuidv4(),
       recipe_name: title,
-      image: image,
+      image: images,
       tags: tags,
       preparation: preparation,
       ingredients: ingredients,
@@ -261,7 +282,7 @@ export function AddPost() {
 
   const updateRecipe = async ({
     title,
-    image,
+    images,
     preparation,
     tags,
     ingredients,
@@ -272,7 +293,7 @@ export function AddPost() {
       const updates = {
         user_id: user.id,
         recipe_name: title,
-        image,
+        image: images,
         preparation,
         tags,
         ingredients,
@@ -314,7 +335,7 @@ export function AddPost() {
     console.log("🧪 instructions", instructions);
     const payload = {
       title,
-      image,
+      images,
       preparation,
       tags,
       ingredients,
@@ -330,7 +351,7 @@ export function AddPost() {
 
   const handleCancelEdit = async () => {
     setTitle(originalTitle);
-    setImage(originalImage);
+    setImages(originalImage);
     setPreparation(originalPreparation);
     setTags(originalTags);
     setIngredients(originalIngredients);
@@ -381,34 +402,39 @@ export function AddPost() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-            {/* image */}
-            <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-4 p-4">
-              <label className="form-label text-orange">Recipe image</label>
-              <input
-                type="file"
-                className="w-full cursor-pointer rounded-md bg-[#1E1E3F] p-2 text-[#FFD28F]/70 outline-none"
-                accept="image/*"
-                onChange={uploadImage}
-              />
-              <p className="-mt-1 text-xs text-white300">
-                {isEditMode
-                  ? "Wanna update a tasty food image? 🍽️"
-                  : "Please choose a photo of a dish"}
-              </p>
-
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Preview image"
-                  className="mx-auto h-[300px] w-[300px] rounded-md object-cover object-center md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
-                />
-              )}
-              {image?.length > 0 && (
-                <p className="mt-1 break-all text-xs text-beige300">
-                  📁 {typeof image[0] === "string" ? image[0].split("/").pop() : image[0]?.name}
-                </p>
-              )}
+            
+            {/* 多圖支援 */}
+            <div
+              {...getRootProps()}
+              className="w-full cursor-pointer rounded-md border border-dashed border-yellow p-4"
+            >
+              <input {...getInputProps()} />
+              <p className="text-white300">Drag and drop images here, or click to select</p>
             </div>
+
+            {Array.isArray(imagePreview) && imagePreview.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                {imagePreview.map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Preview ${index}`}
+                    className="h-[150px] w-[150px] rounded-md object-cover"
+                  />
+                ))}
+              </div>
+            )}
+            {/* 檔案名稱 */}
+            {images.length > 0 && (
+              <ul className="mt-2 text-sm">
+                {images.map((url, index) => (
+                  <li key={index} className="mt-1 break-all text-xs text-beige300">
+                    📁 {url.split("/").pop()}
+                  </li>
+                ))}
+              </ul>
+            )}
+
             {/* recipe info */}
             <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
               <div className="flex items-center justify-between">

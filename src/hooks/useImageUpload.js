@@ -2,65 +2,60 @@ import { useState } from "react";
 import { supabase } from "src/supabaseClient";
 
 export function useImageUpload() {
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [images, setImages] = useState([]); // 多圖 URL
+  const [imagePreview, setImagePreview] = useState([]); // 多圖預覽
   const [uploading, setUploading] = useState(false);
 
-  const uploadImage = async (event) => {
+  const uploadImages = async (files) => {
+    setUploading(true);
+    const newPreviews = [];
+    const newImageURLs = [];
+
     try {
-      setUploading(true);
+      for (const file of files) {
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
 
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
+        // 本地預覽網址
+        newPreviews.push(URL.createObjectURL(file));
+
+        // 上傳圖片
+        const { error: uploadError } = await supabase.storage
+          .from("recipe-image")
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        // 取得公開 URL
+        const { publicURL, error: urlError } = supabase.storage
+          .from("recipe-image")
+          .getPublicUrl(filePath);
+
+        if (urlError) {
+          throw urlError;
+        }
+        newImageURLs.push(publicURL);
       }
-      const file = event.target?.files[0];
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`; // 建立檔案路徑
 
-      if (file) {
-        setImage([file]);
-        console.log("選擇的圖片", file);
-        const imagePreview = URL.createObjectURL(file);
-        setImagePreview(imagePreview);
-      }
+      setImagePreview((prev) => Array.isArray(prev) ? [...prev, ...newPreviews] : [...newPreviews]);
+      setImages((prev) => Array.isArray(prev) ? [...prev, ...newImageURLs] : [...newImageURLs]);
 
-      // 上傳圖片到 Supabase
-      let { data, error: uploadError } = await supabase.storage
-        .from("recipe-image")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-      await getURL(filePath);
-      console.log("Upload successful! Image URL:", data.path);
     } catch (error) {
-      alert(`Failed to upload image：${error.message}`);
-    }
-  };
-
-  const getURL = async (url) => {
-    try {
-      // 從 Supabase 取得公開 URL
-      const { publicURL, error } = await supabase.storage.from("recipe-image").getPublicUrl(url);
-
-      if (error) {
-        throw error;
-      }
-      // 將圖片 URL 存入 state
-      setImage([publicURL]);
-    } catch (error) {
-      alert(`獲取圖片 URL 失敗：${error.message}`);
+      alert(`❌ Upload failed: ${error.message}`);
     } finally {
       setUploading(false);
     }
   };
 
   return {
-    image,
+    images,
     imagePreview,
     uploading,
-    uploadImage,setImage,setImagePreview
+    uploadImages,
+    setImages,
+    setImagePreview,
   };
 }
