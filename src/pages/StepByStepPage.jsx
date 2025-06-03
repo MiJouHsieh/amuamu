@@ -17,7 +17,7 @@ import { FinishPage } from "src/components/step-by-step/FinishPage";
 export function StepByStepPage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const [trackDoneSteps, setTrackDoneSteps] = useState(false);
+  const [isAllStepsDone, setIsAllStepsDone] = useState(false);
 
   // 建立 Swiper DOM 的 ref
   const swiperRef = useRef(null);
@@ -64,19 +64,15 @@ export function StepByStepPage() {
             </SwiperSlide>
 
             {/* 動態步驟頁 */}
-            {recipe.instructions.map((step, i) => (
-              <SwiperSlide key={i}>
-                <InstructionSteps
-                  recipe={recipe}
-                  onNext={goNext}
-                  onPrev={goPrev}
-                  isLastStep={i === recipe.instructions.length - 1}
-                  trackDoneSteps={trackDoneSteps}
-                  setTrackDoneSteps={setTrackDoneSteps}
-                  index={i}
-                />
-              </SwiperSlide>
-            ))}
+            <SwiperSlide>
+              <InstructionSteps
+                recipe={recipe}
+                onNext={goNext}
+                onPrev={goPrev}
+                isAllStepsDone={isAllStepsDone}
+                setIsAllStepsDone={setIsAllStepsDone}
+              />
+            </SwiperSlide>
 
             {/* 完成頁 */}
             <SwiperSlide className="flex min-h-screen items-center justify-center text-center">
