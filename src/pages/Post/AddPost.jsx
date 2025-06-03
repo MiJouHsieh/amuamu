@@ -78,11 +78,11 @@ export function AddPost() {
         const draft = data.draft_data;
         setTitle(draft.title);
         setImages(Array.isArray(draft.image) ? draft.image : [draft.image]);
-      
+
         if (Array.isArray(draft.image)) {
           setImagePreview(draft.image);
         } else if (typeof draft.image === "string") {
-          setImagePreview([draft.image]); 
+          setImagePreview([draft.image]);
         } else {
           setImagePreview([]);
         }
@@ -382,6 +382,11 @@ export function AddPost() {
     navigate("/");
   };
 
+  const handleRemoveImage = (indexToRemove) => {
+    setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   return (
     user && (
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -402,7 +407,7 @@ export function AddPost() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-            
+
             {/* 多圖支援 */}
             <div
               {...getRootProps()}
@@ -413,14 +418,23 @@ export function AddPost() {
             </div>
 
             {Array.isArray(imagePreview) && imagePreview.length > 0 && (
-              <div className="mt-4 grid grid-cols-2 gap-4">
+              <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
                 {imagePreview.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Preview ${index}`}
-                    className="h-[150px] w-[150px] rounded-md object-cover"
-                  />
+                  <div key={index} className="relative h-[150px] w-[150px]">
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`Preview ${index}`}
+                      className="h-[150px] w-[150px] rounded-md object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="bg-red-500 absolute right-1 top-1 rounded-full bg-blue800/60 px-2 py-1 text-xs font-bold text-orange"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -429,7 +443,7 @@ export function AddPost() {
               <ul className="mt-2 text-sm">
                 {images.map((url, index) => (
                   <li key={index} className="mt-1 break-all text-xs text-beige300">
-                    📁 {url.split("/").pop()}
+                    📁 {url ? url.split("/").pop() : "Invalid image"}
                   </li>
                 ))}
               </ul>
