@@ -6,6 +6,7 @@ import { MiniCartModal } from "src/components/MiniCartModal";
 import { CartIconToggle } from "src/components/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
+import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -106,10 +107,12 @@ export function RecipePage() {
           <div className="mt-10">
             <RecipeImage
               className="h-[300px] w-[300px] rounded-full object-cover object-center 500:rounded-full md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
-              src={data?.image}
+              src={data?.image[0]}
               alt={data?.recipe_name}
             />
           </div>
+          <RecipeImageCarousel imageArray={data?.image ?? []} />
+
           <SharedByUserLabel loginUserId={user?.id} recipeUserId={data.user_id} />
           {/* user edit delete */}
           {user?.id === data.user_id && (
@@ -122,7 +125,6 @@ export function RecipePage() {
               </button>
             </div>
           )}
-
           <h1 className="font-youngSerif text-[30px] font-semibold uppercase leading-[40px] tracking-[3px] text-orange opacity-90">
             {data ? data.recipe_name : ""}
           </h1>
