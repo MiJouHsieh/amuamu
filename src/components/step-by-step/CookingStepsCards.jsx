@@ -2,17 +2,16 @@ import { MdDoneOutline } from "react-icons/md";
 import { useState, useEffect } from "react";
 import Slider from "react-slick";
 
-export function CookingStepsCards({ instructions, setTrackDoneSteps }) {
-  const [doneStepsNum, setDoneStepsNum] = useState(0);
+export function CookingStepsCards({ instructions, setIsAllStepsDone }) {
   const [stepsStatus, setStepsStatus] = useState(Array(instructions.length).fill(false));
 
   useEffect(() => {
-    console.log("✅ doneStepsNum", doneStepsNum);
+    const allDone = stepsStatus.every((step) => step === true);
 
-    if (doneStepsNum === instructions.length) {
-      setTrackDoneSteps();
+    if (allDone) {
+      setIsAllStepsDone(true);
     }
-  }, [doneStepsNum, instructions.length, setTrackDoneSteps]);
+  }, [stepsStatus, setIsAllStepsDone]);
 
   if (!Array.isArray(instructions) || instructions.length === 0) {
     console.warn("Oops! No instructions found or data format is invalid.");
@@ -23,8 +22,6 @@ export function CookingStepsCards({ instructions, setTrackDoneSteps }) {
     setStepsStatus((prevSteps) => {
       const newSteps = [...prevSteps];
       newSteps[index] = !newSteps[index];
-      //計算完成數量
-      setDoneStepsNum(newSteps.filter((step) => step).length);
       return newSteps;
     });
   };
@@ -75,7 +72,9 @@ export function CookingStepsCards({ instructions, setTrackDoneSteps }) {
 
       <p className="text-5xl text-beige">
         {instructions.length > 0 ? (
-          <span>{((doneStepsNum / instructions.length) * 100).toFixed(0)}% </span>
+          <span>
+            {((stepsStatus.filter(Boolean).length / instructions.length) * 100).toFixed(0)}%{" "}
+          </span>
         ) : (
           <span>0%</span>
         )}
