@@ -32,6 +32,7 @@ export function CookingStepsCards({ instructions, setIsAllStepsDone }) {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    swipeToSlide: false,
   };
   return (
     <div className="h-full w-full space-y-4 py-6">
