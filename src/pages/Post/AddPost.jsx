@@ -409,12 +409,16 @@ export function AddPost() {
             </div>
 
             {/* 多圖支援 */}
-            <div
-              {...getRootProps()}
-              className="w-full cursor-pointer rounded-md border border-dashed border-yellow p-4"
-            >
-              <input {...getInputProps()} />
-              <p className="text-white300">Drag and drop images here, or click to select</p>
+            <div className="hover:addPostShadow mx-auto flex w-full items-center justify-between p-4 transition-all duration-200 md:p-6">
+              <label className="form-label text-orange">Recipe Images</label>
+
+              <div
+                {...getRootProps()}
+                className="inputField darkInputField flex w-1/2 items-center"
+              >
+                <input {...getInputProps()} />
+                <p className="w-full text-[#FFD28F]/50">🖼️ Upload images</p>
+              </div>
             </div>
 
             {Array.isArray(imagePreview) && imagePreview.length > 0 && (
@@ -450,8 +454,8 @@ export function AddPost() {
             )}
 
             {/* recipe info */}
-            <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
-              <div className="flex items-center justify-between">
+            <div className="hover:addPostShadow mx-auto flex w-full flex-col gap-y-4 overflow-hidden p-4">
+              <div className="flex w-full items-center justify-between">
                 <label className="form-label text-orange">Preparation Time</label>
                 <input
                   className="inputField darkInputField"
@@ -464,7 +468,7 @@ export function AddPost() {
               <div className="flex items-center justify-between">
                 <label className="form-label text-orange">Cook time</label>
                 <input
-                  className="inputField darkInputField bg-[#3A3A6A]"
+                  className="inputField darkInputField"
                   placeholder="🧑‍🍳 e.g. 45 mins"
                   value={preparation.cookTime}
                   onChange={handleChangePreparation}
