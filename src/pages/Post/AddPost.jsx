@@ -78,11 +78,11 @@ export function AddPost() {
         const draft = data.draft_data;
         setTitle(draft.title);
         setImages(Array.isArray(draft.image) ? draft.image : [draft.image]);
-      
+
         if (Array.isArray(draft.image)) {
           setImagePreview(draft.image);
         } else if (typeof draft.image === "string") {
-          setImagePreview([draft.image]); 
+          setImagePreview([draft.image]);
         } else {
           setImagePreview([]);
         }
@@ -382,6 +382,11 @@ export function AddPost() {
     navigate("/");
   };
 
+  const handleRemoveImage = (indexToRemove) => {
+    setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   return (
     user && (
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
@@ -402,25 +407,38 @@ export function AddPost() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-            
+
             {/* 多圖支援 */}
-            <div
-              {...getRootProps()}
-              className="w-full cursor-pointer rounded-md border border-dashed border-yellow p-4"
-            >
-              <input {...getInputProps()} />
-              <p className="text-white300">Drag and drop images here, or click to select</p>
+            <div className="hover:addPostShadow mx-auto flex w-full items-center justify-between p-4 transition-all duration-200 md:p-6">
+              <label className="form-label text-orange">Recipe Images</label>
+
+              <div
+                {...getRootProps()}
+                className="inputField darkInputField flex w-1/2 items-center"
+              >
+                <input {...getInputProps()} />
+                <p className="w-full text-[#FFD28F]/50">🖼️ Upload images</p>
+              </div>
             </div>
 
             {Array.isArray(imagePreview) && imagePreview.length > 0 && (
-              <div className="mt-4 grid grid-cols-2 gap-4">
+              <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
                 {imagePreview.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Preview ${index}`}
-                    className="h-[150px] w-[150px] rounded-md object-cover"
-                  />
+                  <div key={index} className="relative h-[150px] w-[150px]">
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`Preview ${index}`}
+                      className="h-[150px] w-[150px] rounded-md object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="bg-red-500 absolute right-1 top-1 rounded-full bg-blue800/60 px-2 py-1 text-xs font-bold text-orange"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -429,15 +447,15 @@ export function AddPost() {
               <ul className="mt-2 text-sm">
                 {images.map((url, index) => (
                   <li key={index} className="mt-1 break-all text-xs text-beige300">
-                    📁 {url.split("/").pop()}
+                    📁 {url ? url.split("/").pop() : "Invalid image"}
                   </li>
                 ))}
               </ul>
             )}
 
             {/* recipe info */}
-            <div className="hover:addPostShadow mx-auto flex flex-col gap-y-4 p-4">
-              <div className="flex items-center justify-between">
+            <div className="hover:addPostShadow mx-auto flex w-full flex-col gap-y-4 overflow-hidden p-4">
+              <div className="flex w-full items-center justify-between">
                 <label className="form-label text-orange">Preparation Time</label>
                 <input
                   className="inputField darkInputField"
@@ -450,7 +468,7 @@ export function AddPost() {
               <div className="flex items-center justify-between">
                 <label className="form-label text-orange">Cook time</label>
                 <input
-                  className="inputField darkInputField bg-[#3A3A6A]"
+                  className="inputField darkInputField"
                   placeholder="🧑‍🍳 e.g. 45 mins"
                   value={preparation.cookTime}
                   onChange={handleChangePreparation}
