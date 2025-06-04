@@ -51,20 +51,20 @@ export function StepByStepPage() {
             speed={800}
           >
             {/* Step 0: 食材確認 */}
-            <SwiperSlide className="flex min-h-screen items-center justify-center text-center">
+            <SwiperSlide className="swiperSlideStyle">
               <div className="mx-auto max-w-[500px] py-3">
                 <IngredientCheck recipe={recipe} onNext={goNext} />
               </div>
             </SwiperSlide>
 
-            <SwiperSlide className="flex min-h-screen items-center justify-center text-center">
+            <SwiperSlide className="swiperSlideStyle">
               <div className="mx-auto max-w-[500px] py-3">
                 <StartCooking onPrev={goPrev} onNext={goNext} />
               </div>
             </SwiperSlide>
 
             {/* 動態步驟頁 */}
-            <SwiperSlide>
+            <SwiperSlide className="swiperSlideStyle">
               <InstructionSteps
                 recipe={recipe}
                 onNext={goNext}
@@ -75,7 +75,7 @@ export function StepByStepPage() {
             </SwiperSlide>
 
             {/* 完成頁 */}
-            <SwiperSlide className="flex min-h-screen items-center justify-center text-center">
+            <SwiperSlide className="swiperSlideStyle">
               <FinishPage recipe={recipe} />
             </SwiperSlide>
           </Swiper>

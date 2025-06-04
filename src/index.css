@@ -169,4 +169,7 @@
   .miniCartRecipeName:hover {
     @apply text-orange;
   }
+  .swiperSlideStyle {
+    @apply flex min-h-screen items-center justify-center px-6 text-center;
+  }
 }
