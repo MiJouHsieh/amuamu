@@ -7,6 +7,8 @@ import { CartIconToggle } from "src/components/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
 import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
+import { RecipeTags } from "src/components/recipe/RecipeTags";
+import { StepByStepBtn } from "src/components/recipe/StepByStepBtn";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -146,33 +148,11 @@ export function RecipePage() {
           </div>
         </div>
         {/* Tags */}
-        <div className="w-full space-y-4 py-6 990:flex 990:items-center 990:justify-center 990:space-x-4 990:space-y-0">
-          <h4 className="font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
-            Tags
-          </h4>
-          <div className="h-full space-x-2 space-y-2 text-beige">
-            {data?.tags?.map((tag) => {
-              return (
-                <span
-                  className="inline-block rounded-full border border-yellow px-4 py-2 text-xl"
-                  key={tag}
-                >
-                  {tag}
-                </span>
-              );
-            })}
-          </div>
-        </div>
+        <RecipeTags tagArray={data?.tags} />
+
         {/* Step-by-step mode */}
-        <div className="flex w-full justify-center py-6">
-          <button
-            className="submitBtn mx-auto"
-            onClick={() => navigate(`/step-by-step/${id}`)}
-            recipe={data?.recipe_name}
-          >
-            Step-by-step mode
-          </button>
-        </div>
+        <StepByStepBtn id={id} />
+
         {/* ingredients  */}
         <div className="w-full space-y-4 py-6">
           <div className="flex justify-between">
@@ -207,12 +187,6 @@ export function RecipePage() {
             Note
           </h4>
           <p className="pl-2 text-beige">{data ? data.note : ""}</p>
-        </div>
-        {/* Step-by-step mode */}
-        <div className="flex w-full justify-end py-6">
-          <button className="submitBtn" onClick={() => navigate(`/step-by-step/${id}`)}>
-            Step-by-step mode
-          </button>
         </div>
       </div>
       {/* mini cart */}

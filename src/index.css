@@ -91,7 +91,7 @@
     @apply flex flex-col gap-y-6 p-4 text-xl md:p-6;
   }
   .userInputField {
-    @apply h-16 rounded-md border w-full text-center border-transparent p-2 outline-none transition-colors duration-1000  md:p-4;
+    @apply h-16 w-full rounded-md border border-transparent p-2 text-center outline-none transition-colors duration-1000 md:p-4;
   }
   .search-input {
     @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-10 text-[#FFD28F] outline-none focus:border-yellow300;
@@ -102,22 +102,32 @@
   .auth-input-field {
     @apply tracking-widest text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FFEF88];
   }
-  .stepByStepBackBtn, .cancelBtn {
-    @apply py-2 rounded-full border-4 border-blue100 bg-blue-400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-blue-500 active:scale-95;
+  .stepByStepBackBtn,
+  .cancelBtn {
+    @apply rounded-full border-4 border-blue100 bg-blue-400 p-4 py-2 text-center text-blue900 transition-transform duration-200 hover:bg-blue-500 active:scale-95;
   }
   .stepByStepNextBtn {
-    @apply py-2 rounded-full border-4 border-beige300 bg-yellow400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
+    @apply rounded-full border-4 border-beige300 bg-yellow400 p-4 py-2 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
   }
-  .submitBtn, .setTimerBtn  {
+  .submitBtn,
+  .setTimerBtn {
     @apply my-4 rounded-full border-4 border-beige300 bg-yellow400 p-4 text-center text-blue900 transition-transform duration-200 hover:bg-orange active:scale-95;
   }
-  .submitBtn:hover, .stepByStepNextBtn:hover, .setTimerBtn:hover {
+  .submitBtn:hover,
+  .stepByStepNextBtn:hover,
+  .setTimerBtn:hover,
+  .step-by-step-btn:hover {
     box-shadow: 0px 0px 20px 16px rgba(255, 140, 0, 0.2);
+  }
+  .step-by-step-btn {
+    @apply fixed bottom-5 right-5 z-20 flex h-[90px] w-[90px] flex-col items-center justify-center rounded-full bg-white/30 p-2 text-center text-base font-semibold text-orange backdrop-blur-sm transition-transform duration-200 hover:bg-yellow400 active:scale-95 sm:h-[100px] sm:w-[100px] md:h-[120px] md:w-[120px];
   }
   .cancelBtn {
     @apply my-4 rounded-full border-4 border-blue100 bg-blue-400 p-4 text-center text-blue500 transition-transform duration-200 hover:bg-blue-500 active:scale-95;
   }
-  .cancelBtn:hover, .stepByStepBackBtn:hover, .cancelBtn:hover {
+  .cancelBtn:hover,
+  .stepByStepBackBtn:hover,
+  .cancelBtn:hover {
     box-shadow: 0px 0px 20px 16px rgba(140, 200, 255, 0.2);
   }
   .deleteBtn {
@@ -168,5 +178,8 @@
   }
   .miniCartRecipeName:hover {
     @apply text-orange;
+  }
+  .swiperSlideStyle {
+    @apply flex min-h-screen items-center justify-center px-6 text-center;
   }
 }
