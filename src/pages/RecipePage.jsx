@@ -6,13 +6,10 @@ import { MiniCartModal } from "src/components/MiniCartModal";
 import { CartIconToggle } from "src/components/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
-<<<<<<< HEAD
 import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
 import { RecipeTags } from "src/components/recipe/RecipeTags";
 import { StepByStepBtn } from "src/components/recipe/StepByStepBtn";
-=======
 import { CookingTimer } from "src/components/recipe/CookingTimer";
->>>>>>> 0f40d81195e49f1e3bba9efb8a9df58bce5b838c
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
