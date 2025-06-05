@@ -8,6 +8,7 @@ import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
 import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
 import { RecipeTags } from "src/components/recipe/RecipeTags";
+import { StepByStepBtn } from "src/components/recipe/StepByStepBtn";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -150,15 +151,8 @@ export function RecipePage() {
         <RecipeTags tagArray={data?.tags} />
 
         {/* Step-by-step mode */}
-        <div className="flex w-full justify-center py-6">
-          <button
-            className="submitBtn mx-auto"
-            onClick={() => navigate(`/step-by-step/${id}`)}
-            recipe={data?.recipe_name}
-          >
-            Step-by-step mode
-          </button>
-        </div>
+        <StepByStepBtn id={id} />
+
         {/* ingredients  */}
         <div className="w-full space-y-4 py-6">
           <div className="flex justify-between">
@@ -193,12 +187,6 @@ export function RecipePage() {
             Note
           </h4>
           <p className="pl-2 text-beige">{data ? data.note : ""}</p>
-        </div>
-        {/* Step-by-step mode */}
-        <div className="flex w-full justify-end py-6">
-          <button className="submitBtn" onClick={() => navigate(`/step-by-step/${id}`)}>
-            Step-by-step mode
-          </button>
         </div>
       </div>
       {/* mini cart */}
