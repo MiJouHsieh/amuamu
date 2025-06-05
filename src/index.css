@@ -40,7 +40,7 @@
   }
   .miniCartModal {
     @apply fixed left-1/2 z-50 w-[60%] max-w-[500px] -translate-x-1/2 rounded-xl bg-orange900/40 p-4 ring-1 ring-yellow400/40 backdrop-blur-xl transition-all duration-700 ease-in-out;
-  }
+  } 
   .miniCartModalHidden {
     @apply top-[-100px] opacity-0;
   }
