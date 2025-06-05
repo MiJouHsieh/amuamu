@@ -40,7 +40,7 @@
   }
   .miniCartModal {
     @apply fixed left-1/2 z-50 w-[60%] max-w-[500px] -translate-x-1/2 rounded-xl bg-orange900/40 p-4 ring-1 ring-yellow400/40 backdrop-blur-xl transition-all duration-700 ease-in-out;
-  } 
+  }
   .miniCartModalHidden {
     @apply top-[-100px] opacity-0;
   }
@@ -181,5 +181,27 @@
   }
   .swiperSlideStyle {
     @apply flex min-h-screen items-center justify-center px-6 text-center;
+  }
+  .timer-btn {
+    @apply cursor-pointer rounded-xl border bg-transparent px-2;
+    transition: background-color 0.5s ease;
+  }
+  .start-btn:active,
+  .start-btn:focus,
+  .start-btn:hover {
+    @apply bg-blue200/80 text-blue500;
+  }
+  .stop-btn:active,
+  .stop-btn:focus,
+  .stop-btn:hover {
+    @apply bg-orange/90 text-blue500;
+  }
+  .reset-btn:active,
+  .reset-btn:focus,
+  .reset-btn:hover {
+    @apply bg-yellow300/90 text-blue500;
+  }
+  .disabled-done-btn {
+    @apply rounded-full border-4 border-white bg-gray-400 p-4 py-2 text-center text-white;
   }
 }
