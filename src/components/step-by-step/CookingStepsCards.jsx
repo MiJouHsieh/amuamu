@@ -48,7 +48,14 @@ export function CookingStepsCards({ instructions, setIsAllStepsDone }) {
               <div key={index} className="h-full p-4">
                 <div
                   className={`group relative flex h-full cursor-pointer flex-col items-center space-y-6 rounded-3xl bg-beige p-[30px] text-blue800 before:absolute before:inset-0 before:rounded-3xl before:border-4 ${stepsStatus[index] ? "before:border-orange" : "cardHoverShadow before:border-transparent hover:before:border-yellow200"} `}
-                  onClick={() => handleClick(index)}
+                  onClick={() => {
+                    const canClick = index === 0 || stepsStatus[index - 1];
+                    if (canClick) {
+                      handleClick(index);
+                    } else {
+                      alert(`Oops! You’ll need to complete Step ${index} first.`);
+                    }
+                  }}
                 >
                   <div className="flex w-full items-center justify-between">
                     <span
