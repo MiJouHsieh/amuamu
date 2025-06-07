@@ -67,7 +67,6 @@ export function RecipePage() {
           throw error;
         }
         setData(data);
-        console.log("RecipePage data", data);
       } catch (error) {
         console.error("An error occurred while loading the post.", error);
       } finally {
