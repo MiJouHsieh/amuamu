@@ -9,10 +9,7 @@ export function CookingStepsCards({ instructions, setIsAllStepsDone }) {
 
   useEffect(() => {
     const allDone = stepsStatus.every((step) => step === true);
-
-    if (allDone) {
-      setIsAllStepsDone(true);
-    }
+    setIsAllStepsDone(allDone);
   }, [stepsStatus, setIsAllStepsDone]);
 
   if (!Array.isArray(instructions) || instructions.length === 0) {

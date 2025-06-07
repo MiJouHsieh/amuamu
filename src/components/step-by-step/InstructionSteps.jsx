@@ -25,8 +25,8 @@ export function InstructionSteps({ recipe, onPrev, onNext, isAllStepsDone, setIs
             Done
           </button>
         ) : (
-          <button className="disabled-done-btn" disabled>
-            disabled Done
+          <button className="disabled-done-btn cursor-not-allowed" disabled>
+            Done
           </button>
         )}
       </div>
