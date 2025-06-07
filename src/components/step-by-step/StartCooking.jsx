@@ -26,10 +26,16 @@ export function StartCooking({ onPrev, onNext }) {
           Use a timer to see how long it takes you to complete the recipe!
         </p>
         <div className="flex w-full justify-center gap-x-10 text-base font-semibold">
-          <button className="cancelBtn w-24" onClick={() => handleChoice("cancel")}>
+          <button
+            className={`cancelBtn w-24 ${chooseSetting === "cancel" ? "selectedCancelBtn" : ""}`}
+            onClick={() => handleChoice("cancel")}
+          >
             Cancel
           </button>
-          <button className="setTimerBtn w-24" onClick={() => handleChoice("ok")}>
+          <button
+            className={`setTimerBtn w-24 ${chooseSetting === "ok" ? "selectedOkBtn" : ""}`}
+            onClick={() => handleChoice("ok")}
+          >
             OK
           </button>
         </div>
