@@ -3,7 +3,7 @@ import { StepsCards } from "src/components/StepsCards";
 import { SlideOverPanel } from "src/components/SlideOverPanel";
 import { MiniCartItem } from "src/components/MiniCartItem";
 import { MiniCartModal } from "src/components/MiniCartModal";
-import { CartIconToggle } from "src/components/CartIconToggle";
+import { CartIconToggle } from "src/components/recipe/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
 import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
@@ -256,7 +256,7 @@ export function RecipePage() {
         </MiniCartModal>
       )}
       {/* CookingTimer */}
-      <CookingTimer/>
+      <CookingTimer />
     </section>
   );
 }
