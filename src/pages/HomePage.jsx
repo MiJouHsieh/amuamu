@@ -1,3 +1,5 @@
+import { GoSearch } from "react-icons/go";
+import { RxCross2 } from "react-icons/rx";
 import IconLogo from "src/assets/icons/amuamu-logo.svg?react";
 import { useState, useEffect } from "react";
 import { useAuth } from "src/context/AuthContext";
@@ -74,12 +76,14 @@ export function HomePage() {
             placeholder="Search by Materials"
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <span className="absolute left-4 top-4 cursor-pointer text-base">🔍</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl">
+            <GoSearch className="text-white" />
+          </span>
           <button
             onClick={() => setSearchKeyword("")}
-            className="absolute right-4 top-3 cursor-pointer text-xl text-blue300"
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-xl"
           >
-            X
+            <RxCross2 className="text-white hover:text-orange active:text-orange" />
           </button>
         </div>
         {/* tags */}
