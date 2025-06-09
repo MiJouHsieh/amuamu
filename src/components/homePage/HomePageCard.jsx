@@ -30,12 +30,12 @@ export const HomePageCard = ({ item }) => {
       <div className="flex items-center justify-between gap-x-2 text-sm text-orange900">
         <p className="inline-flex flex-col items-center px-2 py-1">
           <span>Prep time</span>
-          <span className="font-bold">{item.preparation.preparationTime}</span>
+          <span className="font-bold">{item.preparation.preparationTime} mins</span>
         </p>
 
         <p className="inline-flex flex-col items-center px-2 py-1">
           <span>Cook time</span>
-          <span className="font-bold">{item.preparation.cookTime}</span>
+          <span className="font-bold">{item.preparation.cookTime} mins</span>
         </p>
         <AddAllFoodToCart onClick={handleAddAllFoodToCart} />
       </div>
