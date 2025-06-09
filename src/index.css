@@ -94,7 +94,7 @@
     @apply h-16 w-full rounded-md border border-transparent p-2 text-center outline-none transition-colors duration-1000 md:p-4;
   }
   .search-input {
-    @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-10 text-[#FFD28F] outline-none focus:border-yellow300;
+    @apply w-full rounded-2xl border-2 border-beige500 bg-transparent/20 p-3 pl-11 text-[#FFD28F] outline-none focus:border-yellow300;
   }
   .auth-input {
     @apply rounded-full border border-[#917262] bg-transparent p-6 pr-16 outline-none transition-colors duration-1000;
