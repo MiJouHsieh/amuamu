@@ -1,6 +1,7 @@
 import { RecipeImage } from "src/components/RecipeImage";
 import { AddAllFoodToCart } from "src/components/homePage/AddAllFoodToCart";
 import { useCart } from "src/context/CartContext";
+import toast, { Toaster } from "react-hot-toast";
 
 export const HomePageCard = ({ item }) => {
   const { addToCart } = useCart();
@@ -16,6 +17,18 @@ export const HomePageCard = ({ item }) => {
         recipe_image: item.image,
         checked: false,
       });
+    });
+    toast.success("All ingredients added to cart!", {
+      style: {
+        border: "1px solid #62381F",
+        padding: "16px",
+        color: "#62381F",
+        background: "#DFCFB4",
+      },
+      iconTheme: {
+        primary: "#62381F",
+        secondary: "#F9F8F3",
+      },
     });
   };
 
@@ -38,6 +51,7 @@ export const HomePageCard = ({ item }) => {
           <span className="font-bold">{item.preparation.cookTime} mins</span>
         </p>
         <AddAllFoodToCart onClick={handleAddAllFoodToCart} />
+        <Toaster />
       </div>
     </div>
   );
