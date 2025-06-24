@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HiPlusCircle } from "react-icons/hi";
+import { RxCross2 } from "react-icons/rx";
 
 export function TagsInput({ tags, setTags }) {
   const [inputValue, setInputValue] = useState("");
@@ -24,8 +25,8 @@ export function TagsInput({ tags, setTags }) {
   };
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-y-2 p-4">
-      <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2">
+    <div className="addPostShadow mx-auto flex w-full flex-col gap-y-2 p-4">
+      <div className="flex w-full flex-col items-start gap-y-2">
         <label className="form-label w-full text-orange">Recipe Tags</label>
         <div className="flex w-full items-center justify-between gap-x-4">
           <input
@@ -49,29 +50,31 @@ export function TagsInput({ tags, setTags }) {
         </div>
       </div>
 
-      <div className="hover:addPostShadow flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <div key={index} className="tag-container">
-            <input
-              value={tag}
-              style={{ width: `${Math.max(tag.length, 1)}ch` }}
-              onChange={(e) => handleEditTag(index, e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Backspace" && tag.length === 0) {
-                  e.preventDefault();
-                  handleDeleteTag(e, index);
-                } else if (e.key === "Enter") {
-                  e.preventDefault();
-                }
-              }}
-              className="tag min-w-[100px]"
-            />
-            <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2 text-blue300">
-              X
-            </button>
-          </div>
-        ))}
-      </div>
+      {tags.length > 0 && (
+        <div className="addPostShadow flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <div key={index} className="tag-container">
+              <input
+                value={tag}
+                style={{ width: `${Math.max(tag.length, 1)}ch` }}
+                onChange={(e) => handleEditTag(index, e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace" && tag.length === 0) {
+                    e.preventDefault();
+                    handleDeleteTag(e, index);
+                  } else if (e.key === "Enter") {
+                    e.preventDefault();
+                  }
+                }}
+                className="inputTag min-w-[100px]"
+              />
+              <button onClick={(e) => handleDeleteTag(e, index)} className="mr-2">
+                <RxCross2 className="text-white hover:text-orange active:text-orange" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

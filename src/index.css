@@ -75,14 +75,14 @@
   .inputStyle {
     @apply md:h-10 md:p-4;
   }
-  .tag {
-    @apply h-8 border-none bg-transparent p-2 text-[#FFD28F] outline-none transition-colors duration-1000 md:h-10 md:p-4;
+  .inputTag {
+    @apply h-8 border-none bg-transparent p-2 text-beige outline-none transition-colors duration-1000 md:h-10 md:p-4;
   }
   .tag-container {
-    @apply flex items-center justify-between gap-1 rounded-full border border-[#FFD28F]/70 bg-transparent p-1 focus-within:border-[#FF6F00];
+    @apply flex items-center justify-between gap-1 rounded-full border border-[#FFD28F]/70 bg-transparent p-1 focus-within:border-[#FF6F00] hover:border-[#FF6F00];
   }
   .inputField {
-    @apply h-8 rounded-md border border-transparent p-2 outline-none transition-colors duration-1000 md:h-10 md:p-4;
+    @apply h-[42px] rounded-md border border-transparent p-2 outline-none transition-colors duration-1000 md:h-10 md:p-4;
   }
   .darkInputField {
     @apply bg-[#1E1E3F] text-[#FFD28F] placeholder:text-[#FFD28F]/50 focus:border-[#FF6F00];
@@ -138,7 +138,7 @@
     box-shadow: 0px 0px 20px 16px rgba(255, 70, 0, 0.2);
   }
   .tagBtn {
-    @apply rounded-full border px-3 py-1 text-lg text-beige;
+    @apply rounded-full border border-white px-3 py-1 text-lg text-beige;
   }
   .selectedBtn,
   .tagBtn:hover {
