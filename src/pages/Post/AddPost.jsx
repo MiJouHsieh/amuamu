@@ -415,7 +415,7 @@ export function AddPost() {
               <FormLabel>Recipe Images</FormLabel>
               <div
                 {...getRootProps()}
-                className="inputField darkInputField flex w-full cursor-pointer items-center 500:w-1/2 500:min-w-[220px] 500:max-w-[327px]"
+                className="inputField darkInputField flex w-full cursor-pointer items-center 500:w-auto 500:min-w-[220px] 500:max-w-[327px] md:min-w-[286px] 990:min-w-[327px]"
               >
                 <input {...getInputProps()} className="sr-only" />
                 <p className="text-[#FFD28F]/50">🖼️ Upload images</p>
