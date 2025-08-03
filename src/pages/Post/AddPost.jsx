@@ -1,9 +1,12 @@
 import { HiPlusCircle } from "react-icons/hi";
+import { RxCross2 } from "react-icons/rx";
+
 import { useState, useEffect } from "react";
 import { IngredientCollection } from "src/components/post/IngredientCollection";
 import { InstructionsCollection } from "src/components/post/InstructionsCollection";
 import { TagsInput } from "src/components/post/TagsInput";
 import { RecipeFormButtons } from "src/components/post/RecipeFormButtons";
+import { FormLabel } from "src/components/post/FormLabel";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
@@ -391,17 +394,16 @@ export function AddPost() {
     user && (
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
         <div className="mx-auto flex w-full max-w-[500px] flex-col items-center justify-center px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
-          <h1 className="mb-10 font-youngSerif text-4xl text-orange md:text-5xl 990:text-6xl">
+          <h1 className="mb-10 font-youngSerif text-3xl text-orange 500:text-4xl md:text-5xl 990:text-6xl">
             Create a Recipe
           </h1>
           {/* form */}
           <form className="block w-full space-y-3 md:space-y-5 990:space-y-6">
             {/* title */}
-            <div className="hover:addPostShadow flex items-center justify-between p-4 transition-all duration-200 md:p-6">
-              <label className="form-label text-orange">Recipe Name</label>
-
+            <div className="addPostShadow inputFieldContainer p-4 transition-all duration-200">
+              <FormLabel required>Recipe Name</FormLabel>
               <input
-                className="inputField darkInputField bg-beige"
+                className="inputField darkInputField w-full bg-beige 500:w-auto"
                 value={title}
                 placeholder="🧁 e.g. Chocolate Cake"
                 onChange={(e) => setTitle(e.target.value)}
@@ -409,15 +411,14 @@ export function AddPost() {
             </div>
 
             {/* 多圖支援 */}
-            <div className="hover:addPostShadow mx-auto flex w-full items-center justify-between p-4 transition-all duration-200 md:p-6">
-              <label className="form-label text-orange">Recipe Images</label>
-
+            <div className="addPostShadow inputFieldContainer p-4 transition-all duration-200">
+              <FormLabel>Recipe Images</FormLabel>
               <div
                 {...getRootProps()}
-                className="inputField darkInputField flex w-1/2 items-center"
+                className="inputField darkInputField flex w-full cursor-pointer items-center 500:w-auto 500:min-w-[220px] 500:max-w-[327px] md:min-w-[286px] 990:min-w-[327px]"
               >
-                <input {...getInputProps()} />
-                <p className="w-full text-[#FFD28F]/50">🖼️ Upload images</p>
+                <input {...getInputProps()} className="sr-only" />
+                <p className="text-[#FFD28F]/50">🖼️ Upload images</p>
               </div>
             </div>
 
@@ -434,9 +435,9 @@ export function AddPost() {
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="bg-red-500 absolute right-1 top-1 rounded-full bg-blue800/60 px-2 py-1 text-xs font-bold text-orange"
+                      className="absolute right-1 top-1 rounded-full bg-blue800/70 p-1 text-base text-white hover:text-orange active:text-orange"
                     >
-                      ✕
+                      <RxCross2 />
                     </button>
                   </div>
                 ))}
@@ -454,31 +455,31 @@ export function AddPost() {
             )}
 
             {/* recipe info */}
-            <div className="hover:addPostShadow mx-auto flex w-full flex-col gap-y-4 overflow-hidden p-4">
-              <div className="flex w-full items-center justify-between">
-                <label className="form-label text-orange">Preparation Time</label>
+            <div className="addPostShadow mx-auto flex w-full flex-col gap-y-4 overflow-hidden p-4">
+              <div className="inputFieldContainer w-full">
+                <FormLabel>Preparation Time</FormLabel>
                 <input
-                  className="inputField darkInputField"
+                  className="inputField darkInputField w-full 500:w-auto"
                   value={preparation.preparationTime}
                   placeholder="⏰ e.g. 30 mins"
                   name="preparationTime"
                   onChange={handleChangePreparation}
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <label className="form-label text-orange">Cook time</label>
+              <div className="inputFieldContainer w-full 500:w-auto">
+                <FormLabel>Cook Time</FormLabel>
                 <input
-                  className="inputField darkInputField"
+                  className="inputField darkInputField w-full 500:w-auto"
                   placeholder="🧑‍🍳 e.g. 45 mins"
                   value={preparation.cookTime}
                   onChange={handleChangePreparation}
                   name="cookTime"
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <label className="form-label text-orange">Servings</label>
+              <div className="inputFieldContainer w-full">
+                <FormLabel>Servings</FormLabel>
                 <input
-                  className="inputField darkInputField"
+                  className="inputField darkInputField w-full 500:w-auto"
                   placeholder=" 🍽 e.g. 2 people "
                   value={preparation.servings}
                   onChange={handleChangePreparation}
@@ -489,8 +490,11 @@ export function AddPost() {
             {/* Multiple Tags  */}
             <TagsInput tags={tags} setTags={setTags} />
             {/* Ingredients */}
-            <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
-              <label className="form-label w-full text-orange">Ingredients</label>
+            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+              <FormLabel required className="w-full">
+                Ingredients
+              </FormLabel>
+
               <div className="flex w-full items-center justify-between gap-x-4">
                 <TextareaAutosize
                   rows={5}
@@ -509,16 +513,20 @@ export function AddPost() {
                   </button>
                 )}
               </div>
-              <IngredientCollection
-                ingredients={ingredients}
-                onSave={handleSaveIngredient}
-                onDelete={handleDeleteIngredient}
-                onChangeMode={handleChangeModeIngredient}
-              />
+              {ingredients.length > 0 && (
+                <IngredientCollection
+                  ingredients={ingredients}
+                  onSave={handleSaveIngredient}
+                  onDelete={handleDeleteIngredient}
+                  onChangeMode={handleChangeModeIngredient}
+                />
+              )}
             </div>
             {/* Instructions  */}
-            <div className="hover:addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
-              <label className="form-label w-full text-orange">Instructions</label>
+            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+              <FormLabel required className="w-full">
+                Instructions
+              </FormLabel>
               <div className="flex w-full items-center justify-between gap-x-4">
                 <TextareaAutosize
                   rows={5}
@@ -537,16 +545,19 @@ export function AddPost() {
                   </button>
                 )}
               </div>
-              <InstructionsCollection
-                instructions={instructions}
-                onSave={handleSaveInstructions}
-                onDelete={handleDeleteInstructions}
-                onChangeMode={handleChangeModeInstructions}
-              />
+              {instructions.length > 0 && (
+                <InstructionsCollection
+                  instructions={instructions}
+                  onSave={handleSaveInstructions}
+                  onDelete={handleDeleteInstructions}
+                  onChangeMode={handleChangeModeInstructions}
+                />
+              )}
             </div>
             {/* note */}
-            <div className="hover:addPostShadow flex w-full flex-col items-start justify-between gap-y-2 p-4">
-              <label className="form-label text-orange">Note</label>
+            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+              <FormLabel>Note</FormLabel>
+
               <TextareaAutosize
                 className="inputField darkInputField w-full"
                 value={note}
