@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "src/context/AuthContext";
 import { NavItem } from "src/components/NavItem";
+import { useCart } from "src/context/CartContext";
 
 const ROUTES = [
   { id: "", label: "Home" },
@@ -12,6 +13,19 @@ const ROUTES = [
   { id: "add-recipe", label: "Add Recipe" },
   { id: "cart", label: "Cart" },
 ];
+
+function CartLabel() {
+  const { cart } = useCart();
+
+  return (
+    <div className="relative">
+      <span>Cart</span>
+      <span className="absolute -right-5 -top-3 flex h-5 w-5 items-center justify-center rounded-md border border-white300 bg-red px-1 py-1 text-[12px] leading-none text-white300">
+        {cart.length}
+      </span>
+    </div>
+  );
+}
 
 export function Nav() {
   const [showMenu, setShowMenu] = useState(false);
@@ -51,7 +65,7 @@ export function Nav() {
       <div className="navContainer">
         <div className="1440:relative">
           <Link to="/">
-            <IconLogo className="660:mx-10 h-16 w-16 1440:mx-16" />
+            <IconLogo className="w-16 h-16 660:mx-10 1440:mx-16" />
           </Link>
         </div>
         <div className="md:hidden">
@@ -61,7 +75,7 @@ export function Nav() {
         {showMenu && (
           <div
             ref={navRef}
-            className="fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/15 pl-8 backdrop-blur-xl md:hidden"
+            className="fixed right-0 top-0 z-20 h-screen w-[67%] max-w-[736px] bg-blue900/15 pl-8 outline backdrop-blur-xl md:hidden"
           >
             <div className="flex justify-end py-8 pr-6">
               <IconClose
@@ -74,7 +88,12 @@ export function Nav() {
                 <>
                   <h3 className="items-center text-2xl text-white300">Hi, {displayName} 👋</h3>
                   {ROUTES.map(({ id, label }) => {
-                    return <NavItem key={id} id={id} label={label} pathname={location.pathname} />;
+                    const isCart = id === "cart";
+                    const finalLabel = isCart ? <CartLabel /> : label;
+
+                    return (
+                      <NavItem key={id} id={id} label={finalLabel} pathname={location.pathname} />
+                    );
                   })}
                   <NavItem
                     id="signout"
@@ -86,7 +105,12 @@ export function Nav() {
                 </>
               ) : (
                 <>
-                  <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+                  <NavItem
+                    id="cart"
+                    label={<CartLabel />}
+                    pathname={location.pathname}
+                    to="/cart"
+                  />
                   <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
                 </>
               )}
@@ -95,12 +119,17 @@ export function Nav() {
         )}
 
         <div className="hidden h-full w-full max-w-[756px] md:block">
-          <ul className="flex h-full w-full items-center justify-end gap-x-12">
+          <ul className="flex items-center justify-end w-full h-full gap-x-12">
             {user ? (
               <>
-                {ROUTES.map(({ id, label }) => (
-                  <NavItem key={id} id={id} label={label} pathname={location.pathname} />
-                ))}
+                {ROUTES.map(({ id, label }) => {
+                  const isCart = id === "cart";
+                  const finalLabel = isCart ? <CartLabel /> : label;
+
+                  return (
+                    <NavItem key={id} id={id} label={finalLabel} pathname={location.pathname} />
+                  );
+                })}
                 <NavItem
                   id="signout"
                   label="Sign out"
@@ -111,7 +140,7 @@ export function Nav() {
               </>
             ) : (
               <>
-                <NavItem id="cart" label="Cart" pathname={location.pathname} to="/cart" />
+                <NavItem id="cart" label={<CartLabel />} pathname={location.pathname} to="/cart" />
                 <NavItem id="login" label="Log in" pathname={location.pathname} to="/login" />
               </>
             )}
