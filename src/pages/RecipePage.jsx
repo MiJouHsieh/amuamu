@@ -9,7 +9,6 @@ import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
 import { RecipeImageCarousel } from "src/components/recipe/RecipeImageCarousel";
 import { RecipeTags } from "src/components/recipe/RecipeTags";
 import { StepByStepBtn } from "src/components/recipe/StepByStepBtn";
-import { CookingTimer } from "src/components/recipe/CookingTimer";
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -254,8 +253,6 @@ export function RecipePage() {
           )}
         </MiniCartModal>
       )}
-      {/* CookingTimer */}
-      <CookingTimer />
     </section>
   );
 }
