@@ -43,6 +43,7 @@ export function RecipePage() {
     return acc;
   }, {});
   const recipeGroup = Object.values(groupedIngredients);
+  const [isAllStepsDone, setIsAllStepsDone] = useState(false);
 
   const handleClickAddBtn = (title, isNew) => {
     setLatestItemTitle(title);
@@ -89,12 +90,12 @@ export function RecipePage() {
   }, [id, showMiniCart]);
 
   if (loading) {
-    return <div className="mt-48 p-3 text-3xl text-orange">Loading...</div>;
+    return <div className="p-3 mt-48 text-3xl text-orange">Loading...</div>;
   }
 
   if (!data) {
     return (
-      <div className="mt-48 flex rounded-lg border-2 border-orange px-4 py-2 text-3xl text-orange">
+      <div className="flex px-4 py-2 mt-48 text-3xl border-2 rounded-lg border-orange text-orange">
         Recipe not found.💔
       </div>
     );
@@ -102,7 +103,7 @@ export function RecipePage() {
 
   return (
     <section className="archBackground border-box h-full w-full p-4 md:p-10 990:mx-0 990:p-8 1440:max-w-[1110px]">
-      <div className="flex w-full flex-col items-center 990:flex-row 990:flex-wrap 990:items-end 990:justify-between">
+      <div className="flex flex-col items-center w-full 990:flex-row 990:flex-wrap 990:items-end 990:justify-between">
         {/* image */}
         <div className="flex w-full flex-1 flex-col items-center justify-center space-y-4 575:mt-4 990:w-[40%]">
           <div className="mt-10">
@@ -117,7 +118,7 @@ export function RecipePage() {
           <SharedByUserLabel loginUserId={user?.id} recipeUserId={data.user_id} />
           {/* user edit delete */}
           {user?.id === data.user_id && (
-            <div className="flex w-full items-center justify-center gap-10 text-blue100">
+            <div className="flex items-center justify-center w-full gap-10 text-blue100">
               <button
                 className="actionBtn:hover actionBtn rounded-xl"
                 onClick={() => navigate(`/edit/${id}`)}
@@ -153,15 +154,15 @@ export function RecipePage() {
         <StepByStepBtn id={id} />
 
         {/* ingredients  */}
-        <div className="w-full space-y-4 py-6">
+        <div className="w-full py-6 space-y-4">
           <div className="flex justify-between">
-            <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold text-yellow400">
+            <h4 className="text-2xl font-semibold text-start font-chocolateClassicalSans text-yellow400">
               Ingredients
             </h4>
             <CartIconToggle onClick={handleToggleCart} />
           </div>
 
-          <div className="space-y-4 rounded-xl border border-yellow p-6 text-beige md:flex md:flex-wrap md:space-y-0">
+          <div className="p-6 space-y-4 border rounded-xl border-yellow text-beige md:flex md:flex-wrap md:space-y-0">
             {data?.ingredients?.map((item) => {
               return (
                 <Checkbox
@@ -179,9 +180,15 @@ export function RecipePage() {
           </div>
         </div>
         {/* instructions */}
-        {data?.instructions && <StepsCards instructions={data.instructions} />}
+        {data?.instructions && (
+          <StepsCards
+            instructions={data.instructions}
+            isAllStepsDone={isAllStepsDone}
+            setIsAllStepsDone={setIsAllStepsDone}
+          />
+        )}
         {/* Note */}
-        <div className="mt-6 w-full space-y-3 rounded-xl border border-yellow p-6 md:max-w-none">
+        <div className="w-full p-6 mt-6 space-y-3 border rounded-xl border-yellow md:max-w-none">
           <h4 className="text-start font-chocolateClassicalSans text-2xl font-semibold leading-[32px] tracking-[0px] text-yellow400">
             Note
           </h4>
@@ -192,7 +199,7 @@ export function RecipePage() {
       {showMiniCart && (
         <SlideOverPanel ref={cartRef} onClose={handleToggleCart}>
           {cart?.length > 0 && (
-            <p className="w-full text-center text-xl text-beige">
+            <p className="w-full text-xl text-center text-beige">
               Total: {cart?.length === 1 ? "1 item" : `${cart?.length} items`}
             </p>
           )}
@@ -201,7 +208,7 @@ export function RecipePage() {
             return (
               <div
                 key={group.recipe_id}
-                className="w-full space-y-4 rounded-xl border border-yellow p-2 text-beige"
+                className="w-full p-2 space-y-4 border rounded-xl border-yellow text-beige"
               >
                 <div className="flex flex-col">
                   <Link to={`/recipe-page/${group.recipe_id}`}>
@@ -218,7 +225,7 @@ export function RecipePage() {
                   </div>
                 </div>
 
-                <div className="flex w-full flex-col space-y-6 rounded-xl">
+                <div className="flex flex-col w-full space-y-6 rounded-xl">
                   {ingredientsArr?.map((ingredient) => {
                     return (
                       <MiniCartItem
@@ -232,7 +239,7 @@ export function RecipePage() {
               </div>
             );
           })}
-          <button className="submitBtn w-full" onClick={() => navigate("/cart")}>
+          <button className="w-full submitBtn" onClick={() => navigate("/cart")}>
             Check My Cart
           </button>
         </SlideOverPanel>
