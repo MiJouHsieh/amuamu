@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "src/supabaseClient";
+import toast  from "react-hot-toast";
 
 export function useImageUpload() {
   const [images, setImages] = useState([]); // 多圖 URL
@@ -25,6 +26,18 @@ export function useImageUpload() {
           .from("recipe-image")
           .upload(filePath, file);
 
+        toast.success("Uploading image...", {
+      style: {
+        border: "1px solid #62381F",
+        padding: "16px",
+        color: "#62381F",
+        background: "#DFCFB4",
+      },
+      iconTheme: {
+        primary: "#62381F",
+        secondary: "#F9F8F3",
+      },
+    });
         if (uploadError) {
           throw uploadError;
         }

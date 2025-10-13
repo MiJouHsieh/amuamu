@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 import { useDropzone } from "react-dropzone";
+import toast, { Toaster } from "react-hot-toast";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -388,22 +389,34 @@ export function AddPost() {
   const handleRemoveImage = (indexToRemove) => {
     setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+    toast.success("Deleting image...", {
+      style: {
+        border: "1px solid #62381F",
+        padding: "16px",
+        color: "#62381F",
+        background: "#DFCFB4",
+      },
+      iconTheme: {
+        primary: "#62381F",
+        secondary: "#F9F8F3",
+      },
+    });
   };
 
   return (
     user && (
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
         <div className="mx-auto flex w-full max-w-[500px] flex-col items-center justify-center px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
-          <h1 className="mb-10 font-youngSerif text-3xl text-orange 500:text-4xl md:text-5xl 990:text-6xl">
+          <h1 className="mb-10 text-3xl font-youngSerif text-orange 500:text-4xl md:text-5xl 990:text-6xl">
             Create a Recipe
           </h1>
           {/* form */}
           <form className="block w-full space-y-3 md:space-y-5 990:space-y-6">
             {/* title */}
-            <div className="addPostShadow inputFieldContainer p-4 transition-all duration-200">
+            <div className="p-4 transition-all duration-200 addPostShadow inputFieldContainer">
               <FormLabel required>Recipe Name</FormLabel>
               <input
-                className="inputField darkInputField w-full bg-beige 500:w-auto"
+                className="w-full inputField darkInputField bg-beige 500:w-auto"
                 value={title}
                 placeholder="🧁 e.g. Chocolate Cake"
                 onChange={(e) => setTitle(e.target.value)}
@@ -411,7 +424,7 @@ export function AddPost() {
             </div>
 
             {/* 多圖支援 */}
-            <div className="addPostShadow inputFieldContainer p-4 transition-all duration-200">
+            <div className="p-4 transition-all duration-200 addPostShadow inputFieldContainer">
               <FormLabel>Recipe Images</FormLabel>
               <div
                 {...getRootProps()}
@@ -423,7 +436,7 @@ export function AddPost() {
             </div>
 
             {Array.isArray(imagePreview) && imagePreview.length > 0 && (
-              <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-3">
                 {imagePreview.map((src, index) => (
                   <div key={index} className="relative h-[150px] w-[150px]">
                     <img
@@ -435,7 +448,7 @@ export function AddPost() {
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute right-1 top-1 rounded-full bg-blue800/70 p-1 text-base text-white hover:text-orange active:text-orange"
+                      className="absolute p-1 text-base text-white rounded-full right-1 top-1 bg-blue800/70 hover:text-orange active:text-orange"
                     >
                       <RxCross2 />
                     </button>
@@ -447,39 +460,40 @@ export function AddPost() {
             {images.length > 0 && (
               <ul className="mt-2 text-sm">
                 {images.map((url, index) => (
-                  <li key={index} className="mt-1 break-all text-xs text-beige300">
+                  <li key={index} className="mt-1 text-xs break-all text-beige300">
                     📁 {url ? url.split("/").pop() : "Invalid image"}
                   </li>
                 ))}
               </ul>
             )}
+            <Toaster />
 
             {/* recipe info */}
-            <div className="addPostShadow mx-auto flex w-full flex-col gap-y-4 overflow-hidden p-4">
-              <div className="inputFieldContainer w-full">
+            <div className="flex flex-col w-full p-4 mx-auto overflow-hidden addPostShadow gap-y-4">
+              <div className="w-full inputFieldContainer">
                 <FormLabel>Preparation Time</FormLabel>
                 <input
-                  className="inputField darkInputField w-full 500:w-auto"
+                  className="w-full inputField darkInputField 500:w-auto"
                   value={preparation.preparationTime}
                   placeholder="⏰ e.g. 30 mins"
                   name="preparationTime"
                   onChange={handleChangePreparation}
                 />
               </div>
-              <div className="inputFieldContainer w-full 500:w-auto">
+              <div className="w-full inputFieldContainer 500:w-auto">
                 <FormLabel>Cook Time</FormLabel>
                 <input
-                  className="inputField darkInputField w-full 500:w-auto"
+                  className="w-full inputField darkInputField 500:w-auto"
                   placeholder="🧑‍🍳 e.g. 45 mins"
                   value={preparation.cookTime}
                   onChange={handleChangePreparation}
                   name="cookTime"
                 />
               </div>
-              <div className="inputFieldContainer w-full">
+              <div className="w-full inputFieldContainer">
                 <FormLabel>Servings</FormLabel>
                 <input
-                  className="inputField darkInputField w-full 500:w-auto"
+                  className="w-full inputField darkInputField 500:w-auto"
                   placeholder=" 🍽 e.g. 2 people "
                   value={preparation.servings}
                   onChange={handleChangePreparation}
@@ -490,16 +504,16 @@ export function AddPost() {
             {/* Multiple Tags  */}
             <TagsInput tags={tags} setTags={setTags} />
             {/* Ingredients */}
-            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+            <div className="flex flex-col items-start w-full p-4 addPostShadow gap-y-2">
               <FormLabel required className="w-full">
                 Ingredients
               </FormLabel>
 
-              <div className="flex w-full items-center justify-between gap-x-4">
+              <div className="flex items-center justify-between w-full gap-x-4">
                 <TextareaAutosize
                   rows={5}
                   spellCheck={false}
-                  className="inputField darkInputField flex-1 resize-none overflow-auto"
+                  className="flex-1 overflow-auto resize-none inputField darkInputField"
                   value={ingredientInput}
                   placeholder="🥚 e.g. 2 eggs"
                   onChange={(e) => setIngredientInput(e.target.value)}
@@ -523,15 +537,15 @@ export function AddPost() {
               )}
             </div>
             {/* Instructions  */}
-            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+            <div className="flex flex-col items-start w-full p-4 addPostShadow gap-y-2">
               <FormLabel required className="w-full">
                 Instructions
               </FormLabel>
-              <div className="flex w-full items-center justify-between gap-x-4">
+              <div className="flex items-center justify-between w-full gap-x-4">
                 <TextareaAutosize
                   rows={5}
                   spellCheck={false}
-                  className="inputField darkInputField flex-1 resize-none overflow-auto"
+                  className="flex-1 overflow-auto resize-none inputField darkInputField"
                   value={instructionsInput}
                   placeholder="🥣 e.g. Crack the eggs into a bowl and whisk well"
                   onChange={(e) => setInstructionsInput(e.target.value)}
@@ -555,11 +569,11 @@ export function AddPost() {
               )}
             </div>
             {/* note */}
-            <div className="addPostShadow flex w-full flex-col items-start gap-y-2 p-4">
+            <div className="flex flex-col items-start w-full p-4 addPostShadow gap-y-2">
               <FormLabel>Note</FormLabel>
 
               <TextareaAutosize
-                className="inputField darkInputField w-full"
+                className="w-full inputField darkInputField"
                 value={note}
                 placeholder="📝 Any tips or notes?"
                 onChange={(e) => setNote(e.target.value)}
