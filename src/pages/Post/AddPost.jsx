@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 import { useDropzone } from "react-dropzone";
+import toast, { Toaster } from "react-hot-toast";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -391,6 +392,18 @@ export function AddPost() {
   const handleRemoveImage = (indexToRemove) => {
     setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+    toast.success("Deleted image!", {
+      style: {
+        border: "1px solid #62381F",
+        padding: "16px",
+        color: "#62381F",
+        background: "#DFCFB4",
+      },
+      iconTheme: {
+        primary: "#62381F",
+        secondary: "#F9F8F3",
+      },
+    });
   };
 
   return (
@@ -456,6 +469,7 @@ export function AddPost() {
                 ))}
               </ul>
             )}
+            <Toaster />
 
             {/* recipe info */}
             <div className="flex flex-col w-full p-4 mx-auto overflow-hidden addPostShadow gap-y-4">
