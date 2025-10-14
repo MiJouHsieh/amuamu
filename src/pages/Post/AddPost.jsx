@@ -389,7 +389,7 @@ export function AddPost() {
   const handleRemoveImage = (indexToRemove) => {
     setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
-    toast.success("Deleting image...", {
+    toast.success("Deleted image!", {
       style: {
         border: "1px solid #62381F",
         padding: "16px",

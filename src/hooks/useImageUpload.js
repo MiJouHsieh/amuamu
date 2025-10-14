@@ -21,26 +21,44 @@ export function useImageUpload() {
         // 本地預覽網址
         newPreviews.push(URL.createObjectURL(file));
 
+        // 顯示 loading toast
+        const toastId = toast.loading("Uploading image...", {
+          style: {
+            border: "1px solid #62381F",
+            padding: "16px",
+            color: "#62381F",
+            background: "#DFCFB4",
+          },
+          iconTheme: {
+            primary: "#62381F",
+            secondary: "#F9F8F3",
+          },
+        });
+
         // 上傳圖片
         const { error: uploadError } = await supabase.storage
           .from("recipe-image")
           .upload(filePath, file);
 
-        toast.success("Uploading image...", {
-      style: {
-        border: "1px solid #62381F",
-        padding: "16px",
-        color: "#62381F",
-        background: "#DFCFB4",
-      },
-      iconTheme: {
-        primary: "#62381F",
-        secondary: "#F9F8F3",
-      },
-    });
         if (uploadError) {
-          throw uploadError;
+          toast.error("Image upload failed!", {
+            id: toastId, // 替換原本 loading toast
+            style: {
+              border: "1px solid #62381F",
+              padding: "16px",
+              color: "#62381F",
+              background: "#FCEBEA",
+            },
+            iconTheme: {
+              primary: "#62381F",
+              secondary: "#F9F8F3",
+            },
+          });
+          console.error("Upload failed:", uploadError.message);
+          continue; // 跳過這張，不中斷其他圖片
         }
+
+        toast.success("Image uploaded successfully!", { id: toastId });
 
         // 取得公開 URL
         const { publicURL, error: urlError } = supabase.storage
