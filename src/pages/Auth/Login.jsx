@@ -53,15 +53,15 @@ export function Login() {
       }}
     >
       {({ isSubmitting, status }) => (
-        <main className="archBackground flex h-full w-full flex-col items-center justify-center gap-y-6 py-8">
+        <main className="flex flex-col items-center justify-center w-full h-full py-8 archBackground gap-y-6">
           <div>
-            <IconLogo className="h-40 w-40" />
+            <IconLogo className="w-40 h-40" />
           </div>
           <div className="relative flex w-full flex-col items-center gap-y-6 p-6 500:max-w-[28rem]">
-            <h1 className="mb-6 w-full text-center font-youngSerif text-6xl text-orange">
+            <h1 className="w-full mb-6 text-6xl text-center font-youngSerif text-orange">
               Sign In
             </h1>
-            <Form className="flex w-full flex-col gap-y-5">
+            <Form className="flex flex-col w-full gap-y-5">
               <FormInput
                 id="inputEmail"
                 label="Email Address"
@@ -78,7 +78,7 @@ export function Login() {
                 required
               />
               {status && (
-                <div className="rounded-md border-4 border-red bg-beige px-4 py-3 text-center text-base font-semibold leading-snug text-red">
+                <div className="px-4 py-3 text-base font-semibold leading-snug text-center border-4 rounded-md border-red bg-beige text-red">
                   <p>⚠️ Oops! That doesn't look right. ⚠️</p>
                   <p>Please check your email and password.</p>
                 </div>
@@ -93,7 +93,7 @@ export function Login() {
                   ? "Submitting..."
                   : "Continue your recipe collection 😋"}
               </button>
-              <Link className="text-beige300 underline" to="/signup">
+              <Link className="underline text-beige300" to="/signup">
                 Sign up
               </Link>
             </Form>
