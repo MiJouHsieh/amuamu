@@ -153,7 +153,7 @@ export function HomePage() {
 
         {!isLoading && errorMsg && (
           <div className="flex flex-col w-full gap-2 align-center y-4">
-            <p className="text-center text-yellow400">{errorMsg}errorMsg</p>
+            <p className="text-center text-yellow400">{errorMsg}</p>
             <button className="text-xl submitBtn" onClick={getRecipe}>
               Retry
             </button>
