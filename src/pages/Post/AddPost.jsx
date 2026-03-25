@@ -120,7 +120,7 @@ export function AddPost() {
 
   useEffect(() => {
     if (!isEditMode) return;
-    if (!user || !id) return;
+    if (!user?.id || !id) return;
 
     const isChanged =
       title !== originalTitle ||
@@ -174,7 +174,7 @@ export function AddPost() {
     originalImage,
     originalIngredients,
     originalInstructions,
-    user,
+    user?.id,
     id,
     isEditMode,
   ]);
@@ -215,7 +215,7 @@ export function AddPost() {
     handleKeyDown(e, instructionsInput, setInstructionsInput, setInstructions);
   };
 
-  const handleSaveIngredient = (id, title) => {
+  const handleSaveIngredient = ({ id, title }) => {
     handleSave({
       id,
       title,
@@ -223,7 +223,7 @@ export function AddPost() {
       setItems: setIngredients,
     });
   };
-  const handleSaveInstructions = (id, title) => {
+  const handleSaveInstructions = ({ id, title }) => {
     handleSave({
       id,
       title,
@@ -239,18 +239,18 @@ export function AddPost() {
     handleDelete(id, setInstructions);
   };
 
-  const handleChangeModeIngredient = (id, title) => {
+  const handleChangeModeIngredient = ({ id, isEdit }) => {
     handleChangeMode({
       id,
-      title,
+      isEdit,
       items: ingredients,
       setItems: setIngredients,
     });
   };
-  const handleChangeModeInstructions = (id, title) => {
+  const handleChangeModeInstructions = ({ id, isEdit }) => {
     handleChangeMode({
       id,
-      title,
+      isEdit,
       items: instructions,
       setItems: setInstructions,
     });
@@ -304,6 +304,7 @@ export function AddPost() {
         ingredients,
         instructions,
         note,
+        draft_data: null,
       };
 
       const { error } = await supabase.from("recipe").update(updates).eq("id", id);
@@ -411,8 +412,14 @@ export function AddPost() {
       <section className="archBackground flex w-full justify-center md:text-xl md:leading-9 990:text-2xl 1440:max-w-[1110px]">
         <div className="mx-auto flex w-full max-w-[500px] flex-col items-center justify-center px-6 py-12 md:max-w-[600px] 990:max-w-[800px]">
           <h1 className="mb-10 text-3xl font-youngSerif text-orange 500:text-4xl md:text-5xl 990:text-6xl">
-            Create a Recipe
+            {isEditMode ? "Edit Recipe" : "Create a Recipe"}
           </h1>
+          {isEditMode && (
+            <div className="w-full text-beige/70 500:w-auto">
+              <p>Changes are autosaved as a draft.</p>
+              <p>Cancel edit to restore the original recipe.</p>
+            </div>
+          )}
           {/* form */}
           <form className="block w-full space-y-3 md:space-y-5 990:space-y-6">
             {/* title */}

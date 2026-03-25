@@ -1,28 +1,42 @@
 import { HiMinusCircle } from "react-icons/hi";
-import { useRef } from "react";
+import { useState, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
-export function IngredientItem({ ingredient, onSave, onDelete, onChangeMode }) {
-  const inputRef = useRef(null);
-
+export function IngredientItem({ ingredient, onSave, onDelete }) {
+  
+  const [value, setValue] = useState(ingredient.title ?? "")
+    
+  useEffect(() => {
+    setValue(ingredient.title ?? "");
+  }, [ingredient.title]);
+  
+  const handleBlur = () => {
+    const trimmed = value.trim()
+    if(trimmed.lenth ===0) return
+    if (trimmed === ingredient.title) return
+    
+    onSave?.({
+      id: ingredient.id,
+      title:trimmed
+    })
+  }
+  
   const handleKeyDown = (event) => {
-    if (inputRef.current.value.length > 0 && event.key === "Enter") {
-      onSave?.({
-        id: ingredient.id,
-        title: inputRef.current.value,
-      });
-    }
+    
     if (event.key === "Escape") {
-      onChangeMode?.({ id: ingredient.id, isEdit: false });
+      event.preventDefault()
+      handleBlur()
     }
   };
 
   return (
-    <div className="flex w-full items-center justify-between gap-x-4">
+    <div className="flex items-center justify-between w-full gap-x-4">
       <TextareaAutosize
         className="box-border flex-1 resize-none whitespace-pre-wrap break-words border-b border-[#FFD28F]/70 bg-transparent p-2 leading-tight md:p-4 md:leading-9"
         style={{ boxSizing: "border-box" }}
-        ref={inputRef}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         defaultValue={ingredient.title}
         minRows={1}
