@@ -25,10 +25,10 @@ export function TagsInput({ tags, setTags }) {
   };
 
   return (
-    <div className="addPostShadow mx-auto flex w-full flex-col gap-y-2 p-4">
-      <div className="flex w-full flex-col items-start gap-y-2">
-        <label className="form-label w-full text-orange">Recipe Tags</label>
-        <div className="flex w-full items-center justify-between gap-x-4">
+    <div className="flex flex-col w-full p-4 mx-auto addPostShadow gap-y-2">
+      <div className="flex flex-col items-start w-full gap-y-2">
+        <label className="w-full form-label text-orange">Recipe Tags</label>
+        <div className="flex items-center justify-between w-full gap-x-4">
           <input
             type="text"
             placeholder="🏷️ e.g. cake"
@@ -40,7 +40,7 @@ export function TagsInput({ tags, setTags }) {
                 handleAddTag();
               }
             }}
-            className="darkInputField inputField flex-1 resize-none overflow-auto"
+            className="flex-1 overflow-auto resize-none darkInputField inputField"
           />
           {inputValue.length > 0 && (
             <button type="button" onClick={handleAddTag} className="activeBtn">
@@ -51,7 +51,7 @@ export function TagsInput({ tags, setTags }) {
       </div>
 
       {tags.length > 0 && (
-        <div className="addPostShadow flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 addPostShadow">
           {tags.map((tag, index) => (
             <div key={index} className="tag-container">
               <input
