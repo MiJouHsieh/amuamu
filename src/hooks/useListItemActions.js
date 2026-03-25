@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export const useListItemActions = () => {
   
   const handleAddItem = ( inputValue, setInputValue, setItems ) => {
@@ -10,9 +12,10 @@ export const useListItemActions = () => {
       return [
         ...items,
         {
-          id: Math.random() * 100,
+          id: crypto.randomUUID(),
           title: inputValue.trim(),
           isDone: false,
+          isEdit: false,
         },
       ];
     });
@@ -29,9 +32,10 @@ export const useListItemActions = () => {
       return [
         ...items,
         {
-          id: Math.random() * 100,
+          id: uuidv4(),
           title: inputValue.trim(),
           isDone: false,
+          isEdit: false,
         },
       ];
     });
@@ -39,7 +43,6 @@ export const useListItemActions = () => {
   };;
 
   const handleSave = ({ id, title, items, setItems }) => {
-    console.log("💾 Saving:", id, title);
     const updatedItems = items.map((item) => {
         if (item.id === id) {
           return {
