@@ -415,9 +415,10 @@ export function AddPost() {
             {isEditMode ? "Edit Recipe" : "Create a Recipe"}
           </h1>
           {isEditMode && (
-            <div className="w-full text-beige/70 500:w-auto">
-              <p>Changes are autosaved as a draft.</p>
-              <p>Cancel edit to restore the original recipe.</p>
+            <div className="w-full p-4 space-y-6 border rounded-xl border-yellow/50 text-beige text-beige/70 500:w-auto">
+              <p>• Changes are autosaved as a draft.</p>
+              <p>• Draft changes stay in edit mode until you update the recipe.</p>
+              <p>• Cancel edit restores the original recipe.</p>
             </div>
           )}
           {/* form */}
