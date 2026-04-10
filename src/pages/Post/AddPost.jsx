@@ -7,6 +7,7 @@ import { InstructionsCollection } from "src/components/post/InstructionsCollecti
 import { TagsInput } from "src/components/post/TagsInput";
 import { RecipeFormButtons } from "src/components/post/RecipeFormButtons";
 import { FormLabel } from "src/components/post/FormLabel";
+import { MessageModal } from "src/components/MessageModal";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { useListItemActions } from "src/hooks/useListItemActions";
@@ -17,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/context/AuthContext";
 import { useDropzone } from "react-dropzone";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export function AddPost() {
   const [title, setTitle] = useState("");
@@ -47,6 +48,7 @@ export function AddPost() {
 
   const [note, setNote] = useState("");
   const [originalNote, setOriginalNote] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { images, imagePreview, uploading, uploadImages, setImages, setImagePreview } =
     useImageUpload();
@@ -132,7 +134,6 @@ export function AddPost() {
       JSON.stringify(instructions) !== JSON.stringify(originalInstructions);
 
     if (!isChanged) {
-      console.log("🛑 No changes, skip autosave");
       return;
     }
     const timer = setTimeout(async () => {
@@ -154,8 +155,6 @@ export function AddPost() {
 
       if (error) {
         console.error("⚠️ Failed to autosave draft", error);
-      } else {
-        console.log("💾 Draft saved to Supabase");
       }
     }, 1000);
     return () => clearTimeout(timer); // cleanup：輸入過程中清除舊的 timer
@@ -269,20 +268,11 @@ export function AddPost() {
       note: note,
     };
 
-    try {
-      console.log("🧪 目前登入者 id：", user?.id);
-      console.log("🧪 傳送到 supabase 的資料：", updates);
-      const { error } = await supabase.from("recipe").insert([updates]);
-      await triggerConfetti();
-      if (error) {
-        throw error;
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      alert("⚠️ Oops, there was a problem.", error.message);
-      console.error(error);
+    const { error } = await supabase.from("recipe").insert([updates]);
+    if (error) {
+      throw error;
     }
+    return updates.id;
   };
 
   const updateRecipe = async ({
@@ -294,47 +284,67 @@ export function AddPost() {
     instructions,
     note,
   }) => {
-    try {
-      const updates = {
-        user_id: user.id,
-        recipe_name: title,
-        image: images,
-        preparation,
-        tags,
-        ingredients,
-        instructions,
-        note,
-        draft_data: null,
-      };
+    const updates = {
+      user_id: user.id,
+      recipe_name: title,
+      image: images,
+      preparation,
+      tags,
+      ingredients,
+      instructions,
+      note,
+      draft_data: null,
+    };
 
-      const { error } = await supabase.from("recipe").update(updates).eq("id", id);
-      if (error) {
-        throw error;
-      } else {
-        navigate(`/recipe-page/${id}`);
-      }
-    } catch (error) {
-      alert("⚠️ Failed to update: " + error.message);
+    const { error } = await supabase.from("recipe").update(updates).eq("id", id);
+    if (error) {
+      throw error;
     }
   };
+
+  const baseToastStyle = {
+    padding: "16px",
+    color: "#9e552b",
+    background: "#DFCFB4",
+  };
+
+  const baseIconTheme = {
+    primary: "#62381F",
+    secondary: "#F9F8F3",
+  };
+
+  const showSuccessToast = (message) =>
+    toast.success(message, {
+      style: baseToastStyle,
+      iconTheme: baseIconTheme,
+    });
+
+  const showErrorToast = (message) =>
+    toast.error(message, {
+      style: {
+        ...baseToastStyle,
+        background: "#fcebb9",
+      },
+      iconTheme: baseIconTheme,
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (uploading) {
-      alert("⏳ Upload in progress, please wait...");
+      showErrorToast("⏳ Upload in progress, please wait.");
       return;
     }
     if (!title.trim()) {
-      alert("⚠️ Don't forget to name your recipe!");
+      showErrorToast("⚠️ Don't forget to name your recipe!");
       return;
     }
     if (ingredients.length === 0) {
-      alert("⚠️ You'll need at least one ingredient to get started.");
+      showErrorToast("⚠️ You'll need at least one ingredient to get started.");
       return;
     }
     if (instructions.length === 0) {
-      alert("⚠️ Please add at least one cooking step.");
+      showErrorToast("⚠️ Please add at least one cooking step.");
       return;
     }
 
@@ -350,61 +360,75 @@ export function AddPost() {
       instructions,
       note,
     };
-    if (isEditMode) {
-      await updateRecipe(payload);
-    } else {
-      await addRecipe(payload);
+    try {
+      if (isEditMode) {
+        await updateRecipe(payload);
+        showSuccessToast("Recipe updated");
+        navigate(`/recipe-page/${id}`);
+      } else {
+        const newRecipeId = await addRecipe(payload);
+        await triggerConfetti();
+        showSuccessToast("Recipe created");
+        navigate(`/recipe-page/${newRecipeId}`);
+      }
+    } catch (error) {
+      console.error("Failed to save recipe:", error);
+      showErrorToast("Failed to save recipe");
     }
   };
 
-  const handleCancelEdit = async () => {
+  const restoreOriginalRecipe = () => {
     setTitle(originalTitle);
     setImages(originalImage);
+    setImagePreview(originalImage);
     setPreparation(originalPreparation);
     setTags(originalTags);
     setIngredients(originalIngredients);
     setInstructions(originalInstructions);
     setNote(originalNote);
-
-    // 清空 Supabase 的 draft_data 欄位
-    if (isEditMode) {
-      const { error } = await supabase.from("recipe").update({ draft_data: null }).eq("id", id);
-      if (error) console.error("❌ Failed to clear draft_data", error);
-    }
-
-    alert("Draft cleared. You're now viewing the original version.");
-    navigate(`/recipe-page/${id}`);
   };
 
-  const handleDeleteRecipe = async () => {
-    const confirmDelete = confirm("⚠️ Are you sure you want to delete this recipe?");
-    if (!confirmDelete) return;
+  const handleCancelEdit = async () => {
+    try {
+      // 清空 Supabase 的 draft_data 欄位
+      if (isEditMode) {
+        const { error } = await supabase.from("recipe").update({ draft_data: null }).eq("id", id);
+        if (error) throw error;
+      }
 
-    const { error } = await supabase.from("recipe").delete().eq("id", id);
-    if (error) {
-      alert("❌ Failed to delete recipe: " + error.message);
-      return;
+      restoreOriginalRecipe();
+
+      showSuccessToast("Draft cleared. Original recipe restored.");
+      navigate(`/recipe-page/${id}`);
+    } catch (error) {
+      console.error("Failed to cancel edit:", error);
+      showErrorToast("Failed to clear draft");
     }
+  };
 
-    alert("✅ Recipe deleted successfully.");
-    navigate("/");
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+
+  const confirmDeleteRecipe = async () => {
+    try {
+      const { error } = await supabase.from("recipe").delete().eq("id", id);
+
+      if (error) throw error;
+
+      showSuccessToast("Recipe deleted");
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to delete recipe:", error);
+      showErrorToast("Failed to delete recipe");
+    } finally {
+      closeDeleteModal();
+    }
   };
 
   const handleRemoveImage = (indexToRemove) => {
     setImagePreview((prev) => prev.filter((_, index) => index !== indexToRemove));
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
-    toast.success("Deleted image!", {
-      style: {
-        border: "1px solid #62381F",
-        padding: "16px",
-        color: "#62381F",
-        background: "#DFCFB4",
-      },
-      iconTheme: {
-        primary: "#62381F",
-        secondary: "#F9F8F3",
-      },
-    });
+    showSuccessToast("Deleted image!");
   };
 
   return (
@@ -477,7 +501,6 @@ export function AddPost() {
                 ))}
               </ul>
             )}
-            <Toaster />
 
             {/* recipe info */}
             <div className="flex flex-col w-full p-4 mx-auto overflow-hidden addPostShadow gap-y-4">
@@ -597,8 +620,36 @@ export function AddPost() {
               uploading={uploading}
               onSubmit={handleSubmit}
               onCancelEdit={handleCancelEdit}
-              onDelete={handleDeleteRecipe}
+              onDelete={openDeleteModal}
             />
+
+            {isDeleteModalOpen && (
+              <MessageModal onClose={closeDeleteModal}>
+                <div className="flex items-center justify-center">
+                  <div className="w-full max-w-md p-6 rounded-2xl">
+                    <h2 className="text-beige">Delete recipe?</h2>
+                    <p className="mt-3 text-red">This action cannot be undone.</p>
+
+                    <div className="flex justify-end gap-3 mt-6">
+                      <button
+                        type="button"
+                        className="mr-6 deleteModalbtn"
+                        onClick={closeDeleteModal}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        className="deleteModalDeletebtn"
+                        onClick={confirmDeleteRecipe}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </MessageModal>
+            )}
           </form>
         </div>
       </section>
