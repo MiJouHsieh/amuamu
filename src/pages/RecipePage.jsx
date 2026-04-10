@@ -2,7 +2,7 @@ import { Checkbox } from "src/components/Checkbox";
 import { StepsCards } from "src/components/StepsCards";
 import { SlideOverPanel } from "src/components/SlideOverPanel";
 import { MiniCartItem } from "src/components/MiniCartItem";
-import { MiniCartModal } from "src/components/MiniCartModal";
+import { MessageModal } from "src/components/MessageModal";
 import { CartIconToggle } from "src/components/recipe/CartIconToggle";
 import { RecipeImage } from "src/components/RecipeImage";
 import { SharedByUserLabel } from "src/components/recipe/SharedByUserLabel";
@@ -24,7 +24,7 @@ export function RecipePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showMiniCart, setShowMiniCart] = useState(false);
-  const [showMiniCartModal, setShowMiniCartModal] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   const cartRef = useRef(null);
   const [latestItemTitle, setLatestItemTitle] = useState("");
   const [isNewItem, setIsNewItem] = useState(true);
@@ -54,7 +54,7 @@ export function RecipePage() {
   const handleClickAddBtn = (title, isNew) => {
     setLatestItemTitle(title);
     setIsNewItem(isNew);
-    setShowMiniCartModal(true);
+    setShowMessageModal(true);
   };
   const handleToggleCart = () => {
     setShowMiniCart((prev) => !prev);
@@ -120,7 +120,7 @@ export function RecipePage() {
           <div className="mt-10">
             <RecipeImage
               className="h-[300px] w-[300px] rounded-full object-cover object-center 500:rounded-full md:h-[400px] md:w-[400px] 1440:h-[480px] 1440:w-[480px]"
-              src={data?.image?.[0]}
+              src={data?.image?.[0] ?? ""}
               alt={data.recipe_name}
             />
           </div>
@@ -184,7 +184,7 @@ export function RecipePage() {
                     id={item.id}
                     recipeName={data.recipe_name}
                     recipeId={data.id}
-                    recipeImage={data.image}
+                    recipeImage={data.image?.[0] ?? ""}
                     onClickShowCartModal={handleClickAddBtn}
                   />
                 );
@@ -241,7 +241,7 @@ export function RecipePage() {
                       <div>
                         <RecipeImage
                           className="h-[100px] w-[100px] rounded-full object-cover object-center 1440:h-[150px] 1440:w-[150px]"
-                          src={group.recipe_image}
+                          src={group.recipe_image ?? ""}
                           alt={group.recipe_name}
                         />
                       </div>
@@ -270,9 +270,9 @@ export function RecipePage() {
           )}
         </SlideOverPanel>
       )}
-      {/* mini cart modal */}
-      {showMiniCartModal && (
-        <MiniCartModal onClose={() => setShowMiniCartModal(false)}>
+      {/* message  modal */}
+      {showMessageModal && (
+        <MessageModal onClose={() => setShowMessageModal(false)} autoClose={true}>
           {isNewItem ? (
             <>
               <p className="font-semibold text-orange">{`🎉 ${latestItemTitle}`}</p>
@@ -284,7 +284,7 @@ export function RecipePage() {
               <p className="text-blue100">is already in your cart.</p>
             </>
           )}
-        </MiniCartModal>
+        </MessageModal>
       )}
     </section>
   );
