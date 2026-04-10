@@ -38,16 +38,16 @@
   .borderYellow {
     @apply rounded-xl border border-yellow p-2 text-beige;
   }
-  .miniCartModal {
+  .messageModal {
     @apply fixed left-1/2 z-50 w-[60%] max-w-[500px] -translate-x-1/2 rounded-xl bg-orange900/40 p-4 ring-1 ring-yellow400/40 backdrop-blur-xl transition-all duration-700 ease-in-out;
   }
-  .miniCartModalHidden {
+  .messageModalHidden {
     @apply top-[-100px] opacity-0;
   }
-  .miniCartModalEnter {
+  .messageModalEnter {
     @apply top-0 opacity-100;
   }
-  .miniCartModalStay {
+  .messageModalStay {
     @apply top-[100px] opacity-100;
   }
   .checkedCountIcon {
@@ -137,19 +137,32 @@
   .deleteBtn {
     @apply my-4 rounded-full border-4 border-pink bg-red p-4 text-center text-white transition-transform duration-200 hover:bg-rose-600 active:scale-95;
   }
-  .deleteBtn:hover {
+  .deleteBtn:hover, .deleteModalbtn:hover  {
     box-shadow: 0px 0px 20px 16px rgba(255, 70, 0, 0.2);
   }
   .tagBtn {
     @apply rounded-full border border-white px-3 py-1 text-lg text-beige;
   }
+  .deleteModalbtn {
+    @apply rounded-full border border-beige/50 px-3 py-1 text-lg font-semibold text-beige300;
+  }
+  .deleteModalbtn:hover  {
+    box-shadow: 0px 0px 12px 6px rgba(249, 238, 205, 0.1);
+  }
+  .deleteModalDeletebtn {
+    @apply rounded-full border border-red/50 px-3 py-1 text-lg font-semibold text-red;
+  }
+  .deleteModalDeletebtn:hover  {
+    box-shadow: 0px 0px 20px 16px rgba(255, 90, 79, 0.18);
+  }
+
   .selectedBtn,
   .tagBtn:hover {
     @apply bg-orange text-blue900;
     box-shadow: 0px 0px 20px 16px rgba(249, 238, 205, 0.15);
   }
   .homePageFoodCardImg {
-    @apply h-full w-full cursor-pointer rounded-xl object-cover object-center transition-transform duration-200 group-hover:scale-[1.15];
+    @apply h-full w-full cursor-pointer rounded-xl object-cover object-center transition-transform duration-200 group-hover/card:scale-105;
   }
   .actionBtn {
     @apply border border-orange bg-transparent px-4 py-2 text-red transition-colors duration-1000;
