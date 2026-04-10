@@ -13,6 +13,7 @@ import { UserProfileEdit } from "src/pages/UserProfileEdit";
 import { StepByStepPage } from "src/pages/StepByStepPage";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 export function App() {
   return (
@@ -21,6 +22,7 @@ export function App() {
         <AuthProvider>
           <CartProvider>
             <Router>
+              <Toaster position="top-center" containerStyle={{ top: 60 }} />
               <Nav />
               <Routes>
                 <Route path="/" element={<HomePage />} />
