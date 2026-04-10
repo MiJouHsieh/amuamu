@@ -45,7 +45,7 @@ export function RecipeFormButtons({
         <div className="pt-10">
           <button
             type="submit"
-            className="submitBtn cursor-pointer"
+            className="cursor-pointer submitBtn"
             aria-label="Submit recipe form"
             onClick={onSubmit}
           >
