@@ -8,6 +8,10 @@ AMUAMU 是一個簡易食譜記錄 App，靈感來自日常中常見的使用情
 因此，想打造一個介面簡潔、操作直覺的 App ，來解決日常的不便，讓使用者可以更輕鬆的查找、記錄和實作食譜。
 
 🔗 [Demo Link](https://amuamu-mjh.vercel.app/)
+🔗 [Full Demo Video](https://canva.link/wl9wa17az0agz1d) 
+
+以下縮圖也可點擊觀看影片：
+[![Watch the demo](./public/images/demo-cover.png)](https://canva.link/wl9wa17az0agz1d)
 
 **試用帳號：**
 信箱：amuamuuser@gmail.com
